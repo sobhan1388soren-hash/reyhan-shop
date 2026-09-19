@@ -80,6 +80,14 @@ export function AdminIcon({ name }: { name: string }) {
           <path d="M8.5 8.5h7M8.5 11.5h4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
         </svg>
       );
+    case "banner":
+      return (
+        <svg aria-hidden="true" viewBox="0 0 24 24" className={cls} fill="none">
+          <path d="M4 5.5h11l5 3.5-5 3.5H4z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+          <path d="M4 5.5v13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          <path d="M8.5 9.5h5M8.5 12h3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        </svg>
+      );
     default:
       return null;
   }

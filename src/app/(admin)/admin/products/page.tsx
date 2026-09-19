@@ -250,6 +250,13 @@ export default async function AdminProductsPage({
                   value={categoryId ?? ""}
                 />
                 <AdminSelectFilter
+                  name="featured"
+                  label="فیلتر محصول ویژه"
+                  allLabel="همه محصولات"
+                  options={[{ value: "1", label: "فقط محصولات ویژه" }]}
+                  value={featured ? "1" : ""}
+                />
+                <AdminSelectFilter
                   name="sort"
                   label="ترتیب نمایش"
                   allLabel="ترتیب پیشفرض"

@@ -101,6 +101,11 @@ enum PostStatus {
   ARCHIVED
 }
 
+enum BannerPlacement {
+  HERO
+  PROMO
+}
+
 //
 // User and OTP
 //
@@ -786,4 +791,39 @@ model DiscountUsage {
   @@index([userId])
   @@index([orderId])
   @@map("discount_usages")
+}
+
+//
+// Homepage marketing — Phase 16.
+//
+// One minimal model serves both the homepage hero (a single active HERO
+// row; the storefront falls back to factual defaults when none is active)
+// and the promotional banner strip (ordered active PROMO rows). Images are
+// URL-only (no upload/storage infra in this phase). No scheduling fields:
+// active/inactive is the whole visibility rule, mirroring the existing
+// Category/Discount isActive convention.
+//
+
+model Banner {
+  id        String           @id @default(cuid())
+  placement BannerPlacement
+  title     String
+  // Hero supporting text / promo short text (optional).
+  description String?        @db.Text
+  // URL-only imagery (https:// or root-relative); null → branded fallback.
+  imageUrl String?
+  // Primary CTA (optional; the storefront falls back to sensible defaults).
+  primaryLinkHref  String?
+  primaryLinkLabel String?
+  // Hero-only secondary CTA (optional; ignored for PROMO).
+  secondaryLinkHref  String?
+  secondaryLinkLabel String?
+  isActive Boolean @default(false)
+  sortOrder Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([placement, isActive, sortOrder])
+  @@map("banners")
 }

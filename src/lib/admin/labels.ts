@@ -15,6 +15,7 @@ import type {
   ReviewStatus,
   QuestionStatus,
   PostStatus,
+  BannerPlacement,
 } from "@prisma/client";
 
 export type StatusTone =
@@ -156,4 +157,13 @@ export const postStatusTones: Record<PostStatus, StatusTone> = {
   DRAFT: "neutral",
   PUBLISHED: "success",
   ARCHIVED: "warning",
+};
+
+// ── Homepage marketing (Phase 16) ───────────────────────────────────────
+// Banner placement is the real schema enum; active/inactive reuse the
+// existing CategoryStatus label vocabulary (no invented states).
+
+export const bannerPlacementLabels: Record<BannerPlacement, string> = {
+  HERO: "هیرو صفحه اصلی",
+  PROMO: "بنر تبلیغاتی",
 };

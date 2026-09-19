@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import type { Prisma } from "@prisma/client";
+import type { Prisma, OrderStatus } from "@prisma/client";
 import type {
   CatalogProduct,
   CatalogCategory,
@@ -11,6 +11,7 @@ import { parseSort, sortToPrismaOrderBy } from "./sorting";
 import { buildSearchWhere } from "./search";
 import { buildFilterWhere } from "./filtering";
 import { getProductAvailability } from "./availability";
+import { selectRankedProducts } from "@/lib/marketing/ranking";
 
 // Safe wrapper — if DB is empty or unreachable, return empty result instead of crashing build
 async function safe<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
@@ -361,6 +362,65 @@ export async function getRelatedProducts(productId: string, categoryIds: string[
       orderBy: { createdAt: "desc" },
     });
     return items.map(toCatalogProduct);
+  }, []);
+}
+
+// ── Homepage selections (Phase 16) ─────────────────────────────────────
+// Both reuse the shared productInclude/toCatalogProduct mapping so a
+// homepage card behaves exactly like a catalog card (same price range,
+// availability and URL structure). No parallel product-selection system.
+
+/**
+ * Manually curated "featured" products — the admin `isFeatured` flag is the
+ * single source of truth (set on the product form). Only ACTIVE products
+ * are storefront-visible; the flag alone never surfaces a draft/archived
+ * product.
+ */
+export async function getFeaturedProducts(take = 8): Promise<CatalogProduct[]> {
+  return safe(async () => {
+    const items = await prisma.product.findMany({
+      where: { isFeatured: true, status: "ACTIVE" },
+      include: productInclude,
+      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
+      take,
+    });
+    return items.map(toCatalogProduct);
+  }, []);
+}
+
+/**
+ * "Best-selling" ranking derived from REAL order data only. A valid sale is
+ * a PAID order that was not cancelled or returned (the payment success
+ * signal from the Phase 10 architecture). Ranks products by aggregated sold
+ * quantity, then keeps only storefront-valid (ACTIVE) products and returns
+ * them in rank order. Sales numbers are intentionally NOT returned — the
+ * homepage shows products, never fabricated or exposed business metrics.
+ * Empty/no-sales data → empty array (the section is omitted upstream).
+ */
+const VALID_SALE_ORDER_STATUS: OrderStatus[] = ["PENDING", "CONFIRMED", "PROCESSING", "SHIPPED", "DELIVERED"];
+
+export async function getBestSellingProducts(take = 8): Promise<CatalogProduct[]> {
+  return safe(async () => {
+    const ranked = await prisma.orderItem.groupBy({
+      by: ["productId"],
+      where: {
+        order: { paymentStatus: "PAID", status: { in: VALID_SALE_ORDER_STATUS } },
+      },
+      _sum: { quantity: true },
+      orderBy: { _sum: { quantity: "desc" } },
+      take,
+    });
+    if (ranked.length === 0) return [];
+
+    const ids = ranked.map((r) => r.productId);
+    const products = await prisma.product.findMany({
+      where: { id: { in: ids }, status: "ACTIVE" },
+      include: productInclude,
+    });
+
+    // Preserve the sales ranking; drop ids whose product is no longer
+    // storefront-valid (draft/archived/deleted).
+    return selectRankedProducts(ranked, products.map(toCatalogProduct), take);
   }, []);
 }
 

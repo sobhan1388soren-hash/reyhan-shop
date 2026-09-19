@@ -11,6 +11,7 @@ import type {
   ReviewStatus,
   QuestionStatus,
   PostStatus,
+  BannerPlacement,
 } from "@prisma/client";
 import {
   orderStatusLabels,
@@ -25,6 +26,7 @@ import {
   discountTypeLabels,
   discountStatusLabels,
   postStatusLabels,
+  bannerPlacementLabels,
   type DiscountDisplayStatus,
 } from "./labels.ts";
 import { PRODUCT_STATUSES } from "./product-rules.ts";
@@ -76,6 +78,12 @@ export const ADMIN_DISCOUNT_STATUS_OPTIONS: { value: DiscountDisplayStatus; labe
 ).map((value) => ({ value, label: discountStatusLabels[value] }));
 
 // Blog post status options (Phase 15) — sourced from the pure rules'
-// allow-list so a client-submitted value can only be a real schema enum.
+// allow-list so a client-submitted value can only ever be a real schema enum.
 export const ADMIN_POST_STATUS_OPTIONS: { value: PostStatus; label: string }[] =
   POST_STATUSES.map((value) => ({ value, label: postStatusLabels[value] }));
+
+// Banner placement options (Phase 16) — the exact Prisma enum values, so a
+// client-submitted placement can only ever be a legal value.
+export const ADMIN_BANNER_PLACEMENT_OPTIONS: { value: BannerPlacement; label: string }[] = (
+  Object.keys(bannerPlacementLabels) as BannerPlacement[]
+).map((value) => ({ value, label: bannerPlacementLabels[value] }));

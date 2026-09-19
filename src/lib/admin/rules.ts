@@ -70,7 +70,8 @@ export type AdminNavItem = {
     | "settings"
     | "sitemap"
     | "chat"
-    | "article";
+    | "article"
+    | "banner";
   /** Roles allowed to see this item. Omitted → any admin-capable role. */
   roles?: readonly string[];
   /** Placeholder modules (Phase 14) render non-interactive. */
@@ -111,6 +112,14 @@ export const ADMIN_NAVIGATION: AdminNavSection[] = [
     items: [
       { label: "مقالات", href: "/admin/blog/posts", icon: "article" },
       { label: "دسته‌بندی مقالات", href: "/admin/blog/categories", icon: "sitemap" },
+    ],
+  },
+  {
+    label: "بازاریابی",
+    items: [
+      // Hero + promotional banners share one minimal model; the homepage
+      // falls back to factual structural content when nothing is active.
+      { label: "بنرها و هیرو", href: "/admin/banners", icon: "banner" },
     ],
   },
 ];
