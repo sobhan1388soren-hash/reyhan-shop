@@ -1,26 +1,159 @@
 @import "tailwindcss";
 
-:root {
+/* =========================================================
+   Reyhan Design System — Phase 3
+   Brand values: Trust (Blue) · Health (Green) · Expertise · Modernity
+   Visual direction: Blue + Green + White · clean medical/water · professional Persian e-commerce
+   LIGHT THEME ONLY — no dark mode. Do not add dark variants.
+   Future RTL: tokens use logical properties where possible; dir handled at app level
+   ========================================================= */
+
+ :root {
+  /* Reyhan is light-theme only — force light UA rendering (scrollbars, form controls) */
+  color-scheme: light;
+
+  /* Brand — Reyhan Blue (Trust/Water/Expertise) */
+  --reyhan-blue-50: #eef8fb;
+  --reyhan-blue-100: #d5eef5;
+  --reyhan-blue-200: #a8d9e8;
+  --reyhan-blue-300: #7ac1d6;
+  --reyhan-blue-500: #0ea5c8;
+  --reyhan-blue-600: #0c6b8a;
+  --reyhan-blue-700: #0a5670;
+  --reyhan-blue-800: #083f52;
+  --reyhan-blue-900: #042e3a;
+
+  /* Brand — Reyhan Green (Health/Purity) */
+  --reyhan-green-50: #f0fdf5;
+  --reyhan-green-100: #dcfce7;
+  --reyhan-green-300: #86efac;
+  --reyhan-green-500: #16a34a;
+  --reyhan-green-600: #0f8a3d;
+  --reyhan-green-700: #0c6b30;
+
+  /* Semantic — light (medical clean) */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0f172a; /* slate-900 */
+
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  --primary: var(--reyhan-blue-600);
+  --primary-foreground: #ffffff;
+
+  --secondary: #f1f5f9; /* slate-100 */
+  --secondary-foreground: #0f172a;
+
+  --muted: #f8fafc; /* slate-50 */
+  --muted-foreground: #64748b; /* slate-500 */
+
+  --accent: var(--reyhan-green-50);
+  --accent-foreground: var(--reyhan-green-600);
+
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+
+  --border: #e2e8f0; /* slate-200 */
+  --input: #e2e8f0;
+  --ring: var(--reyhan-blue-600);
+
+  /* Radius — soft medical, modern */
+  --radius: 0.75rem; /* 12px */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-full: 9999px;
+
+  /* Shadows — subtle medical depth */
+  --shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.04);
+  --shadow: 0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.06);
+  --shadow-md: 0 4px 6px -1px rgb(15 23 42 / 0.06), 0 2px 4px -2px rgb(15 23 42 / 0.06);
+  --shadow-lg: 0 10px 15px -3px rgb(15 23 42 / 0.08), 0 4px 6px -4px rgb(15 23 42 / 0.06);
+  --shadow-card: 0 2px 8px rgb(15 23 42 / 0.06);
 }
 
+/* Tailwind v4 theme bridge — semantic tokens become utilities */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Brand extended utilities */
+  --color-reyhan-blue-50: var(--reyhan-blue-50);
+  --color-reyhan-blue-600: var(--reyhan-blue-600);
+  --color-reyhan-blue-700: var(--reyhan-blue-700);
+  --color-reyhan-green-50: var(--reyhan-green-50);
+  --color-reyhan-green-600: var(--reyhan-green-600);
+
+  --font-sans: var(--font-vazirmatn);
+  --font-mono: var(--font-vazirmatn);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Base */
+* {
+  border-color: var(--border);
+}
+
+html {
+  /* RTL Persian storefront — direction handled by dir="rtl" on <html> */
+  scrollbar-gutter: stable;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Vazirmatn, system-ui, -apple-system, sans-serif;
+  font-feature-settings: "rlig" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Typography scale — Persian-friendly: no negative tracking for Arabic script */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 700;
+    line-height: 1.3;
+  }
+}
+
+/* Focus — accessible, trust signal */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+/* Shadows as utilities */
+@utility shadow-card {
+  box-shadow: var(--shadow-card);
 }

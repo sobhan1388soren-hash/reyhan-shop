@@ -1,0 +1,6 @@
+export const SITE_NAME = "ریحان"
+export const SITE_DESCRIPTION = "فروشگاه تخصصی تصفیه آب خانگی — دستگاه‌ها، فیلترها، قطعات یدکی و لوازم جانبی"
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+export const SITE_EMAIL = "contact@reyhan.com"
+export const PHONE_NUMBER = ""
+export const ADDRESS = ""

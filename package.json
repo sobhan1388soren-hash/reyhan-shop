@@ -6,12 +6,29 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "type-check": "tsc --noEmit",
+    "test:checkout": "node --test src/lib/checkout/checkout.test.mjs",
+    "test:payments": "node --test src/lib/payments/payments.test.mjs",
+    "test:reviews": "node --test src/lib/reviews/reviews.test.mjs",
+    "test:discounts": "node --test src/lib/discounts/discounts.test.mjs",
+    "test:admin": "node --test src/lib/admin/admin.test.mjs",
+    "test:categories": "node --test src/lib/admin/categories.test.mjs",
+    "test:products": "node --test src/lib/admin/products.test.mjs",
+    "test:admin-orders": "node --test src/lib/admin/orders-admin.test.mjs",
+    "test:admin-users": "node --test src/lib/admin/users-admin.test.mjs",
+    "test:admin-discounts": "node --test src/lib/admin/discounts-admin.test.mjs",
+    "test:admin-moderation": "node --test src/lib/admin/moderation-admin.test.mjs",
+    "test": "node --test src/lib/checkout/checkout.test.mjs src/lib/payments/payments.test.mjs src/lib/reviews/reviews.test.mjs src/lib/discounts/discounts.test.mjs src/lib/admin/admin.test.mjs src/lib/admin/categories.test.mjs src/lib/admin/products.test.mjs src/lib/admin/orders-admin.test.mjs src/lib/admin/users-admin.test.mjs src/lib/admin/discounts-admin.test.mjs src/lib/admin/moderation-admin.test.mjs"
   },
   "dependencies": {
+    "@prisma/client": "^7.10.0",
+    "clsx": "^2.1.1",
     "next": "16.3.3",
+    "prisma": "^7.10.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
