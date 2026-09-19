@@ -157,3 +157,218 @@ body {
 @utility shadow-card {
   box-shadow: var(--shadow-card);
 }
+
+/* =========================================================
+   Article prose — renders the sanitizer's allowlist subset
+   (src/lib/blog/content.ts). Alignment rides on data-align and
+   callouts on data-callout — never inline styles — so there is no
+   CSS injection surface. Direction-agnostic (logical properties).
+   ========================================================= */
+.prose-rtl {
+  color: var(--foreground);
+  font-size: 0.95rem;
+  line-height: 1.95;
+  word-break: break-word;
+}
+.prose-rtl > *:first-child {
+  margin-top: 0;
+}
+.prose-rtl > *:last-child {
+  margin-bottom: 0;
+}
+.prose-rtl p {
+  margin: 0.95rem 0;
+}
+.prose-rtl h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 2rem 0 0.8rem;
+  scroll-margin-top: 6rem;
+}
+.prose-rtl h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.45;
+  margin: 1.6rem 0 0.6rem;
+  scroll-margin-top: 6rem;
+}
+.prose-rtl h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 1.35rem 0 0.5rem;
+  scroll-margin-top: 6rem;
+}
+.prose-rtl a {
+  color: var(--reyhan-blue-600);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s;
+}
+.prose-rtl a:hover {
+  color: var(--reyhan-blue-700);
+}
+.prose-rtl strong {
+  font-weight: 700;
+}
+.prose-rtl em {
+  font-style: italic;
+}
+.prose-rtl u {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-rtl s {
+  text-decoration: line-through;
+}
+.prose-rtl sub,
+.prose-rtl sup {
+  font-size: 0.75em;
+}
+.prose-rtl mark {
+  background: #fef9c3;
+  border-radius: 0.2rem;
+  padding: 0 0.15rem;
+}
+.prose-rtl code,
+.prose-rtl kbd {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--muted);
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.32rem;
+}
+.prose-rtl ul,
+.prose-rtl ol {
+  margin: 0.95rem 0;
+  padding-inline-start: 1.6rem;
+}
+.prose-rtl ul {
+  list-style: disc;
+}
+.prose-rtl ol {
+  list-style: decimal;
+}
+.prose-rtl li {
+  margin: 0.4rem 0;
+}
+.prose-rtl li::marker {
+  color: var(--reyhan-blue-600);
+}
+.prose-rtl blockquote {
+  margin: 1.25rem 0;
+  padding: 0.65rem 1.1rem;
+  background: var(--reyhan-blue-50);
+  border-inline-start: 3px solid var(--reyhan-blue-300);
+  border-radius: 0.5rem;
+  color: var(--muted-foreground);
+}
+.prose-rtl blockquote p {
+  margin: 0.35rem 0;
+}
+.prose-rtl hr {
+  margin: 1.9rem 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+.prose-rtl figure {
+  margin: 1.35rem 0;
+}
+.prose-rtl img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.6rem;
+}
+.prose-rtl figure img {
+  width: 100%;
+}
+.prose-rtl figcaption {
+  margin-top: 0.45rem;
+  text-align: center;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--muted-foreground);
+}
+.prose-rtl iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 1.25rem 0;
+  border: 0;
+  border-radius: 0.6rem;
+  background: #000;
+}
+.prose-rtl table {
+  width: 100%;
+  margin: 1.25rem 0;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  text-align: start;
+}
+.prose-rtl th,
+.prose-rtl td {
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.7rem;
+  text-align: start;
+}
+.prose-rtl th {
+  background: var(--muted);
+  font-weight: 600;
+}
+.prose-rtl aside {
+  margin: 1.25rem 0;
+  padding: 0.8rem 1rem;
+  border-radius: 0.6rem;
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+.prose-rtl aside p {
+  margin: 0.4rem 0;
+}
+.prose-rtl aside > p:first-child {
+  margin-top: 0;
+}
+.prose-rtl aside > p:last-child {
+  margin-bottom: 0;
+}
+/* Callout tones (data-callout allowlist: info/success/warning/danger) */
+.prose-rtl aside[data-callout="info"] {
+  background: var(--reyhan-blue-50);
+  border-inline-start: 3px solid var(--reyhan-blue-500);
+}
+.prose-rtl aside[data-callout="success"] {
+  background: var(--reyhan-green-50);
+  border-inline-start: 3px solid var(--reyhan-green-500);
+}
+.prose-rtl aside[data-callout="warning"] {
+  background: #fffbeb;
+  border-inline-start: 3px solid #f59e0b;
+}
+.prose-rtl aside[data-callout="danger"] {
+  background: #fef2f2;
+  border-inline-start: 3px solid var(--destructive);
+}
+/* Alignment hints (data-align allowlist: start/center/end) */
+.prose-rtl [data-align="start"] {
+  text-align: start;
+}
+.prose-rtl [data-align="center"] {
+  text-align: center;
+}
+.prose-rtl [data-align="end"] {
+  text-align: end;
+}
+/* Native FAQ/details — semantic and crawlable */
+.prose-rtl details {
+  margin: 1.1rem 0;
+  padding: 0.65rem 0.95rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--muted);
+}
+.prose-rtl summary {
+  cursor: pointer;
+  font-weight: 600;
+}

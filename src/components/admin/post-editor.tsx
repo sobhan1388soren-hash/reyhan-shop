@@ -3,7 +3,6 @@
 import * as React from "react";
 import { sanitizeHtml, safeEmbedUrl, safeUrl } from "@/lib/blog/content";
 import type { InternalLinkTarget } from "@/lib/blog/post-service";
-import { cn } from "@/lib/utils";
 
 // PostEditor — lightweight WYSIWYG editor for article content.
 //
@@ -342,6 +341,8 @@ export function PostEditor({ initialContent, internalTargets, contentError }: Ed
     <div className="overflow-hidden rounded-xl border bg-card shadow-card">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-1 border-b bg-muted/20 p-2">
+        {/* eslint-disable-next-line react-hooks/refs -- the action closures read
+            the editor ref lazily, on user click; they never run during render. */}
         {groups.map((group, gi) => (
           <React.Fragment key={gi}>
             {gi > 0 && <span aria-hidden="true" className="mx-1 h-6 w-px bg-border" />}

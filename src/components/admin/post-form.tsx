@@ -77,6 +77,35 @@ export function emptyPostDraft(): PostDraft {
   };
 }
 
+/** Build the editable draft from a loaded admin post detail. */
+export function draftFromPost(post: {
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  content: string;
+  coverImage: string | null;
+  status: string;
+  seoTitle: string | null;
+  seoDescription: string | null;
+  seoKeywords: string | null;
+  authorId: string | null;
+  categories: { id: string }[];
+}): PostDraft {
+  return {
+    title: post.title,
+    slug: post.slug,
+    excerpt: post.excerpt ?? "",
+    content: post.content,
+    coverImage: post.coverImage ?? "",
+    status: post.status,
+    seoTitle: post.seoTitle ?? "",
+    seoDescription: post.seoDescription ?? "",
+    seoKeywords: post.seoKeywords ?? "",
+    authorId: post.authorId ?? "",
+    categoryIds: post.categories.map((c) => c.id),
+  };
+}
+
 type FlatCategory = { depth: number; node: CategoryTreeNode<AdminPostCategoryNode> };
 
 function flattenCategories(

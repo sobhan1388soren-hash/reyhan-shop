@@ -34,12 +34,19 @@ import {
   normalizeRelatedProductIds,
   publishFieldFor,
   POST_STATUSES,
+  POST_SORTS,
   parsePostSort,
   type PostInputRaw,
   type NormalizedPostInput,
   type PostSort,
   type PostErrorCode,
 } from "./post-rules.ts";
+import {
+  getAdminPostCategoryTree,
+  getPostAuthorOptions,
+  type AdminPostCategoryNode,
+  type PostAuthorOption,
+} from "./category-service.ts";
 
 export type PostMutationResult<T = undefined> =
   | { ok: true; data: T }
@@ -599,4 +606,40 @@ export async function getInternalLinkTargets(): Promise<{
 }
 
 // Re-exported for the admin page's sort whitelisting.
-export { parsePostSort, POST_STATUSES };
+export { parsePostSort, POST_STATUSES, POST_SORTS };
+
+// ── Editor context (one round-trip for the create/edit pages) ──────────
+
+export type PostFormContext = {
+  categories: AdminPostCategoryNode[];
+  products: PostProductOption[];
+  authors: PostAuthorOption[];
+  internalTargets: {
+    posts: InternalLinkTarget[];
+    blogCategories: InternalLinkTarget[];
+    products: InternalLinkTarget[];
+    productCategories: InternalLinkTarget[];
+  };
+};
+
+/**
+ * Everything the post create/edit form needs, fetched in parallel. Each
+ * part degrades to an empty list on DB failure (the form renders its own
+ * empty states), so a partial outage never blocks the editor.
+ */
+export async function getPostFormContext(
+  selectedProductIds?: string[]
+): Promise<PostFormContext> {
+  const [categoryTree, authors, internalTargets, products] = await Promise.all([
+    getAdminPostCategoryTree(),
+    getPostAuthorOptions(),
+    getInternalLinkTargets(),
+    getProductOptions(undefined, selectedProductIds),
+  ]);
+  return {
+    categories: categoryTree.state === "ok" ? categoryTree.categories : [],
+    authors,
+    internalTargets,
+    products,
+  };
+}
