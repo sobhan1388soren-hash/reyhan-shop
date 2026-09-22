@@ -12,6 +12,9 @@ import {
   getPublishedPosts,
 } from "@/lib/blog/queries";
 import { toFaDigits } from "@/lib/catalog/format";
+import { buildMetadata } from "@/lib/seo/metadata";
+import { buildBreadcrumbJsonLd, blogCategoryPath } from "@/lib/seo/json-ld";
+import { JsonLd } from "@/components/seo/json-ld";
 
 type PageProps = {
   params: Promise<{ categorySlug: string }>;
@@ -22,13 +25,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { categorySlug } = await params;
   const category = await getBlogCategoryBySlug(categorySlug);
   if (!category) return { title: "دسته‌بندی یافت نشد" };
-  return {
-    title: category.name,
-    description: category.description ?? `مقالات دسته «${category.name}».`,
-    alternates: {
-      canonical: `/blog/category/${category.slug}`,
-    },
-  };
+  const title = category.seoTitle || category.name;
+  const description =
+    category.seoDescription ??
+    category.description ??
+    `مقالات دسته «${category.name}».`;
+  return buildMetadata({
+    title,
+    description,
+    path: `/blog/category/${category.slug}`,
+    type: "website",
+    images: category.image ? [{ url: category.image, alt: category.name }] : [],
+  });
 }
 
 export default async function BlogCategoryPage({ params, searchParams }: PageProps) {
@@ -43,9 +51,17 @@ export default async function BlogCategoryPage({ params, searchParams }: PagePro
     getBlogCategoryTree(),
   ]);
 
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "خانه", path: "/" },
+    { name: "وبلاگ", path: "/blog" },
+    { name: category.name, path: blogCategoryPath(category.slug) },
+  ]);
+
   return (
     <Section className="bg-background py-10 sm:py-14 lg:py-16">
       <Container>
+        <JsonLd id="blog-category" data={breadcrumbJsonLd} />
+
         <BlogBreadcrumb category={category} />
 
         <div className="mx-auto mb-10 max-w-3xl text-center">

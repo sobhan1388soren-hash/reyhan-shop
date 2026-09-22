@@ -49,6 +49,8 @@ export type BlogCategoryView = {
   sortOrder: number;
   children: BlogCategoryView[];
   postCount: number;
+  seoTitle: string | null;
+  seoDescription: string | null;
 };
 
 export type BlogArticle = BlogPostCard & {
@@ -57,6 +59,7 @@ export type BlogArticle = BlogPostCard & {
   seoDescription: string | null;
   seoKeywords: string | null;
   coverImage: string | null;
+  updatedAt: Date;
   relatedProducts: {
     id: string;
     title: string;
@@ -141,6 +144,8 @@ export async function getBlogCategoryTree(): Promise<BlogCategoryView[]> {
         sortOrder: c.sortOrder,
         children: [],
         postCount: countByCategory.get(c.id) ?? 0,
+        seoTitle: c.seoTitle,
+        seoDescription: c.seoDescription,
       });
     }
     const roots: BlogCategoryView[] = [];
@@ -175,6 +180,8 @@ export async function getBlogCategoryBySlug(
       sortOrder: category.sortOrder,
       children: [],
       postCount: count,
+      seoTitle: category.seoTitle,
+      seoDescription: category.seoDescription,
     };
   }, null);
 }
@@ -268,6 +275,7 @@ export async function getPostBySlug(slug: string): Promise<BlogArticle | null> {
         seoTitle: true,
         seoDescription: true,
         seoKeywords: true,
+        updatedAt: true,
         products: {
           orderBy: { sortOrder: "asc" },
           where: { product: { status: "ACTIVE" } },
@@ -301,6 +309,7 @@ export async function getPostBySlug(slug: string): Promise<BlogArticle | null> {
       seoTitle: post.seoTitle,
       seoDescription: post.seoDescription,
       seoKeywords: post.seoKeywords,
+      updatedAt: post.updatedAt,
       relatedProducts: post.products.map((p) => ({
         id: p.product.id,
         title: p.product.title,

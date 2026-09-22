@@ -80,6 +80,8 @@ export async function getHomepageCategories(
       level: c.level,
       status: c.status,
       sortOrder: c.sortOrder,
+      seoTitle: c.seoTitle,
+      seoDescription: c.seoDescription,
       productCount: countById.get(c.id) ?? 0,
     }));
   }, []);

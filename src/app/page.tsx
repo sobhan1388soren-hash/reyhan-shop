@@ -18,6 +18,17 @@ import { HomeTrustStrip } from "@/components/home/home-trust-strip";
 import { HomePromoBanners } from "@/components/home/home-promo-banners";
 import { HomeBlogSection } from "@/components/home/home-blog-section";
 import { HomeConsultationCta } from "@/components/home/home-consultation-cta";
+import { JsonLd } from "@/components/seo/json-ld";
+import { buildOrganizationJsonLd, buildWebSiteJsonLd } from "@/lib/seo/json-ld";
+import { canonicalUrl } from "@/lib/seo/site";
+import type { Metadata } from "next";
+
+// The homepage is the canonical root of the site. It is declared HERE (not as
+// a root-layout default) so private/noindex routes (cart, account, admin,
+// checkout, payment) don't inherit a canonical pointing back to the homepage.
+export const metadata: Metadata = {
+  alternates: { canonical: canonicalUrl("/") },
+};
 
 export default async function Home() {
   const { hero, promos, categories, featured, bestSelling, posts } =
@@ -25,6 +36,12 @@ export default async function Home() {
 
   return (
     <div className="flex flex-1 flex-col">
+      {/* Organization + WebSite identity graph — homepage only, real facts */}
+      <JsonLd
+        id="home-identity"
+        data={[buildOrganizationJsonLd(), buildWebSiteJsonLd()]}
+      />
+
       {/* Hero — static, single, admin-editable */}
       <HomeHero hero={hero} />
 

@@ -27,7 +27,13 @@ import {
   getProductQuestions,
   getRelatedPostsForProduct,
 } from "@/lib/catalog/product-detail";
-import { SITE_NAME, SITE_URL } from "@/lib/constants";
+import { buildMetadata } from "@/lib/seo/metadata";
+import {
+  buildProductJsonLd,
+  buildBreadcrumbJsonLd,
+  categoryPath,
+} from "@/lib/seo/json-ld";
+import { JsonLd } from "@/components/seo/json-ld";
 
 type PageProps = {
   params: Promise<{ productSlug: string }>;
@@ -39,27 +45,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!product) {
     return { title: "محصول یافت نشد" };
   }
+  const title = product.seoTitle || product.title;
   const description =
-    product.shortDescription ?? product.description?.slice(0, 160) ?? undefined;
+    product.seoDescription ?? product.shortDescription ?? product.description ?? undefined;
   const minPrice = product.priceRange.min;
-  return {
-    title: product.title,
+  return buildMetadata({
+    title,
     description,
-    alternates: {
-      canonical: `/products/${product.slug}`,
-    },
-    openGraph: {
-      type: "website",
-      siteName: SITE_NAME,
-      title: product.title,
-      description,
-      url: `${SITE_URL}/products/${product.slug}`,
-      images: product.images[0]?.url ? [{ url: product.images[0].url }] : undefined,
-    },
+    path: `/products/${product.slug}`,
+    type: "website",
+    images: product.images,
     ...(minPrice != null
       ? { other: { "product:price:amount": String(Math.round(minPrice / 10)), "product:price:currency": "IRR" } }
       : {}),
-  };
+  });
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
@@ -103,8 +102,38 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
   const defaultVariant = product.variants.find((v) => v.isDefault) ?? product.variants[0];
 
+  // ── Structured data (only real, page-visible facts) ──
+  const offer =
+    defaultVariant && defaultVariant.isActive
+      ? {
+          price: defaultVariant.price,
+          currency: "IRR",
+          availability: product.availability,
+        }
+      : null;
+  const aggregateRating =
+    reviewsSummary.total > 0 && reviewsSummary.average != null
+      ? { average: reviewsSummary.average, total: reviewsSummary.total }
+      : null;
+  const productJsonLd = buildProductJsonLd({
+    title: product.title,
+    slug: product.slug,
+    description: product.shortDescription ?? product.description,
+    images: product.images,
+    sku: defaultVariant?.sku ?? null,
+    brand: null,
+    offer,
+    aggregateRating,
+  });
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "دسته‌بندی‌ها", path: "/categories" },
+    ...ancestors.map((cat) => ({ name: cat.name, path: categoryPath(cat.slug) })),
+  ]);
+
   return (
     <Container className="py-6 pb-24 lg:pb-10">
+      <JsonLd id="product" data={[productJsonLd, breadcrumbJsonLd].filter(Boolean)} />
+
       <CategoryBreadcrumb ancestors={ancestors} />
 
       {/* ── Purchase area ── */}

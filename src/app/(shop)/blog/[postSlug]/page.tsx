@@ -12,6 +12,13 @@ import {
 } from "@/lib/blog/queries";
 import { plainTextFromContent } from "@/lib/blog/content";
 import { formatFaDate, toFaDigits } from "@/lib/catalog/format";
+import { buildMetadata } from "@/lib/seo/metadata";
+import {
+  buildArticleJsonLd,
+  buildBreadcrumbJsonLd,
+  blogCategoryPath,
+} from "@/lib/seo/json-ld";
+import { JsonLd } from "@/components/seo/json-ld";
 
 type PageProps = {
   params: Promise<{ postSlug: string }>;
@@ -25,22 +32,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const title = post.seoTitle || post.title;
   const description = post.seoDescription || post.excerpt || plainTextFromContent(post.content, 160);
 
-  return {
+  return buildMetadata({
     title,
     description,
-    keywords: post.seoKeywords ? post.seoKeywords.split(",").map((k) => k.trim()).filter(Boolean) : undefined,
-    alternates: {
-      canonical: `/blog/${post.slug}`,
-    },
-    openGraph: {
-      type: "article",
-      title,
-      description,
-      publishedTime: post.publishedAt?.toISOString(),
-      authors: post.authorName ? [post.authorName] : undefined,
-      images: post.coverImage ? [{ url: post.coverImage, alt: post.title }] : undefined,
-    },
-  };
+    path: `/blog/${post.slug}`,
+    type: "article",
+    images: post.coverImage ? [{ url: post.coverImage, alt: post.title }] : [],
+    publishedTime: post.publishedAt?.toISOString(),
+    modifiedTime: post.updatedAt.toISOString(),
+    authors: post.authorName ? [post.authorName] : undefined,
+  });
 }
 
 export default async function BlogArticlePage({ params }: PageProps) {
@@ -58,8 +59,28 @@ export default async function BlogArticlePage({ params }: PageProps) {
 
   const category = post.categories[0] ?? null;
 
+  const articleJsonLd = buildArticleJsonLd({
+    title: post.title,
+    slug: post.slug,
+    description: post.seoDescription || post.excerpt || plainTextFromContent(post.content, 160),
+    coverImage: post.coverImage,
+    authorName: post.authorName,
+    publishedAt: post.publishedAt,
+    updatedAt: post.updatedAt,
+  });
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "خانه", path: "/" },
+    { name: "وبلاگ", path: "/blog" },
+    ...(category
+      ? [{ name: category.name, path: blogCategoryPath(category.slug) }]
+      : []),
+    { name: post.title, path: `/blog/${post.slug}` },
+  ]);
+
   return (
     <article>
+      <JsonLd id="article" data={[articleJsonLd, breadcrumbJsonLd].filter(Boolean)} />
+
       {/* Header */}
       <Section className="border-b bg-gradient-to-b from-[var(--reyhan-blue-50)]/60 via-white to-white pb-8 pt-10 sm:pb-12 sm:pt-14">
         <Container size="sm">

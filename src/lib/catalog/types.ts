@@ -28,6 +28,9 @@ export type CatalogCategory = {
   level: number;
   status: string;
   sortOrder: number;
+  // SEO fields (stored on the Category row; surfaced for metadata)
+  seoTitle: string | null;
+  seoDescription: string | null;
   children?: CatalogCategory[];
   productCount?: number;
   createdAt?: Date;
@@ -63,6 +66,9 @@ export type CatalogProduct = {
   shortDescription: string | null;
   status: string; // ProductStatus
   isFeatured: boolean;
+  // SEO fields (stored on the Product row; surfaced for metadata)
+  seoTitle: string | null;
+  seoDescription: string | null;
   categories: { id: string; name: string; slug: string }[];
   variants: CatalogVariant[];
   specifications: CatalogSpecification[];

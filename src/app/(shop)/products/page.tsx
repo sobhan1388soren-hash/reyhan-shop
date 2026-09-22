@@ -9,12 +9,33 @@ import { getProductsPaginated, getAvailableSpecFilters } from "@/lib/catalog/que
 import { parseCatalogSearchParams, catalogParamsToUrlSearch } from "@/lib/catalog/filtering";
 import { parseSort } from "@/lib/catalog/sorting";
 import { toFaDigits } from "@/lib/catalog/format";
+import { buildMetadata } from "@/lib/seo/metadata";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "محصولات",
-  description: "خرید تجهیزات تصفیه آب خانگی — دستگاه‌ها، فیلترها، قطعات یدکی و لوازم جانبی.",
-};
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}): Promise<Metadata> {
+  const resolved = await searchParams;
+  const params = parseCatalogSearchParams(resolved);
+  // Filtered/search/paginated combinations canonicalize to the clean landing
+  // page and are not indexed — the canonical landing page stays indexable.
+  const hasFilters = Boolean(
+    params.q || params.category || params.minPrice || params.maxPrice ||
+      params.sort || (params.availability && params.availability.length > 0) ||
+      (params.specs && Object.keys(params.specs).length > 0) || params.inStock ||
+      (params.page && params.page > 1)
+  );
+  return buildMetadata({
+    title: "محصولات",
+    description:
+      "خرید تجهیزات تصفیه آب خانگی — دستگاه‌ها، فیلترها، قطعات یدکی و لوازم جانبی.",
+    path: "/products",
+    type: "website",
+    noindex: hasFilters,
+  });
+}
 
 type PageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

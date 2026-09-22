@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Container, Section } from "@/components/layout/container";
 import { PostCard } from "@/components/blog/post-card";
 import { BlogSidebar } from "@/components/blog/blog-sidebar";
@@ -11,14 +10,15 @@ import {
 } from "@/lib/blog/queries";
 import { toFaDigits } from "@/lib/catalog/format";
 import { SITE_NAME } from "@/lib/constants";
+import { buildMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "وبلاگ ریحان",
-  description: "مقالات تخصصی تصفیه آب خانگی، راهنمای خرید و نگهداری دستگاه‌های تصفیه آب.",
-  alternates: {
-    canonical: "/blog",
-  },
-};
+  description:
+    "مقالات تخصصی تصفیه آب خانگی، راهنمای خرید و نگهداری دستگاه‌های تصفیه آب.",
+  path: "/blog",
+  type: "website",
+});
 
 type PageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

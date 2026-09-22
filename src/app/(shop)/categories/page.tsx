@@ -1,12 +1,14 @@
 import { Container, Section } from "@/components/layout/container";
 import { CategoryCard } from "@/components/catalog/category-card";
 import { getCategoryTree } from "@/lib/catalog/queries";
-import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "دسته‌بندی محصولات",
   description: "دسته‌بندی محصولات تصفیه آب خانگی ریحان.",
-};
+  path: "/categories",
+  type: "website",
+});
 
 export default async function CategoriesPage() {
   const categories = await getCategoryTree();

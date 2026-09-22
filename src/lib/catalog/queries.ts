@@ -50,6 +50,8 @@ function toCatalogCategory(c: {
   level: number;
   status: string;
   sortOrder: number;
+  seoTitle: string | null;
+  seoDescription: string | null;
 }): CatalogCategory {
   return {
     id: c.id,
@@ -61,6 +63,8 @@ function toCatalogCategory(c: {
     level: c.level,
     status: c.status,
     sortOrder: c.sortOrder,
+    seoTitle: c.seoTitle,
+    seoDescription: c.seoDescription,
   };
 }
 
@@ -202,6 +206,8 @@ function toCatalogProduct(raw: ProductWithRelations): CatalogProduct {
     shortDescription: raw.shortDescription,
     status: raw.status,
     isFeatured: raw.isFeatured,
+    seoTitle: raw.seoTitle,
+    seoDescription: raw.seoDescription,
     categories: raw.categories.map((c) => c.category),
     variants,
     specifications: raw.specifications,

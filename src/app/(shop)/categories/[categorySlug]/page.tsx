@@ -20,6 +20,9 @@ import {
 import { parseCatalogSearchParams, catalogParamsToUrlSearch } from "@/lib/catalog/filtering";
 import { parseSort } from "@/lib/catalog/sorting";
 import { toFaDigits } from "@/lib/catalog/format";
+import { buildMetadata } from "@/lib/seo/metadata";
+import { buildBreadcrumbJsonLd, categoryPath } from "@/lib/seo/json-ld";
+import { JsonLd } from "@/components/seo/json-ld";
 
 type PageProps = {
   params: Promise<{ categorySlug: string }>;
@@ -30,13 +33,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { categorySlug } = await params;
   const category = await getCategoryBySlug(categorySlug);
   if (!category) return { title: "دسته‌بندی یافت نشد" };
-  return {
-    title: category.name,
-    description: category.description ?? `خرید محصولات دسته «${category.name}».`,
-    alternates: {
-      canonical: `/categories/${category.slug}`,
-    },
-  };
+  const title = category.seoTitle || category.name;
+  const description =
+    category.seoDescription ??
+    category.description ??
+    `خرید محصولات دسته «${category.name}».`;
+  return buildMetadata({
+    title,
+    description,
+    path: `/categories/${category.slug}`,
+    type: "website",
+    images: category.image ? [{ url: category.image, alt: category.name }] : [],
+  });
 }
 
 export default async function CategoryDetailPage({ params, searchParams }: PageProps) {
@@ -66,9 +74,16 @@ export default async function CategoryDetailPage({ params, searchParams }: PageP
   const urlParams = catalogParamsToUrlSearch(scopedParams);
   const basePath = `/categories/${category.slug}`;
 
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "دسته‌بندی‌ها", path: "/categories" },
+    ...ancestors.map((cat) => ({ name: cat.name, path: categoryPath(cat.slug) })),
+  ]);
+
   return (
     <Section className="border-b bg-gradient-to-b from-[var(--reyhan-blue-50)]/60 via-white to-white py-12 sm:py-16 lg:py-20">
       <Container>
+        <JsonLd id="category" data={breadcrumbJsonLd} />
+
         <CategoryBreadcrumb ancestors={ancestors} />
         <div className="mx-auto mt-4 mb-10 max-w-3xl text-center">
           <h1 className="text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">

@@ -3,6 +3,11 @@ import { AccountNav } from "@/components/account/account-nav";
 import { LogoutButton } from "@/components/account/logout-button";
 import { requireUser, userDisplayName } from "@/lib/auth/dal";
 import { formatPhoneForDisplay } from "@/lib/auth/phone";
+import type { Metadata } from "next";
+import { buildPrivateMetadata } from "@/lib/seo/metadata";
+
+// The whole account area is private and must never be indexed.
+export const metadata: Metadata = buildPrivateMetadata("حساب کاربری");
 
 // Secure check — beyond the optimistic proxy redirect, every account page
 // requires a valid session AND an existing active user row.

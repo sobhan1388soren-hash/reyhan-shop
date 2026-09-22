@@ -1,5 +1,10 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { Container } from "@/components/layout/container";
+import { buildPrivateMetadata } from "@/lib/seo/metadata";
+
+// 404 pages are not indexed.
+export const metadata: Metadata = buildPrivateMetadata("صفحه مورد نظر یافت نشد");
 
 export default function NotFound() {
   return (
