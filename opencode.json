@@ -11,9 +11,12 @@
         "atria/Atria-Dawn-Preview": {
           "name": "Atria Dawn Preview",
           "limit": {
-            "context": 1000000,
+            "context": 500000,
             "output": 64000
           }
+        },
+        "apmix/deepseek-v4-flash-free": {
+          "name": "APMIX DeepSeek V4 Flash Free"
         }
       }
     }

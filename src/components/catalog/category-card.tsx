@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { MediaPlaceholder } from "@/components/common/media-placeholder";
 import type { CatalogCategory } from "@/lib/catalog/types";
 import { toFaDigits } from "@/lib/catalog/format";
 
@@ -13,12 +13,7 @@ export function CategoryCard({
       href={`/categories/${category.slug}`}
       className="group flex flex-col rounded-xl border bg-card shadow-sm transition-all hover:shadow-md"
     >
-      <div
-        className={cn(
-          "aspect-square overflow-hidden rounded-t-xl bg-muted",
-          category.image && "bg-gradient-to-br from-[var(--reyhan-blue-50)] to-white"
-        )}
-      >
+      <div className="aspect-square overflow-hidden rounded-t-xl">
         {category.image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -28,9 +23,7 @@ export function CategoryCard({
             loading="lazy"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <span className="text-4xl text-muted-foreground" aria-hidden="true">💧</span>
-          </div>
+          <MediaPlaceholder tone="blue" glyph="drop" label={category.name} />
         )}
       </div>
       <div className="flex flex-1 flex-col p-4">

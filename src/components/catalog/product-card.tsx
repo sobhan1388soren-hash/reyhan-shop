@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { MediaPlaceholder } from "@/components/common/media-placeholder";
 import { ProductAvailability } from "@/components/catalog/product-availability";
 import { PriceRange } from "@/components/catalog/price";
 import type { CatalogProduct } from "@/lib/catalog/types";
@@ -28,17 +29,11 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
               loading="lazy"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--reyhan-blue-50)] to-white">
-              <div className="text-center">
-                <div className="mx-auto flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5" fill="none">
-                    <path d="M7 16C7 16 9 14 10.5 12C12 10 13.5 8 15 6.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                    <path d="M12 18C12 18 12.5 14.5 14 12C15.5 9.5 18 7 18 7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" opacity="0.7" />
-                  </svg>
-                </div>
-                <p className="mt-2 text-xs font-medium text-muted-foreground">{product.categories[0]?.name ?? "ریحان"}</p>
-              </div>
-            </div>
+            <MediaPlaceholder
+              tone="blue"
+              glyph="image"
+              label={product.categories[0]?.name ?? "ریحان"}
+            />
           )}
           {/* Availability overlay */}
           <div className="absolute start-3 top-3">

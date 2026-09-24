@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MediaPlaceholder } from "@/components/common/media-placeholder";
 import type { BlogPostCard } from "@/lib/blog/queries";
 import { formatFaDate, toFaDigits } from "@/lib/catalog/format";
 
@@ -22,30 +23,11 @@ export function PostCard({ post }: { post: BlogPostCard }) {
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[var(--reyhan-blue-50)] via-white to-[var(--reyhan-green-50)]">
-              <div className="text-center">
-                <div className="mx-auto flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5" fill="none">
-                    <path
-                      d="M5 4.5h9l5 5V19.5H5z"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinejoin="round"
-                    />
-                    <path d="M14 4.5v5h5" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-                    <path
-                      d="M8.5 13.5h7M8.5 16.5h4.5"
-                      stroke="currentColor"
-                      strokeWidth="1.4"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </div>
-                <p className="mt-2 text-xs font-medium text-muted-foreground">
-                  {primaryCategory?.name ?? "مقاله ریحان"}
-                </p>
-              </div>
-            </div>
+            <MediaPlaceholder
+              tone="green"
+              glyph="image"
+              label={primaryCategory?.name ?? "مقاله ریحان"}
+            />
           )}
         </div>
       </Link>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { HeroVisual } from "@/components/home/hero-visual";
+import { MediaPlaceholder } from "@/components/common/media-placeholder";
 import type { HeroContentView } from "@/lib/marketing/banner-rules";
 
 // HomeHero — STATIC single hero (no carousel, no autoplay, no slider
@@ -55,7 +55,7 @@ export function HomeHero({ hero }: { hero: HeroContentView }) {
           </div>
         </div>
 
-        {/* Visual side — admin image URL, or the branded illustration */}
+        {/* Visual side — admin image URL, or the placeholder surface */}
         <div className="relative order-first mx-auto w-full max-w-md px-2 sm:max-w-lg lg:order-none lg:max-w-none lg:px-0">
           {hero.imageUrl ? (
             <div className="overflow-hidden rounded-2xl border bg-card shadow-card">
@@ -72,7 +72,12 @@ export function HomeHero({ hero }: { hero: HeroContentView }) {
               </div>
             </div>
           ) : (
-            <HeroVisual className="mx-auto h-auto w-full drop-shadow-sm" />
+            <div className="overflow-hidden rounded-2xl border bg-card shadow-card">
+              {/* Same fixed aspect + card chrome as the image branch. */}
+              <div className="aspect-[4/3] w-full">
+                <MediaPlaceholder tone="mixed" glyph="drop" />
+              </div>
+            </div>
           )}
         </div>
       </div>

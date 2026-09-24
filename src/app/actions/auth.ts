@@ -208,9 +208,11 @@ export async function verifyRegisterOtp(
 ): Promise<AuthFormState> {
   const phone = String(formData.get("phone") ?? "");
   const code = String(formData.get("code") ?? "");
-  // requestId travels as a form field but is only ever validated server-side
-  // against the intent store — the client cannot forge another user's data.
-  const requestId = _prev.fieldErrors?.requestId;
+  // The requestId is submitted as a hidden form field and only ever validated
+  // server-side against the intent store — the client cannot forge another
+  // user's data. It must come from the form, not from _prev, because the
+  // verify action's previous state never carries it.
+  const requestId = String(formData.get("requestId") ?? "");
 
   if (!/^989\d{9}$/.test(phone)) {
     return { step: "phone", error: "نشست شما منقضی شده است. دوباره ثبت‌نام کنید." };
@@ -231,7 +233,7 @@ export async function verifyRegisterOtp(
     }
 
     const intent = requestId ? registerIntents.get(requestId) : undefined;
-    if (!intent || !requestId || intent.phone !== phone) {
+    if (!requestId || !intent || intent.phone !== phone) {
       return {
         step: "phone",
         error: "اطلاعات ثبت‌نام شما منقضی شده است. دوباره ثبت‌نام کنید.",

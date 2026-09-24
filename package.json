@@ -25,6 +25,7 @@
     "test": "node --test src/lib/checkout/checkout.test.mjs src/lib/payments/payments.test.mjs src/lib/reviews/reviews.test.mjs src/lib/discounts/discounts.test.mjs src/lib/admin/admin.test.mjs src/lib/admin/categories.test.mjs src/lib/admin/products.test.mjs src/lib/admin/orders-admin.test.mjs src/lib/admin/users-admin.test.mjs src/lib/admin/discounts-admin.test.mjs src/lib/admin/moderation-admin.test.mjs src/lib/blog/blog.test.mjs src/lib/marketing/marketing.test.mjs src/lib/seo/seo.test.mjs"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "clsx": "^2.1.1",
     "next": "16.3.3",

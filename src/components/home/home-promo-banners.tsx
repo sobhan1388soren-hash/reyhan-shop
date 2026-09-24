@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MediaPlaceholder } from "@/components/common/media-placeholder";
 import type { PromoBannerView } from "@/lib/marketing/banner-rules";
 
 // HomePromoBanners — the active promotional banner strip. Renders as a
@@ -32,9 +33,10 @@ export function HomePromoBanners({ banners }: { banners: PromoBannerView[] }) {
                     <div className="absolute inset-0 bg-gradient-to-l from-white/92 via-white/70 to-white/30" />
                   </>
                 ) : (
-                  <div
-                    className="absolute inset-0 bg-gradient-to-l from-[var(--reyhan-blue-50)] via-white to-[var(--reyhan-green-50)]"
-                    aria-hidden="true"
+                  <MediaPlaceholder
+                    tone="band"
+                    glyph="none"
+                    className="absolute inset-0"
                   />
                 )}
 

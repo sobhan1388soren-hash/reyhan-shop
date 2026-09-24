@@ -25,7 +25,7 @@ type ConsoleSmsSender = SmsOtpSender;
 const consoleSmsSender: ConsoleSmsSender = {
   async sendOtp(phoneNumber, code) {
     if (process.env.OTP_DEBUG_LOG === "true" && process.env.NODE_ENV !== "production") {
-      console.info(`[SMS:DEV] OTP for ${phoneNumber}: ${code}`);
+      console.info(`[DEV OTP] phone=${phoneNumber} code=${code}`);
     }
     // In dev without debug logging the code is simply "sent" invisibly —
     // testers enable OTP_DEBUG_LOG or use the DB to inspect delivery.

@@ -51,6 +51,11 @@ export function RegisterForm() {
     return (
       <form action={verifyAction} className="space-y-4">
         <input type="hidden" name="phone" value={requestState.phone ?? form.phone} />
+        <input
+          type="hidden"
+          name="requestId"
+          value={requestState.fieldErrors?.requestId ?? ""}
+        />
         <OtpStep
           phone={requestState.phone ?? form.phone}
           onBack={() => {
@@ -149,9 +154,9 @@ export function RegisterForm() {
         <FieldError message={fieldErrors?.email} />
       </div>
 
-      {requestState.error && (
+      {(requestState.error || verifyState.error) && (
         <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive" role="alert">
-          {requestState.error}
+          {requestState.error ?? verifyState.error}
         </p>
       )}
 
