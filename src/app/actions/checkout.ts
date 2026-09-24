@@ -24,8 +24,6 @@ import { DISCOUNT_REJECT_MESSAGES } from "@/lib/discounts/rules";
 import type { CheckoutFormState } from "@/lib/checkout/types";
 import type { CartValidationResult } from "@/lib/cart/types";
 
-export const initialCheckoutState: CheckoutFormState = { status: "idle" };
-
 // ── Snapshot validation (page load / cart changes) ─────────────────────
 
 export type CheckoutSnapshotOutcome =

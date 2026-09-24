@@ -85,6 +85,9 @@ export function buildSitemap(input: SitemapInput): MetadataRoute.Sitemap {
       priority: 0.8,
       lastModified: safeDate(...posts.map((p) => p.updatedAt ?? p.publishedAt)),
     },
+    { url: canonicalUrl("/contact"), changeFrequency: "monthly", priority: 0.5 },
+    { url: canonicalUrl("/about"), changeFrequency: "monthly", priority: 0.4 },
+    { url: canonicalUrl("/faq"), changeFrequency: "monthly", priority: 0.4 },
   ];
 
   const categoryEntries: MetadataRoute.Sitemap = categories.map((category) => ({

@@ -54,13 +54,14 @@ export default async function ProductsPage({ searchParams }: PageProps) {
   const urlParams = catalogParamsToUrlSearch(params);
 
   return (
-    <Section className="border-b bg-gradient-to-b from-[var(--reyhan-blue-50)]/60 via-white to-white py-12 sm:py-16 lg:py-20">
+    <Section className="py-10 sm:py-12">
       <Container>
-        <div className="mx-auto mb-10 max-w-3xl text-center">
-          <h1 className="text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
+        <div className="mx-auto mb-8 max-w-3xl text-center">
+          <p className="text-xs font-semibold tracking-widest text-[var(--reyhan-blue-600)]">فروشگاه ریحان</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             فروشگاه محصولات
           </h1>
-          <p className="mt-3 text-pretty text-base leading-8 text-muted-foreground sm:text-lg">
+          <p className="mx-auto mt-3 max-w-2xl text-pretty text-sm leading-7 text-muted-foreground sm:text-[15px]">
             خرید تجهیزات تصفیه آب خانگی — دستگاه‌ها، فیلترها، قطعات یدکی و لوازم جانبی.
           </p>
         </div>

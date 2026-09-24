@@ -93,3 +93,5 @@ export type CheckoutFormState = {
   orderId?: string;
   orderNumber?: string;
 };
+
+export const initialCheckoutState: CheckoutFormState = { status: "idle" };

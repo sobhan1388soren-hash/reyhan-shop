@@ -16,8 +16,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
   const purchasable = isPurchasable(product.availability);
 
   return (
-    <Card className="group flex flex-col overflow-hidden transition-shadow hover:shadow-md">
-      {/* Image placeholder — keeps aspect ratio, ready for Next Image later */}
+    <Card className="group flex flex-col overflow-hidden rounded-xl border bg-card transition-all hover:border-[var(--reyhan-blue-200)] hover:shadow-md">
       <Link href={`/products/${product.slug}`} className="block">
         <div className="relative aspect-[4/3] overflow-hidden bg-muted">
           {primaryImage ? (
@@ -25,7 +24,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
             <img
               src={primaryImage.url}
               alt={primaryImage.alt ?? product.title}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
               loading="lazy"
               decoding="async"
             />
@@ -36,7 +35,6 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
               label={product.categories[0]?.name ?? "ریحان"}
             />
           )}
-          {/* Availability overlay */}
           <div className="absolute start-3 top-3">
             <ProductAvailability state={product.availability} size="sm" />
           </div>
@@ -47,14 +45,13 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
       </Link>
 
       <CardContent className="flex flex-1 flex-col p-4">
-        {/* Categories */}
         {product.categories.length > 0 && (
-          <div className="mb-2 flex flex-wrap gap-1.5">
+          <div className="mb-2.5 flex flex-wrap gap-1.5">
             {product.categories.slice(0, 2).map((cat) => (
               <Link
                 key={cat.id}
                 href={`/categories/${cat.slug}`}
-                className="inline-flex rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                className="inline-flex rounded-full border bg-white px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground transition-colors hover:border-[var(--reyhan-blue-200)] hover:bg-[var(--reyhan-blue-50)] hover:text-[var(--reyhan-blue-700)]"
               >
                 {cat.name}
               </Link>
@@ -63,39 +60,40 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
         )}
 
         <Link href={`/products/${product.slug}`} className="group/title">
-          <h3 className="line-clamp-2 text-sm font-semibold leading-5 text-foreground group-hover/title:text-[var(--reyhan-blue-700)] sm:text-[15px]">
+          <h3 className="line-clamp-2 text-[14px] font-bold leading-5 text-foreground group-hover/title:text-[var(--reyhan-blue-700)] sm:text-[15px]">
             {product.title}
           </h3>
         </Link>
 
         {product.shortDescription && (
-          <p className="mt-1.5 line-clamp-2 text-xs leading-5 text-muted-foreground">
+          <p className="mt-1.5 line-clamp-2 text-xs leading-6 text-muted-foreground">
             {product.shortDescription}
           </p>
         )}
 
-        {/* Specs preview — extensible */}
         {product.specifications.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">
             {product.specifications.slice(0, 3).map((spec) => (
-              <Badge key={`${spec.key}-${spec.value}`} variant="outline" className="px-2 py-0 text-[11px] font-normal">
+              <Badge key={`${spec.key}-${spec.value}`} variant="outline" className="border bg-muted/40 px-2 py-0 text-[11px] font-normal text-muted-foreground">
                 {spec.key}: {spec.value}
               </Badge>
             ))}
             {product.specifications.length > 3 && (
               <span className="inline-flex items-center text-[11px] text-muted-foreground">
-                +{product.specifications.length - 3}
+                +{toFaDigits(product.specifications.length - 3)}
               </span>
             )}
           </div>
         )}
 
-        <div className="mt-4 flex items-end justify-between gap-3 border-t pt-3">
+        <div className="mt-auto flex items-end justify-between gap-3 border-t pt-4">
           <div>
-            <div className="text-xs text-muted-foreground">شروع قیمت از</div>
-            <PriceRange min={product.priceRange.min} max={product.priceRange.max} />
+            <div className="text-[11px] font-medium tracking-wide text-muted-foreground">شروع قیمت از</div>
+            <div className="mt-0.5">
+              <PriceRange min={product.priceRange.min} max={product.priceRange.max} />
+            </div>
             {product.variants.length > 1 && (
-              <div className="text-[11px] text-muted-foreground">
+              <div className="mt-0.5 text-[11px] text-muted-foreground">
                 {toFaDigits(product.variants.length)} گزینه
               </div>
             )}
@@ -103,7 +101,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
           <Link
             href={`/products/${product.slug}`}
             aria-disabled={!purchasable}
-            className="inline-flex h-8 items-center justify-center rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground shadow-sm transition-colors hover:bg-[var(--reyhan-blue-700)] disabled:pointer-events-none disabled:opacity-50"
+            className="inline-flex h-8 shrink-0 items-center justify-center rounded-md bg-primary px-3.5 text-xs font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-[var(--reyhan-blue-700)] disabled:pointer-events-none disabled:opacity-50"
           >
             مشاهده
           </Link>
