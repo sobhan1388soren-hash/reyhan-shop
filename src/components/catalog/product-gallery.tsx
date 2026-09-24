@@ -81,6 +81,8 @@ export function ProductGallery({ images, productTitle }: ProductGalleryProps) {
               alt={active.alt}
               className="h-64 w-full object-cover transition-transform duration-300 group-hover:scale-105 sm:h-80 lg:h-96"
               loading="eager"
+              fetchPriority="high"
+              decoding="async"
             />
           </button>
         ) : (
@@ -128,15 +130,17 @@ export function ProductGallery({ images, productTitle }: ProductGalleryProps) {
         )}
       </div>
 
-      {/* Thumbnails */}
+      {/* Thumbnails — plain selector buttons (not tabs: there is no
+          associated tabpanel, so tablist/tab roles would be incorrect).
+          The thumbnail image itself is decorative: the button carries the
+          accessible name and the current item is exposed via aria-current. */}
       {media.length > 1 && (
-        <div className="grid grid-cols-4 gap-2 sm:grid-cols-5" role="tablist" aria-label="تصاویر محصول">
+        <div className="grid grid-cols-4 gap-2 sm:grid-cols-5" role="group" aria-label="تصاویر محصول">
           {media.map((item, i) => (
             <button
               key={`${item.url}-${i}`}
               type="button"
-              role="tab"
-              aria-selected={i === safeIndex}
+              aria-current={i === safeIndex || undefined}
               aria-label={item.kind === "video" ? `ویدیوی ${i + 1}` : `نمایش تصویر ${i + 1}`}
               onClick={() => setActiveIndex(i)}
               className={cn(
@@ -148,9 +152,11 @@ export function ProductGallery({ images, productTitle }: ProductGalleryProps) {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={item.url}
-                  alt={`${productTitle} — تصویر کوچک ${i + 1}`}
+                  alt=""
+                  aria-hidden="true"
                   className="aspect-square w-full object-cover"
                   loading="lazy"
+                  decoding="async"
                 />
               ) : (
                 <span className="flex aspect-square w-full items-center justify-center bg-foreground/5 text-foreground/70">

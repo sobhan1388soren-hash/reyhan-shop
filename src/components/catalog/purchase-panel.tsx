@@ -51,6 +51,27 @@ export function PurchasePanel({
   // Clamp quantity against the current variant's stock during render.
   const quantity = Math.min(Math.max(1, quantityInput), maxQuantity);
 
+  const optionRefs = React.useRef(new Map<string, HTMLButtonElement>());
+
+  // APG radiogroup keyboard pattern (RTL-aware: ArrowLeft moves forward).
+  // Disabled (inactive) options are skipped, matching native radio behavior.
+  const onOptionKeyDown = (e: React.KeyboardEvent, id: string) => {
+    if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(e.key)) return;
+    e.preventDefault();
+    const enabled = variants.filter((v) => v.isActive);
+    if (enabled.length === 0) return;
+    const ids = enabled.map((v) => v.id);
+    const current = ids.includes(id) ? id : resolvedId;
+    const i = Math.max(0, ids.indexOf(current ?? ""));
+    let next: string = ids[0]!;
+    if (e.key === "ArrowLeft" || e.key === "ArrowDown") next = ids[(i + 1) % ids.length]!;
+    else if (e.key === "ArrowRight" || e.key === "ArrowUp") next = ids[(i - 1 + ids.length) % ids.length]!;
+    else if (e.key === "End") next = ids[ids.length - 1]!;
+    setSelectedId(next);
+    setFeedback(null);
+    optionRefs.current.get(next)?.focus();
+  };
+
   const handleAddToCart = () => {
     if (!selected || !purchasable || quantity < 1) {
       setFeedback({ kind: "error", message: "این گزینه در حال حاضر قابل خرید نیست." });
@@ -92,7 +113,7 @@ export function PurchasePanel({
             aria-label="انتخاب مدل محصول"
           >
             {variants.map((variant) => {
-              const isSelected = variant.id === selectedId;
+              const isSelected = variant.id === resolvedId;
               const vAvailability = getVariantAvailability(variant);
               const vPurchasable = variant.isActive && isPurchasable(vAvailability);
               return (
@@ -101,11 +122,17 @@ export function PurchasePanel({
                   type="button"
                   role="radio"
                   aria-checked={isSelected}
+                  tabIndex={isSelected ? 0 : -1}
+                  ref={(el) => {
+                    if (el) optionRefs.current.set(variant.id, el);
+                    else optionRefs.current.delete(variant.id);
+                  }}
                   disabled={!variant.isActive}
                   onClick={() => {
                     setSelectedId(variant.id);
                     setFeedback(null);
                   }}
+                  onKeyDown={(e) => onOptionKeyDown(e, variant.id)}
                   className={cn(
                     "flex flex-col rounded-lg border px-3 py-2.5 text-start transition-colors",
                     isSelected
@@ -194,10 +221,12 @@ export function PurchasePanel({
       {/* Quantity + Add to cart */}
       <div className="flex flex-col gap-3">
         <div className="flex items-stretch justify-between gap-3">
-          <div>
-            <label htmlFor="quantity" className="mb-1.5 block text-sm font-medium text-foreground">
+          {/* group (not label/output): output is not a labelable element,
+              so the stepper is exposed as a named group instead. */}
+          <div role="group" aria-labelledby="quantity-label">
+            <span id="quantity-label" className="mb-1.5 block text-sm font-medium text-foreground">
               تعداد
-            </label>
+            </span>
             <div className="flex h-11 items-center rounded-md border border-input bg-background">
               <button
                 type="button"
@@ -209,7 +238,6 @@ export function PurchasePanel({
                 −
               </button>
               <output
-                id="quantity"
                 aria-live="polite"
                 className="w-12 text-center text-base font-semibold tabular-nums text-foreground"
               >
@@ -226,7 +254,7 @@ export function PurchasePanel({
               </button>
             </div>
             {purchasable && availableStock > 0 && availableStock <= 5 && (
-              <p className="mt-1.5 text-[11px] text-amber-600">
+              <p className="mt-1.5 text-[11px] text-amber-700">
                 تنها {toFaDigits(availableStock)} عدد باقی مانده است
               </p>
             )}

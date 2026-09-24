@@ -66,7 +66,12 @@ export function CheckoutSummary({
       <h2 className="text-base font-bold text-foreground">خلاصه سفارش</h2>
 
       {/* Items — compact, scannable list */}
-      <ul className="max-h-72 space-y-3 overflow-y-auto border-t pt-4" tabIndex={0}>
+      {/* Scrollable region is keyboard-focusable, so it carries a name. */}
+      <ul
+        className="max-h-72 space-y-3 overflow-y-auto border-t pt-4"
+        tabIndex={0}
+        aria-label="اقلام سفارش"
+      >
         {cart.items.map((item) => (
           <li key={item.variantId} className="flex items-start justify-between gap-3">
             <div className="min-w-0">
@@ -85,7 +90,7 @@ export function CheckoutSummary({
                 {item.variant ? `${item.variant.title} · ` : ""}
                 {toFaDigits(item.quantity)} عدد
                 {item.issues.includes("stock_exceeded") && (
-                  <span className="ms-1 font-medium text-amber-600">
+                  <span className="ms-1 font-medium text-amber-700">
                     (تعداد اصلاح شد)
                   </span>
                 )}
@@ -257,7 +262,7 @@ export function CheckoutSummary({
           </svg>
         </button>
         {!addressSelected && !updating && (
-          <p role="status" className="text-[11px] font-medium text-amber-600">
+          <p role="status" className="text-[11px] font-medium text-amber-700">
             ابتدا نشانی ارسال را انتخاب کنید.
           </p>
         )}

@@ -5,6 +5,7 @@
 import "server-only";
 import { createHmac, timingSafeEqual, randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
+import { resolveSessionSecret } from "./guards.ts";
 
 const SESSION_COOKIE = "reyhan-session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7; // 7 days
@@ -17,11 +18,15 @@ export type SessionPayload = {
 };
 
 function getSecret(): string {
-  const secret = process.env.SESSION_SECRET;
-  if (secret && secret.length >= 32) return secret;
-  // Deterministic dev fallback so local flows work without .env setup.
-  // Production must set SESSION_SECRET — see .env.example.
-  return "reyhan-dev-secret-do-not-use-in-production-0123456789";
+  // Decision logic lives in the pure, unit-tested ./guards module.
+  const resolved = resolveSessionSecret(process.env);
+  if (!resolved.ok) {
+    // Fail closed in production: without a strong secret anyone holding the
+    // (public, in-repo) dev fallback could forge valid sessions, including
+    // admin ones. Set SESSION_SECRET (>= 32 chars) — see .env.example.
+    throw new Error(resolved.error);
+  }
+  return resolved.secret;
 }
 
 function base64url(input: Buffer | string): string {
@@ -44,7 +49,14 @@ export function parseSession(token: string | undefined | null): SessionPayload |
   const body = token.slice(0, dot);
   const signature = token.slice(dot + 1);
 
-  const expected = sign(body);
+  let expected: string;
+  try {
+    expected = sign(body);
+  } catch {
+    // Missing/invalid secret in production → deny every session (fail
+    // closed) instead of crashing the caller (e.g. proxy middleware).
+    return null;
+  }
   const a = Buffer.from(signature);
   const b = Buffer.from(expected);
   if (a.length !== b.length || !timingSafeEqual(a, b)) return null;

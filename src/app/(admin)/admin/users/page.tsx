@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { requireAdmin } from "@/lib/admin/dal";
+import { requireUserManager } from "@/lib/admin/dal";
 import {
   parseAdminListPage,
   parseAdminSearchTerm,
@@ -123,7 +123,7 @@ export default async function AdminUsersPage({
 }: {
   searchParams: Promise<AdminListSearchParams>;
 }) {
-  await requireAdmin();
+  await requireUserManager();
   const resolved = await searchParams;
 
   const pagination = parseAdminListPage(resolved);

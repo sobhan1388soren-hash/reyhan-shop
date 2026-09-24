@@ -153,6 +153,8 @@ export default async function BlogArticlePage({ params }: PageProps) {
                 alt={post.title}
                 className="aspect-[16/8] w-full object-cover"
                 loading="eager"
+                fetchPriority="high"
+                decoding="async"
               />
             </div>
           </Container>

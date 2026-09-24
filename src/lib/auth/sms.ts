@@ -4,6 +4,7 @@
 // depends only on this interface.
 
 import "server-only";
+import { isConsoleSmsDeliveryAllowed } from "./guards.ts";
 
 export type SmsDeliveryResult = {
   ok: boolean;
@@ -24,11 +25,21 @@ type ConsoleSmsSender = SmsOtpSender;
 
 const consoleSmsSender: ConsoleSmsSender = {
   async sendOtp(phoneNumber, code) {
-    if (process.env.OTP_DEBUG_LOG === "true" && process.env.NODE_ENV !== "production") {
+    // Decision logic lives in the pure, unit-tested ./guards module.
+    if (!isConsoleSmsDeliveryAllowed(process.env)) {
+      // Fail closed: the console sender delivers nothing. Pretending success
+      // here would issue real (hashed, verifiable) OTP tokens the user can
+      // never receive. Production must configure a real SMS provider.
+      console.error("[SMS] No real SMS provider configured in production — refusing to issue OTP.");
+      return { ok: false, error: "SMS provider not configured" };
+    }
+    if (process.env.OTP_DEBUG_LOG === "true") {
       console.info(`[DEV OTP] phone=${phoneNumber} code=${code}`);
     }
     // In dev without debug logging the code is simply "sent" invisibly —
     // testers enable OTP_DEBUG_LOG or use the DB to inspect delivery.
+    // OTP values NEVER reach production logs: delivery is refused above
+    // before any logging can happen.
     return { ok: true };
   },
 };

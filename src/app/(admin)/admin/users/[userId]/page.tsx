@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { requireAdmin } from "@/lib/admin/dal";
+import { requireUserManager } from "@/lib/admin/dal";
 import { getAdminUserById } from "@/lib/admin/queries";
 import {
   orderStatusLabels,
@@ -57,7 +57,7 @@ function Fact({ label, children }: { label: string; children: React.ReactNode })
 
 export default async function AdminUserDetailPage({ params }: PageProps) {
   const { userId } = await params;
-  const actor = await requireAdmin();
+  const actor = await requireUserManager();
   const result = await getAdminUserById(userId);
 
   if (result.state === "error") {

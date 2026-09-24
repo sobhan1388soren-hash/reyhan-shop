@@ -29,6 +29,7 @@ export function HomePromoBanners({ banners }: { banners: PromoBannerView[] }) {
                       alt={banner.title}
                       className="absolute inset-0 h-full w-full object-cover"
                       loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-l from-white/92 via-white/70 to-white/30" />
                   </>
@@ -41,9 +42,9 @@ export function HomePromoBanners({ banners }: { banners: PromoBannerView[] }) {
                 )}
 
                 <div className="relative max-w-lg">
-                  <h3 className="text-balance text-lg font-bold text-foreground sm:text-2xl">
+                  <h2 className="text-balance text-lg font-bold text-foreground sm:text-2xl">
                     {banner.title}
-                  </h3>
+                  </h2>
                   {banner.description && (
                     <p className="mt-2 text-sm leading-7 text-muted-foreground">
                       {banner.description}

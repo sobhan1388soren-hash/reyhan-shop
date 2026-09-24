@@ -194,10 +194,22 @@ async function storeRegisterIntent(intent: Omit<RegisterIntent, "createdAt">): P
 }> {
   const { randomUUID } = await import("node:crypto");
   const requestId = randomUUID();
-  registerIntents.set(requestId, { ...intent, createdAt: Date.now() });
+  const now = Date.now();
+  registerIntents.set(requestId, { ...intent, createdAt: now });
   // Expire intents after 10 minutes.
   for (const [key, value] of registerIntents) {
-    if (Date.now() - value.createdAt > 10 * 60 * 1000) registerIntents.delete(key);
+    if (now - value.createdAt > 10 * 60 * 1000) registerIntents.delete(key);
+  }
+  // Bound the store so unauthenticated callers cannot grow server memory
+  // without limit by spamming registration requests. Oldest first.
+  const MAX_REGISTER_INTENTS = 500;
+  if (registerIntents.size > MAX_REGISTER_INTENTS) {
+    const oldestFirst = [...registerIntents.entries()].sort(
+      (a, b) => a[1].createdAt - b[1].createdAt
+    );
+    for (const [key] of oldestFirst.slice(0, registerIntents.size - MAX_REGISTER_INTENTS)) {
+      registerIntents.delete(key);
+    }
   }
   return { requestId };
 }

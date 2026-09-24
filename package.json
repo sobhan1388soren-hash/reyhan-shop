@@ -22,7 +22,9 @@
     "test:blog": "node --test src/lib/blog/blog.test.mjs",
     "test:marketing": "node --test src/lib/marketing/marketing.test.mjs",
     "test:seo": "node --test src/lib/seo/seo.test.mjs",
-    "test": "node --test src/lib/checkout/checkout.test.mjs src/lib/payments/payments.test.mjs src/lib/reviews/reviews.test.mjs src/lib/discounts/discounts.test.mjs src/lib/admin/admin.test.mjs src/lib/admin/categories.test.mjs src/lib/admin/products.test.mjs src/lib/admin/orders-admin.test.mjs src/lib/admin/users-admin.test.mjs src/lib/admin/discounts-admin.test.mjs src/lib/admin/moderation-admin.test.mjs src/lib/blog/blog.test.mjs src/lib/marketing/marketing.test.mjs src/lib/seo/seo.test.mjs"
+    "test:security": "node --test src/lib/auth/security.test.mjs",
+    "seed:dev": "node prisma/seed-dev.mjs",
+    "test": "node --test src/lib/checkout/checkout.test.mjs src/lib/payments/payments.test.mjs src/lib/reviews/reviews.test.mjs src/lib/discounts/discounts.test.mjs src/lib/admin/admin.test.mjs src/lib/admin/categories.test.mjs src/lib/admin/products.test.mjs src/lib/admin/orders-admin.test.mjs src/lib/admin/users-admin.test.mjs src/lib/admin/discounts-admin.test.mjs src/lib/admin/moderation-admin.test.mjs src/lib/blog/blog.test.mjs src/lib/marketing/marketing.test.mjs src/lib/seo/seo.test.mjs src/lib/auth/security.test.mjs"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",

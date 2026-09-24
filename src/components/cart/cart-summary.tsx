@@ -110,7 +110,7 @@ export function CartSummary({ cart, updating }: CartSummaryProps) {
         )}
         {canProceed ? null : (
           cart.totalCount > 0 && (
-            <p role="status" className="text-[11px] font-medium text-amber-600">
+            <p role="status" className="text-[11px] font-medium text-amber-700">
               ابتدا وضعیت اقلام ناموجود را حل کنید (حذف یا تغییر گزینه) تا بتوانید ادامه دهید.
             </p>
           )

@@ -34,7 +34,8 @@ export type ProductReviewsSummary = {
 
 // Verified purchase = a paid, non-cancelled order containing this product.
 // Server-derived display fact (the submission gate lives in
-// src/lib/reviews/service — hasPurchasedProduct).
+// src/lib/reviews/service — hasPurchasedProduct). Distinct user ids keep the
+// payload bounded: one row per buyer, not one per order.
 async function getVerifiedReviewerIds(productId: string): Promise<Set<string>> {
   const orders = await prisma.order.findMany({
     where: {
@@ -44,6 +45,7 @@ async function getVerifiedReviewerIds(productId: string): Promise<Set<string>> {
       items: { some: { productId } },
     },
     select: { userId: true },
+    distinct: ["userId"],
   });
   return new Set(
     orders
@@ -58,7 +60,11 @@ export async function getProductReviews(
 ): Promise<ProductReviewsSummary> {
   return safe(
     async () => {
-      const [rows, total, verifiedIds] = await Promise.all([
+      // One parallel round: the page rows, a DB-side rating histogram (which
+      // yields total + average + distribution without fetching every rating
+      // row), and the verified-buyer set. Previously the average/distribution
+      // came from a SECOND, sequential, unbounded findMany of all ratings.
+      const [rows, ratingGroups, verifiedIds] = await Promise.all([
         prisma.review.findMany({
           where: { productId, status: "APPROVED" },
           orderBy: { createdAt: "desc" },
@@ -69,26 +75,29 @@ export async function getProductReviews(
             },
           },
         }),
-        prisma.review.count({ where: { productId, status: "APPROVED" } }),
+        prisma.review.groupBy({
+          by: ["rating"],
+          where: { productId, status: "APPROVED" },
+          _count: { _all: true },
+        }),
         getVerifiedReviewerIds(productId),
       ]);
 
       const distribution: Record<1 | 2 | 3 | 4 | 5, number> = {
         1: 0, 2: 0, 3: 0, 4: 0, 5: 0,
       };
-      const avgRows = await prisma.review.findMany({
-        where: { productId, status: "APPROVED" },
-        select: { rating: true },
-      });
-      for (const r of avgRows) {
-        const key = r.rating as 1 | 2 | 3 | 4 | 5;
-        if (key >= 1 && key <= 5) distribution[key] += 1;
+      let total = 0;
+      let weightedSum = 0;
+      for (const g of ratingGroups) {
+        const key = g.rating as 1 | 2 | 3 | 4 | 5;
+        if (key >= 1 && key <= 5) {
+          distribution[key] += g._count._all;
+          total += g._count._all;
+          weightedSum += g.rating * g._count._all;
+        }
       }
 
-      const average =
-        avgRows.length > 0
-          ? avgRows.reduce((sum, r) => sum + r.rating, 0) / avgRows.length
-          : null;
+      const average = total > 0 ? weightedSum / total : null;
 
       const items: ProductReview[] = rows.map((r) => ({
         id: r.id,

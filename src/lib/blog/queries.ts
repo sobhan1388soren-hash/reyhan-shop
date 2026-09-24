@@ -10,6 +10,7 @@
 // returned here. Drafts and archived posts are invisible to the public
 // site (draft preview happens only inside the admin console).
 
+import { cache } from "react";
 import prisma from "@/lib/prisma";
 import type { Prisma } from "@prisma/client";
 import type { PaginatedResult, PaginationMeta } from "@/lib/catalog/types";
@@ -158,7 +159,7 @@ export async function getBlogCategoryTree(): Promise<BlogCategoryView[]> {
   }, []);
 }
 
-export async function getBlogCategoryBySlug(
+async function fetchBlogCategoryBySlug(
   slug: string
 ): Promise<BlogCategoryView | null> {
   return safe(async () => {
@@ -185,6 +186,10 @@ export async function getBlogCategoryBySlug(
     };
   }, null);
 }
+
+// Request-memoized: the blog category/article generateMetadata + page each
+// resolve the same slug in one request (identical Prisma queries otherwise).
+export const getBlogCategoryBySlug = cache(fetchBlogCategoryBySlug);
 
 /** All descendants of a category (slug-based, for category-page filtering). */
 export async function getBlogCategoryDescendantIds(categoryId: string): Promise<string[]> {
@@ -265,7 +270,7 @@ export async function getFeaturedPosts(take = 3): Promise<BlogPostCard[]> {
   }, []);
 }
 
-export async function getPostBySlug(slug: string): Promise<BlogArticle | null> {
+async function fetchPostBySlug(slug: string): Promise<BlogArticle | null> {
   return safe(async () => {
     const post = await prisma.post.findFirst({
       where: { slug, status: "PUBLISHED" },
@@ -321,6 +326,9 @@ export async function getPostBySlug(slug: string): Promise<BlogArticle | null> {
     };
   }, null);
 }
+
+// Memoized for the same generateMetadata + page duplicate-fetch reason.
+export const getPostBySlug = cache(fetchPostBySlug);
 
 /** "More like this" — same-category articles, excluding the current one. */
 export async function getRelatedPosts(

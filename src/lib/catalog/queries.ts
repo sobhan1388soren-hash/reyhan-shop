@@ -1,3 +1,4 @@
+import { cache } from "react";
 import prisma from "@/lib/prisma";
 import type { Prisma, OrderStatus } from "@prisma/client";
 import type {
@@ -91,13 +92,19 @@ export async function getCategoryTree(): Promise<CatalogCategory[]> {
   }, []);
 }
 
-export async function getCategoryBySlug(slug: string): Promise<CatalogCategory | null> {
+// Request-memoized (React cache): generateMetadata + the page component run
+// in the same request and each resolves the same slug, so without this the
+// identical findUnique runs 2-4× per category/product page load. Prisma
+// queries are not auto-deduplicated — this collapses them to one.
+async function fetchCategoryBySlug(slug: string): Promise<CatalogCategory | null> {
   return safe(async () => {
     const found = await prisma.category.findUnique({ where: { slug } });
     if (!found) return null;
     return toCatalogCategory(found);
   }, null);
 }
+
+export const getCategoryBySlug = cache(fetchCategoryBySlug);
 
 export async function getCategoryByPath(path: string[]): Promise<CatalogCategory | null> {
   if (!path.length) return null;
@@ -139,7 +146,7 @@ export async function getCategoryAncestors(categoryId: string): Promise<CatalogC
   }, []);
 }
 
-export async function getCategoryDescendantIds(categoryId: string): Promise<string[]> {
+async function fetchCategoryDescendantIds(categoryId: string): Promise<string[]> {
   return safe(async () => {
     const ids: string[] = [categoryId];
     const queue: string[] = [categoryId];
@@ -161,6 +168,11 @@ export async function getCategoryDescendantIds(categoryId: string): Promise<stri
     return ids;
   }, [categoryId]);
 }
+
+// Memoized: the category page resolves descendants once directly and
+// getProductsPaginated/getAvailableSpecFilters resolve them again for the
+// same category inside the same request.
+export const getCategoryDescendantIds = cache(fetchCategoryDescendantIds);
 
 export async function getCategoryChildren(parentId: string | null): Promise<CatalogCategory[]> {
   return safe(async () => {
@@ -338,7 +350,7 @@ export async function getProductsPaginated(
   });
 }
 
-export async function getProductBySlug(slug: string): Promise<CatalogProduct | null> {
+async function fetchProductBySlug(slug: string): Promise<CatalogProduct | null> {
   return safe(async () => {
     const p = await prisma.product.findUnique({
       where: { slug },
@@ -353,6 +365,10 @@ export async function getProductBySlug(slug: string): Promise<CatalogProduct | n
     return toCatalogProduct(p);
   }, null);
 }
+
+// Memoized: generateMetadata and the page each fetch the same slug in one
+// request — this collapses the two identical heavyweight includes into one.
+export const getProductBySlug = cache(fetchProductBySlug);
 
 export async function getRelatedProducts(productId: string, categoryIds: string[], take = 4): Promise<CatalogProduct[]> {
   return safe(async () => {

@@ -13,6 +13,9 @@ export function MobileNav() {
   const [open, setOpen] = React.useState(false);
   const [productsOpen, setProductsOpen] = React.useState(true);
   const pathname = usePathname();
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
+  const closeRef = React.useRef<HTMLButtonElement>(null);
+  const wasOpenRef = React.useRef(false);
 
   // Note: drawer also closes via Link onClick handlers below; no pathname effect needed
   // pathname is still used for active state highlighting
@@ -38,6 +41,20 @@ export function MobileNav() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // Move focus into the dialog on open and return it to the trigger on
+  // close, so keyboard and screen-reader users are not left behind.
+  React.useEffect(() => {
+    if (open && !wasOpenRef.current) {
+      wasOpenRef.current = true;
+      // preventScroll: the drawer is fixed and body scroll is locked —
+      // don't yank the page behind it on touch devices.
+      closeRef.current?.focus({ preventScroll: true });
+    } else if (!open && wasOpenRef.current) {
+      wasOpenRef.current = false;
+      triggerRef.current?.focus();
+    }
+  }, [open]);
+
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(href + "/");
@@ -47,6 +64,7 @@ export function MobileNav() {
     <>
       {/* Trigger — visible below lg */}
       <button
+        ref={triggerRef}
         type="button"
         aria-label={open ? "بستن منو" : "باز کردن منو"}
         aria-expanded={open}
@@ -144,6 +162,7 @@ export function MobileNav() {
               </span>
             </Link>
             <button
+              ref={closeRef}
               type="button"
               aria-label="بستن منو"
               onClick={() => setOpen(false)}

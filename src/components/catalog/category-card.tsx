@@ -21,6 +21,7 @@ export function CategoryCard({
             alt={category.name}
             className="h-full w-full object-cover transition-transform group-hover:scale-105"
             loading="lazy"
+            decoding="async"
           />
         ) : (
           <MediaPlaceholder tone="blue" glyph="drop" label={category.name} />

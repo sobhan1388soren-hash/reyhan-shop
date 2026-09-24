@@ -13,7 +13,6 @@ import {
   getCategoryBySlug,
   getCategoryAncestors,
   getCategoryChildren,
-  getCategoryDescendantIds,
   getProductsPaginated,
   getAvailableSpecFilters,
 } from "@/lib/catalog/queries";
@@ -62,15 +61,16 @@ export default async function CategoryDetailPage({ params, searchParams }: PageP
   const scopedParams = { ...catalogParams, category: category.slug };
   const sort = parseSort(scopedParams.sort);
 
-  const [ancestors, children, descendantIds, result, specFilters] = await Promise.all([
+  // Note: descendant ids are resolved inside getProductsPaginated and
+  // getAvailableSpecFilters (request-memoized, so a single lookup serves all
+  // three) — no separate fetch here.
+  const [ancestors, children, result, specFilters] = await Promise.all([
     getCategoryAncestors(category.id),
     getCategoryChildren(category.id),
-    getCategoryDescendantIds(category.id),
     getProductsPaginated(scopedParams),
     getAvailableSpecFilters({ q: scopedParams.q, category: category.slug, sort }),
   ]);
 
-  void descendantIds;
   const urlParams = catalogParamsToUrlSearch(scopedParams);
   const basePath = `/categories/${category.slug}`;
 

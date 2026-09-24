@@ -152,6 +152,23 @@ export function ProductInfoTabs({
   ];
 
   const [activeTab, setActiveTab] = React.useState(sections[0]?.id);
+  const tabRefs = React.useRef(new Map<string, HTMLButtonElement>());
+
+  // APG tabs keyboard pattern (RTL-aware: ArrowLeft moves forward in RTL).
+  const onTabKeyDown = (e: React.KeyboardEvent, id: string) => {
+    const ids = sections.map((s) => s.id);
+    const i = ids.indexOf(id);
+    let next: string | null = null;
+    if (e.key === "ArrowLeft") next = ids[(i + 1) % ids.length] ?? null;
+    else if (e.key === "ArrowRight") next = ids[(i - 1 + ids.length) % ids.length] ?? null;
+    else if (e.key === "Home") next = ids[0] ?? null;
+    else if (e.key === "End") next = ids[ids.length - 1] ?? null;
+    if (next) {
+      e.preventDefault();
+      setActiveTab(next);
+      tabRefs.current.get(next)?.focus();
+    }
+  };
 
   return (
     <div>
@@ -169,7 +186,13 @@ export function ProductInfoTabs({
             aria-selected={activeTab === s.id}
             aria-controls={`panel-${s.id}`}
             id={`tab-${s.id}`}
+            tabIndex={activeTab === s.id ? 0 : -1}
+            ref={(el) => {
+              if (el) tabRefs.current.set(s.id, el);
+              else tabRefs.current.delete(s.id);
+            }}
             onClick={() => setActiveTab(s.id)}
+            onKeyDown={(e) => onTabKeyDown(e, s.id)}
             className={cn(
               "shrink-0 rounded-t-md border-b-2 px-4 py-2.5 text-sm font-medium transition-colors",
               activeTab === s.id

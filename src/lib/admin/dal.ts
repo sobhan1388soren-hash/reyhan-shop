@@ -8,7 +8,7 @@ import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
 import { getCurrentUser, type CurrentUser } from "@/lib/auth/dal";
-import { evaluateAdminAccess, type AdminAccess } from "./rules";
+import { evaluateAdminAccess, canManageUsersRole, type AdminAccess } from "./rules";
 
 export type AdminUser = CurrentUser & { adminRole: "ADMIN" | "STAFF" };
 
@@ -45,6 +45,18 @@ export const requireAdmin = cache(async (): Promise<AdminUser> => {
 export async function requireAdminForAction(): Promise<AdminUser> {
   return requireAdmin();
 }
+
+/**
+ * Require the ADMIN-only user-management capability (users list/detail).
+ * STAFF passes requireAdmin() but must NOT read customer PII — the role is
+ * re-resolved from the DATABASE user row (never session claims) and is
+ * deny-by-default. STAFF is redirected to /admin; signed-out to /login.
+ */
+export const requireUserManager = cache(async (): Promise<AdminUser> => {
+  const admin = await requireAdmin();
+  if (!canManageUsersRole(admin.role)) redirect("/admin");
+  return admin;
+});
 
 /** Lightweight boolean check for conditional UI (sidebar sections etc.). */
 export const isAdminSession = cache(async (): Promise<boolean> => {

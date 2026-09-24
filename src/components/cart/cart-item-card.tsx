@@ -52,7 +52,7 @@ export function CartItemCard({
   const titleBlock = (
     <>
       {item.issues.includes("price_changed") && item.previousPrice != null && (
-        <p className="text-xs font-medium text-amber-600">
+        <p className="text-xs font-medium text-amber-700">
           قیمت این کالا تغییر کرده است؛ قیمت فعلی اعمال می‌شود.
           <span className="ms-1 line-through opacity-70">
             {formatPriceToman(item.previousPrice)}
@@ -60,7 +60,7 @@ export function CartItemCard({
         </p>
       )}
       {item.issues.includes("stock_exceeded") && item.quantity > 0 && (
-        <p className="text-xs font-medium text-amber-600">
+        <p className="text-xs font-medium text-amber-700">
           {`موجودی انبار کمتر از تعداد درخواستی شماست؛ تعداد به ${toFaDigits(
             item.quantity
           )} عدد کاهش یافت.`}
@@ -232,7 +232,7 @@ export function CartItemCard({
               {availabilityLabel(item.availability)}
             </span>
             {item.purchasable && item.maxQuantity <= 5 && (
-              <span className="text-[11px] text-amber-600">
+              <span className="text-[11px] text-amber-700">
                 تنها {toFaDigits(item.maxQuantity)} عدد در انبار باقی مانده است
               </span>
             )}
@@ -305,6 +305,7 @@ function ItemImage({ item }: { item: ValidatedCartItem }) {
           alt={item.product.image.alt}
           className="size-full object-cover"
           loading="lazy"
+          decoding="async"
         />
       ) : (
         <svg aria-hidden="true" viewBox="0 0 24 24" className="size-8 text-muted-foreground/50" fill="none">
