@@ -141,6 +141,9 @@ model User {
   discountUsages DiscountUsage[]
   priceChanges   ProductPriceHistory[] @relation("PriceChangedBy")
   addresses      Address[]
+  priceAlerts    PriceAlert[]
+  stockAlerts    StockAlert[]
+  notificationLogs NotificationLog[]
 
   @@index([role])
   @@index([status])
@@ -309,6 +312,8 @@ model ProductVariant {
   cartItems    CartItem[]
   orderItems   OrderItem[]
   images       ProductImage[]
+  priceAlerts  PriceAlert[]
+  stockAlerts  StockAlert[]
 
   @@index([productId])
   @@index([isActive])
@@ -826,4 +831,81 @@ model Banner {
 
   @@index([placement, isActive, sortOrder])
   @@map("banners")
+}
+
+//
+// Alert / Notification infrastructure — Phase 21
+//
+// PriceAlert: user subscribes to price-drop notifications for a product variant.
+// StockAlert: user subscribes to back-in-stock notifications for a product variant.
+// One-shot: an alert fires once (status → false) and never again automatically.
+// NotificationLog: audit trail for every SMS sent so we never double-send.
+//
+
+enum NotificationType {
+  PRICE_DROP
+  BACK_IN_STOCK
+  ORDER_PLACED
+  ORDER_PAID
+  ORDER_SHIPPED
+}
+
+model PriceAlert {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  variantId String
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  initialPrice Int
+  targetPrice  Int?
+
+  status    Boolean  @default(true)
+  notifiedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, variantId])
+  @@index([variantId])
+  @@index([status])
+  @@map("price_alerts")
+}
+
+model StockAlert {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  variantId String
+  variant   ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  status    Boolean  @default(true)
+  notifiedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, variantId])
+  @@index([variantId])
+  @@index([status])
+  @@map("stock_alerts")
+}
+
+model NotificationLog {
+  id          String           @id @default(cuid())
+  userId      String
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        NotificationType
+  variantId   String?
+
+  message     String           @db.Text
+  status      String           @default("SENT")
+
+  sentAt      DateTime         @default(now())
+
+  @@index([userId])
+  @@index([variantId])
+  @@index([type])
+  @@index([sentAt])
+  @@map("notification_logs")
 }

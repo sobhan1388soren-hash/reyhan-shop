@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/dal";
-import { handleUserGatewayCallback } from "@/lib/payments/service";
+import { handleUserGatewayCallback, getUserOrderPayments } from "@/lib/payments/service";
+import { sendOrderPaidNotification } from "@/lib/notifications";
 
 // GET /api/payments/callback — ZarinPal returns the customer's browser
 // here with Authority + Status query params.
@@ -45,7 +46,24 @@ export async function GET(req: NextRequest) {
     });
 
     switch (outcome.kind) {
-      case "SUCCESS":
+      case "SUCCESS": {
+        const payments = await getUserOrderPayments(user.id, outcome.orderId);
+        const payment = payments[0];
+        if (payment?.orderNumber) {
+          sendOrderPaidNotification({
+            userId: user.id,
+            orderNumber: payment.orderNumber,
+          }).catch((err: unknown) =>
+            console.error("[NOTIFICATION] order paid failed:", err)
+          );
+        }
+        return NextResponse.redirect(
+          new URL(
+            resultUrl("/payment/result", { state: "success", order: outcome.orderId }),
+            req.nextUrl
+          )
+        );
+      }
       case "ALREADY_PAID":
         return NextResponse.redirect(
           new URL(

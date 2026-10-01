@@ -12,6 +12,8 @@ import { requireAdminForAction } from "@/lib/admin/dal";
 import { updateOrderStatus } from "@/lib/admin/order-service";
 import { ORDER_ADMIN_MESSAGES } from "@/lib/admin/order-admin-rules";
 import type { OrderAdminErrorCode } from "@/lib/admin/order-admin-rules";
+import { sendOrderShippedNotification } from "@/lib/notifications";
+import prisma from "@/lib/prisma";
 
 export type OrderActionState = {
   message?: string;
@@ -60,5 +62,23 @@ export async function updateOrderStatusAction(
   if (status === "RETURNED") {
     return { message: "سفارش به‌عنوان مرجوع‌شده ثبت شد." };
   }
+
+  if (status === "SHIPPED") {
+    const trackingCode = str(formData, "trackingCode");
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      select: { userId: true, orderNumber: true },
+    });
+    if (order?.userId) {
+      sendOrderShippedNotification({
+        userId: order.userId,
+        orderNumber: order.orderNumber,
+        trackingCode: trackingCode || undefined,
+      }).catch((err: unknown) =>
+        console.error("[NOTIFICATION] order shipped failed:", err)
+      );
+    }
+  }
+
   return { message: "وضعیت سفارش به‌روزرسانی شد." };
 }

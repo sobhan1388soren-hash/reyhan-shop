@@ -21,6 +21,7 @@ import {
 import { resolveShippingMethod, calculateShippingCost } from "@/lib/checkout/shipping";
 import { evaluateDiscountForCheckout } from "@/lib/discounts/service";
 import { DISCOUNT_REJECT_MESSAGES } from "@/lib/discounts/rules";
+import { sendOrderPlacedNotification } from "@/lib/notifications";
 import type { CheckoutFormState } from "@/lib/checkout/types";
 import type { CartValidationResult } from "@/lib/cart/types";
 
@@ -276,5 +277,10 @@ export async function submitCheckout(
 
   // Success — hard redirect to the order page (PRG; the client also
   // clears the guest cart via the success route's own effect).
+  // Best-effort SMS notification; failure does not affect the order.
+  sendOrderPlacedNotification({ userId: user.id, orderNumber: order.orderNumber }).catch(
+    (err: unknown) => console.error("[NOTIFICATION] order placed failed:", err)
+  );
+
   redirect(`/account/orders/${order.id}?placed=1`);
 }

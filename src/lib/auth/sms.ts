@@ -1,21 +1,25 @@
 // SMS provider abstraction — provider-agnostic OTP delivery.
-// The concrete Iranian SMS provider (Kavenegar, SMS.ir, Farapayamak, …)
-// will be configured later via environment variables; the auth system
-// depends only on this interface.
+// The concrete providers are selected via the SMS_PROVIDER env var; the
+// auth system depends only on the SmsOtpSender interface.
+//
+// Server-only: this module reads process.env secrets (KAVENEGAR_API_KEY)
+// and must never be imported by client code. All provider selection and
+// response mapping is delegated to the pure, DB-free ./sms-providers.ts
+// module so the fail-closed decisions stay unit-testable.
 
 import "server-only";
 import { isConsoleSmsDeliveryAllowed } from "./guards.ts";
+import {
+  SMS_PROVIDER_CONSOLE,
+  SMS_PROVIDER_KAVENEGAR,
+  createKavenegarSmsSender,
+  resolveSmsProvider,
+  type SmsDeliveryResult,
+  type SmsOtpSender,
+} from "./sms-providers.ts";
 
-export type SmsDeliveryResult = {
-  ok: boolean;
-  // Never include the OTP code in error messages exposed to the client.
-  error?: string;
-};
-
-export interface SmsOtpSender {
-  /** Send the OTP message to the given normalized phone (98912xxxxxxx). */
-  sendOtp(phoneNumber: string, code: string): Promise<SmsDeliveryResult>;
-}
+// Re-export the shared contract for existing importers.
+export type { SmsDeliveryResult, SmsOtpSender };
 
 // ── Development provider ──────────────────────────────────────────────
 // Logs the OTP to the server console only when explicitly enabled via
@@ -47,16 +51,23 @@ const consoleSmsSender: ConsoleSmsSender = {
 // ── Registry ──────────────────────────────────────────────────────────
 
 function resolveSender(): SmsOtpSender {
-  const provider = process.env.SMS_PROVIDER;
-  switch (provider) {
-    case undefined:
-    case "":
-    case "console":
-      return consoleSmsSender;
+  const resolution = resolveSmsProvider(process.env);
+  if (resolution.unrecognized) {
+    // Unknown provider key — fail closed with a safe console sender so
+    // flows remain testable; real providers are only used when explicitly
+    // selected with a matching configuration.
+    console.warn(
+      `[SMS] Unknown SMS_PROVIDER "${process.env.SMS_PROVIDER}" — using console sender.`
+    );
+    return consoleSmsSender;
+  }
+  switch (resolution.key) {
+    case SMS_PROVIDER_KAVENEGAR:
+      // The Kavenegar sender fails closed on its own when the API key is
+      // missing — it never falls back to the console sender.
+      return createKavenegarSmsSender(process.env);
+    case SMS_PROVIDER_CONSOLE:
     default:
-      // Unknown provider key — fail closed with a safe console sender so
-      // flows remain testable; replace with real providers when selected.
-      console.warn(`[SMS] Unknown SMS_PROVIDER "${provider}" — using console sender.`);
       return consoleSmsSender;
   }
 }
