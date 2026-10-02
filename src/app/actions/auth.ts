@@ -33,11 +33,11 @@ export async function requestLoginOtp(
 
   try {
     const user = await prisma.user.findUnique({ where: { phone } });
+    // Use a single generic message to prevent user enumeration.
     if (!user || user.status !== "ACTIVE") {
-      // Do not reveal whether the number is registered.
       return {
         step: "phone",
-        error: "حساب کاربری با این شماره یافت نشد. ابتدا ثبت‌نام کنید.",
+        error: "اطلاعات واردشده صحیح نیست. لطفاً دوباره تلاش کنید.",
       };
     }
 
@@ -91,8 +91,9 @@ export async function verifyLoginOtp(
     }
 
     const user = await prisma.user.findUnique({ where: { phone } });
+    // Use a single generic message to prevent user enumeration.
     if (!user || user.status !== "ACTIVE") {
-      return { step: "phone", error: "حساب کاربری با این شماره یافت نشد." };
+      return { step: "phone", error: "اطلاعات واردشده صحیح نیست. لطفاً دوباره تلاش کنید." };
     }
 
     await prisma.user.update({
@@ -139,10 +140,13 @@ export async function requestRegisterOtp(
 
   try {
     const existing = await prisma.user.findUnique({ where: { phone } });
+    // Use a generic message to prevent user enumeration — whether the
+    // number is already registered or something else went wrong, the caller
+    // gets the same response so they cannot discover registered accounts.
     if (existing) {
       return {
         step: "phone",
-        fieldErrors: { phone: "این شماره قبلاً ثبت‌نام کرده است. وارد شوید." },
+        fieldErrors: { phone: "ثبت‌نام با این شماره ممکن نیست. لطفاً با پشتیبانی تماس بگیرید." },
       };
     }
 

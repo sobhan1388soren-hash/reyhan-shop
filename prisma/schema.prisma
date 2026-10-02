@@ -144,6 +144,7 @@ model User {
   priceAlerts    PriceAlert[]
   stockAlerts    StockAlert[]
   notificationLogs NotificationLog[]
+  wishlists      Wishlist[]
 
   @@index([role])
   @@index([status])
@@ -908,4 +909,51 @@ model NotificationLog {
   @@index([type])
   @@index([sentAt])
   @@map("notification_logs")
+}
+
+//
+// Wishlist — Phase 22
+// Supports personal wishlists and shareable public links.
+// Images are URL-only (no upload/storage infra).
+//
+
+model Wishlist {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Shareable link — null means the wishlist is private (personal only).
+  shareId   String?  @unique
+  shareSlug String?  @unique
+
+  // Whether this wishlist is publicly accessible via share link.
+  isPublic  Boolean  @default(false)
+
+  title     String   @default("لیست علاقه‌مندی‌ها") // Persian default title
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items     WishlistItem[]
+
+  @@index([userId])
+  @@index([shareId])
+  @@map("wishlists")
+}
+
+model WishlistItem {
+  id         String   @id @default(cuid())
+  wishlistId String
+  wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+
+  productId  String
+  variantId  String? // optional — user may be interested in a specific variant
+
+  notes      String?  @db.Text // optional user notes about this item
+
+  addedAt    DateTime @default(now())
+
+  @@unique([wishlistId, productId, variantId])
+  @@index([wishlistId])
+  @@map("wishlist_items")
 }

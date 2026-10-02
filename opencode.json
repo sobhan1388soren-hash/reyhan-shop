@@ -17,6 +17,25 @@
         },
         "apmix/deepseek-v4-flash-free": {
           "name": "APMIX DeepSeek V4 Flash Free"
+        },
+        "UnoRouter/k2-horizon:free": {
+          "name": "K2 Horizon Free"
+        }
+      }
+    },
+    "dahl": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Dahl Global",
+      "options": {
+        "baseURL": "https://inference.dahl.global/v1",
+        "apiKey": "dahl_AggDbGoum4TTdVN9gaPCFTBba2HxozNzq"
+      },
+      "models": {
+        "deepseek-ai/DeepSeek-V4-Flash-0731": {
+          "name": "DeepSeek V4 Flash"
+        },
+        "MiniMaxAI/MiniMax-M2.7": {
+          "name": "MiniMax M2.7"
         }
       }
     }
