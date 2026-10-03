@@ -3,6 +3,9 @@ import { defineConfig } from "prisma/config";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
+  migrations: {
+    seed: "node prisma/seed-dev.mjs",
+  },
   datasource: {
     // Prisma 7's config Datasource has no `directUrl` field, so the CLI
     // (migrate/db pull) resolves everything from this `url`. Point it at the
