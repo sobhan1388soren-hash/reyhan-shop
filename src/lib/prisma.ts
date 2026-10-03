@@ -44,7 +44,7 @@ function normalizeConnectionString(raw: string | undefined): string | null {
 function createClient(): PrismaClient {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { PrismaClient: Client } = require("@prisma/client") as typeof import("@prisma/client");
-  const url = normalizeConnectionString(process.env.DATABASE_URL);
+  const url = normalizeConnectionString(process.env.DIRECT_URL ?? process.env.DATABASE_URL);
   if (!url) {
     throw new Error(
       "[prisma] DATABASE_URL is not set or invalid — configure it in the environment"
