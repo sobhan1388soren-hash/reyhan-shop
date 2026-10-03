@@ -19,7 +19,7 @@ export async function getWishlistByUserId(userId: string): Promise<WishlistResul
       include: {
         items: {
           orderBy: { addedAt: "desc" },
-          include: { variantId: true },
+          include: { variant: true },
         },
       },
     });
@@ -70,8 +70,8 @@ export async function addToWishlist(
   variantId?: string
 ): Promise<{ state: "ok" } | { state: "error" } | { state: "exists" }> {
   try {
-    const existing = await prisma.wishlistItem.findUnique({
-      where: { wishlistId_productId_variantId: { wishlistId, productId, variantId: variantId ?? null } },
+    const existing = await prisma.wishlistItem.findFirst({
+      where: { wishlistId, productId, variantId: variantId ?? null },
     });
     if (existing) return { state: "exists" };
 

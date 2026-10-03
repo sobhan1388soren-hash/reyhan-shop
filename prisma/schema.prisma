@@ -266,6 +266,7 @@ model Product {
   orderItems       OrderItem[]
   discountProducts DiscountProduct[]
   blogPosts        PostProductRelation[]
+  wishlistItems    WishlistItem[]
 
   @@index([status])
   @@index([isFeatured])
@@ -315,6 +316,7 @@ model ProductVariant {
   images       ProductImage[]
   priceAlerts  PriceAlert[]
   stockAlerts  StockAlert[]
+  wishlistItems WishlistItem[]
 
   @@index([productId])
   @@index([isActive])
@@ -919,8 +921,8 @@ model NotificationLog {
 
 model Wishlist {
   id        String   @id @default(cuid())
-  userId    String?
-  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Shareable link — null means the wishlist is private (personal only).
   shareId   String?  @unique
@@ -936,7 +938,7 @@ model Wishlist {
 
   items     WishlistItem[]
 
-  @@index([userId])
+  @@unique([userId])
   @@index([shareId])
   @@map("wishlists")
 }
@@ -947,7 +949,9 @@ model WishlistItem {
   wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
 
   productId  String
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   variantId  String? // optional — user may be interested in a specific variant
+  variant    ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
 
   notes      String?  @db.Text // optional user notes about this item
 

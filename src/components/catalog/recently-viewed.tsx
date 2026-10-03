@@ -7,7 +7,7 @@ import { readRecentSlugs } from "@/lib/recently-viewed/storage";
 import type { CatalogProduct } from "@/lib/catalog/types";
 import { ProductCard } from "@/components/catalog/product-card";
 import { Container } from "@/components/layout/container";
-import { SectionHeading } from "@/components/home/section-heading";
+import { HomeSectionHeading } from "@/components/home/section-heading";
 
 async function fetchProductsBySlugs(slugs: string[]): Promise<CatalogProduct[]> {
   if (slugs.length === 0) return [];
@@ -43,9 +43,9 @@ export function RecentlyViewedSection() {
   return (
     <section className="py-8">
       <Container>
-        <SectionHeading
+        <HomeSectionHeading
           title="بازدیدهای اخیر"
-          subtitle="محصولاتی که اخیراً مشاهده کرده‌اید"
+          description="محصولاتی که اخیراً مشاهده کرده‌اید"
         />
         <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {products.map((product) => (

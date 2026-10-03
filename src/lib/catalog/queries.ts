@@ -186,7 +186,7 @@ export async function getCategoryChildren(parentId: string | null): Promise<Cata
 
 // ── Product queries ────────────────────────────────────────────────────
 
-function toCatalogProduct(raw: ProductWithRelations): CatalogProduct {
+export function toCatalogProduct(raw: ProductWithRelations): CatalogProduct {
   const variants = raw.variants.map((v) => ({
     id: v.id,
     title: v.title,

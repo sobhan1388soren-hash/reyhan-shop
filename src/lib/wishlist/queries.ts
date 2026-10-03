@@ -1,36 +1,30 @@
 // Wishlist queries — server-only read layer for wishlist data.
 
 import prisma from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 import type { CatalogProduct } from "@/lib/catalog/types";
 import { toCatalogProduct } from "@/lib/catalog/queries";
+
+const productInclude = {
+  categories: { include: { category: { select: { id: true, name: true, slug: true } } } },
+  variants: { include: { inventory: true } },
+  specifications: true,
+  images: { orderBy: { sortOrder: "asc" } as const },
+} satisfies Prisma.ProductInclude;
 
 export async function getWishlistProducts(wishlistId: string): Promise<CatalogProduct[]> {
   const items = await prisma.wishlistItem.findMany({
     where: { wishlistId },
     orderBy: { addedAt: "desc" },
     include: {
-      variantId: {
-        include: {
-          product: {
-            include: {
-              categories: { include: { category: true } },
-              specifications: true,
-              images: true,
-              variants: true,
-            },
-          },
-        },
-      },
+      product: { include: productInclude },
     },
   });
 
   const products: CatalogProduct[] = [];
   for (const item of items) {
-    const variant = item.variantId;
-    if (!variant) continue;
-    const product = variant.product;
-    if (product.status !== "ACTIVE") continue;
-    products.push(toCatalogProduct(product));
+    if (item.product.status !== "ACTIVE") continue;
+    products.push(toCatalogProduct(item.product));
   }
   return products;
 }
