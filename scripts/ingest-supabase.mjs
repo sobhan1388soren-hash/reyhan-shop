@@ -2,6 +2,11 @@
 // Supabase JS SDK (Plan B). Reads scripts/data/reyhan-catalog.json, upserts
 // categories/products/variants/inventories/images/specifications/banners.
 //
+// ID policy: the schema relies on Prisma's client-side CUID defaults, so the
+// Postgres columns have NO default. Every insert must supply an `id`
+// explicitly. For idempotency we reuse an existing row's id (looked up by its
+// natural unique key) and only generate a new UUID when the row is new.
+//
 // Idempotent via upsert on unique keys (slug / sku / composite PKs). No
 // destructive deletes; never touches users/orders/payments/reviews.
 //
@@ -19,6 +24,7 @@
 
 import "dotenv/config";
 import { readFile } from "node:fs/promises";
+import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -47,20 +53,21 @@ const DATA_PATH =
 
 const data = JSON.parse(await readFile(DATA_PATH, "utf8"));
 
-async function upsert(table, rows, onConflict) {
-  if (!rows?.length) return { inserted: 0, matched: 0 };
-  const { data: result, error } = await supabase
-    .from(table)
-    .upsert(rows, { onConflict, ignoreDuplicates: false });
-  if (error) throw new Error(`${table} upsert failed: ${error.message}`);
-  return { result: result ?? [], count: rows.length };
-}
-
 console.log(`[ingest] role=${isServiceRole ? "SERVICE_ROLE" : "ANON"} — url=${url}`);
 console.log(`[ingest] data file: ${DATA_PATH}`);
 console.log(
   `[ingest] categories=${data.categories?.length ?? 0}, products=${data.products?.length ?? 0}, banners=${data.banners?.length ?? 0}`
 );
+
+// ── ID + timestamp helpers ─────────────────────────────────────────────────
+// The schema's Prisma-managed fields (id, updatedAt) have NO DB default;
+// createdAt defaults to CURRENT_TIMESTAMP. We supply updatedAt explicitly.
+function idFor(existing, fallbackId) {
+  return existing?.id ?? fallbackId ?? randomUUID();
+}
+function nowIso() {
+  return new Date().toISOString();
+}
 
 const categoryBySlug = new Map();
 let catCreated = 0, catMatched = 0;
@@ -73,13 +80,15 @@ for (const cat of (data.categories ?? [])) {
     parentId = parent.id;
   }
 
-  const exists = await supabase
+  const { data: existing, error: existsErr } = await supabase
     .from("categories")
     .select("id")
     .eq("slug", cat.slug)
     .maybeSingle();
+  if (existsErr) throw new Error(`category lookup failed for ${cat.slug}: ${existsErr.message}`);
 
   const row = {
+    id: idFor(existing),
     name: cat.name,
     slug: cat.slug,
     description: cat.description ?? null,
@@ -89,7 +98,8 @@ for (const cat of (data.categories ?? [])) {
     status: cat.status ?? "ACTIVE",
     seoTitle: cat.seoTitle ?? null,
     seoDescription: cat.seoDescription ?? null,
-    ...(parentId ? { parentId } : { parentId: null }),
+    parentId,
+    updatedAt: nowIso(),
   };
 
   const { data: created, error } = await supabase
@@ -100,7 +110,7 @@ for (const cat of (data.categories ?? [])) {
 
   if (error) throw new Error(`category upsert failed for ${cat.slug}: ${error.message}`);
   categoryBySlug.set(cat.slug, created);
-  if (exists.data) catMatched++;
+  if (existing) catMatched++;
   else catCreated++;
 }
 
@@ -109,11 +119,12 @@ console.log(`[ingest] categories — created: ${catCreated}, matched: ${catMatch
 let prodCreated = 0, prodMatched = 0;
 
 for (const p of (data.products ?? [])) {
-  const existingProduct = await supabase
+  const { data: existingProduct, error: prodExistsErr } = await supabase
     .from("products")
     .select("id")
     .eq("slug", p.slug)
     .maybeSingle();
+  if (prodExistsErr) throw new Error(`product lookup failed for ${p.slug}: ${prodExistsErr.message}`);
 
   const categoryIds = [];
   for (const slug of p.categorySlugs ?? []) {
@@ -123,6 +134,7 @@ for (const p of (data.products ?? [])) {
   }
 
   const productRow = {
+    id: idFor(existingProduct),
     title: p.title,
     slug: p.slug,
     description: p.description ?? null,
@@ -133,6 +145,7 @@ for (const p of (data.products ?? [])) {
     seoTitle: p.seoTitle ?? null,
     seoDescription: p.seoDescription ?? null,
     seoKeywords: p.seoKeywords ?? null,
+    updatedAt: nowIso(),
   };
 
   const { data: product, error: pErr } = await supabase
@@ -142,24 +155,29 @@ for (const p of (data.products ?? [])) {
     .single();
 
   if (pErr) throw new Error(`product upsert failed for ${p.slug}: ${pErr.message}`);
-  if (existingProduct.data) prodMatched++;
+  if (existingProduct) prodMatched++;
   else prodCreated++;
 
   for (const catId of categoryIds) {
     const { error: linkErr } = await supabase
       .from("product_categories")
-      .upsert({ productId: product.id, categoryId: catId }, { onConflict: "productId,categoryId" });
+      .upsert(
+        { productId: product.id, categoryId: catId },
+        { onConflict: "productId,categoryId" }
+      );
     if (linkErr) throw new Error(`product_category link failed: ${linkErr.message}`);
   }
 
   for (const v of p.variants ?? []) {
-    const existingVariant = await supabase
+    const { data: existingVariant, error: varExistsErr } = await supabase
       .from("product_variants")
       .select("id")
       .eq("sku", v.sku)
       .maybeSingle();
+    if (varExistsErr) throw new Error(`variant lookup failed for ${v.sku}: ${varExistsErr.message}`);
 
     const variantRow = {
+      id: idFor(existingVariant),
       productId: product.id,
       title: v.title,
       sku: v.sku,
@@ -171,6 +189,7 @@ for (const p of (data.products ?? [])) {
       isDefault: v.isDefault ?? false,
       isActive: v.isActive ?? true,
       sortOrder: v.sortOrder ?? 0,
+      updatedAt: nowIso(),
     };
 
     const { data: variant, error: vErr } = await supabase
@@ -181,47 +200,73 @@ for (const p of (data.products ?? [])) {
 
     if (vErr) throw new Error(`variant upsert failed for ${v.sku}: ${vErr.message}`);
 
+    // Inventory — unique on variantId.
+    const { data: existingInv } = await supabase
+      .from("inventories")
+      .select("id")
+      .eq("variantId", variant.id)
+      .maybeSingle();
+
     const invRow = {
+      id: idFor(existingInv),
       variantId: variant.id,
       quantity: v.quantity ?? 0,
       reservedQuantity: 0,
       lowStockThreshold: v.lowStockThreshold ?? 5,
+      updatedAt: nowIso(),
     };
     const { error: invErr } = await supabase
       .from("inventories")
       .upsert(invRow, { onConflict: "variantId" });
     if (invErr) throw new Error(`inventory upsert failed for ${v.sku}: ${invErr.message}`);
 
+    // Images — no natural unique key on (url, productId), so reconcile by
+    // lookup: reuse an existing matching image id, else insert a new row.
     for (const img of p.images ?? []) {
+      const { data: existingImg } = await supabase
+        .from("product_images")
+        .select("id")
+        .eq("productId", product.id)
+        .eq("url", img.url)
+        .maybeSingle();
+
       const { error: imgErr } = await supabase
         .from("product_images")
         .upsert(
           {
+            id: idFor(existingImg),
             productId: product.id,
             variantId: v.isDefault ? null : variant.id,
             url: img.url,
             alt: img.alt ?? p.title,
             sortOrder: img.sortOrder ?? 0,
           },
-          { onConflict: "url,productId" }
+          { onConflict: "id" }
         );
-      if (imgErr && !/duplicate key|unique violation/i.test(imgErr.message)) {
-        throw new Error(`image upsert failed: ${imgErr.message}`);
-      }
+      if (imgErr) throw new Error(`image upsert failed: ${imgErr.message}`);
     }
   }
 
   for (const spec of p.specifications ?? []) {
+    const { data: existingSpec } = await supabase
+      .from("product_specifications")
+      .select("id")
+      .eq("productId", product.id)
+      .eq("key", spec.key)
+      .maybeSingle();
+
     const { error: specErr } = await supabase
       .from("product_specifications")
       .upsert(
         {
+          id: idFor(existingSpec),
           productId: product.id,
           key: spec.key,
           value: spec.value,
           sortOrder: spec.sortOrder ?? 0,
+          updatedAt: nowIso(),
         },
-        { onConflict: "productId,key" }
+        { onConflict: "id" }
       );
     if (specErr) throw new Error(`spec upsert failed for ${spec.key}: ${specErr.message}`);
   }
@@ -230,10 +275,19 @@ for (const p of (data.products ?? [])) {
 console.log(`[ingest] products — created: ${prodCreated}, matched: ${prodMatched}`);
 
 for (const b of data.banners ?? []) {
+  // Banners have no natural unique key; reconcile by (placement, title).
+  const { data: existingBanner } = await supabase
+    .from("banners")
+    .select("id")
+    .eq("placement", b.placement)
+    .eq("title", b.title)
+    .maybeSingle();
+
   const { error } = await supabase
     .from("banners")
     .upsert(
       {
+        id: idFor(existingBanner),
         placement: b.placement,
         title: b.title,
         description: b.description ?? null,
@@ -244,6 +298,7 @@ for (const b of data.banners ?? []) {
         secondaryLinkLabel: b.secondaryLinkLabel ?? null,
         isActive: b.isActive ?? false,
         sortOrder: b.sortOrder ?? 0,
+        updatedAt: nowIso(),
       },
       { onConflict: "id" }
     );
@@ -252,7 +307,7 @@ for (const b of data.banners ?? []) {
 
 console.log(`[ingest] banners — ${data.banners?.length ?? 0} upserted`);
 
-const { data: counts, error: cErr } = await supabase
+const { data: totalRows, error: cErr } = await supabase
   .from("products")
   .select("id", { count: "exact", head: true });
 if (cErr) throw new Error(`verification count failed: ${cErr.message}`);
@@ -260,6 +315,6 @@ const { count } = await supabase
   .from("products")
   .select("id", { count: "exact", head: true })
   .eq("status", "ACTIVE");
-console.log(`[ingest] verification — total products: ${counts?.length ?? 0}, ACTIVE: ${count}`);
+console.log(`[ingest] verification — total products: ${totalRows?.length ?? 0}, ACTIVE: ${count}`);
 
 console.log("[ingest] Done — idempotent, no destructive deletes.");
