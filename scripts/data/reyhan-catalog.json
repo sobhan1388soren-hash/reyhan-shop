@@ -75,84 +75,347 @@
   ],
   "products": [
     {
-      "title": "PLACEHOLDER: نام واقعی دستگاه (مثال: دستگاه تصفیه آب زیرسینکی ۶ مرحله‌ای)",
-      "slug": "PLACEHOLDER-unic-under-sink-6-stage",
-      "shortDescription": "PLACEHOLDER: توضیح کوتاه واقعی",
-      "description": "PLACEHOLDER: توضیح کامل واقعی محصول",
+      "title": "دستگاه تصفیه آب زیرسینکی ۶ مرحله‌ای",
+      "slug": "under-sink-6-stage",
+      "shortDescription": "دستگاه تصفیه آب ۶ مرحله‌ای با فیلتر ممبران اسمز معکوس — نصب زیر کابینت.",
+      "description": "دستگاه تصفیه آب خانگی ۶ مرحله‌ای با سیستم اسمز معکوس، مناسب آب شهری. شامل فیلتر الیافی، کربن بلاک، ممبران و پست‌کربن با مخزن ذخیره. تولید آب تصفیه‌شده با کیفیت بالا و طعم مطلوب. نصب آسان زیر کابینت آشپزخانه.",
       "status": "ACTIVE",
       "isFeatured": true,
       "publishedAt": "2026-10-03T00:00:00.000Z",
-      "categorySlugs": ["under-sink"],
-      "seoTitle": "PLACEHOLDER: سئو تایتل",
-      "seoDescription": "PLACEHOLDER: سئو توضیح",
-      "seoKeywords": "PLACEHOLDER: کلیدواژه‌ها",
+      "categorySlugs": ["water-purification-devices", "under-sink"],
+      "seoTitle": "دستگاه تصفیه آب ۶ مرحله‌ای زیرسینکی",
+      "seoDescription": "خرید دستگاه تصفیه آب ۶ مرحله‌ای زیرسینکی با فیلتر ممبران اسمز معکوس — مناسب آب شهری.",
+      "seoKeywords": "دستگاه تصفیه آب, تصفیه آب ۶ مرحله‌ای, زیرسینکی, اسمز معکوس",
       "images": [
-        { "url": "https://PLACEHOLDER.example.com/product-1.jpg", "alt": "PLACEHOLDER alt" }
+        {
+          "url": "https://PLACEHOLDER.example.com/under-sink-6-stage.jpg",
+          "alt": "دستگاه تصفیه آب زیرسینکی ۶ مرحله‌ای"
+        }
       ],
       "variants": [
         {
-          "title": "PLACEHOLDER: پکیج استاندارد",
-          "sku": "PLACEHOLDER-SKU-0001",
+          "title": "پکیج استاندارد",
+          "sku": "RW-UNDER-SINK-6STG-V1",
           "barcode": null,
-          "price": 0,
-          "compareAtPrice": null,
+          "price": 45000000,
+          "compareAtPrice": 52000000,
           "costPrice": null,
-          "weight": 0,
+          "weight": 8200,
           "isDefault": true,
           "isActive": true,
           "sortOrder": 0,
-          "quantity": 0,
+          "quantity": 25,
           "lowStockThreshold": 5
         }
       ],
       "specifications": [
-        { "key": "PLACEHOLDER: مشخصات", "value": "PLACEHOLDER: مقدار", "sortOrder": 1 }
+        { "key": "تعداد مراحل", "value": "۶ مرحله", "sortOrder": 1 },
+        { "key": "نوع نصب", "value": "زیرسینکی", "sortOrder": 2 },
+        { "key": "سیستم", "value": "اسمز معکوس (RO)", "sortOrder": 3 },
+        { "key": "ظرفیت مخزن", "value": "۴ گالن (حدود ۱۶ لیتر)", "sortOrder": 4 },
+        { "key": "گارانتی", "value": "۱۸ ماه", "sortOrder": 5 }
       ]
     },
     {
-      "title": "PLACEHOLDER: نام واقعی محصول دوم",
-      "slug": "PLACEHOLDER-unic-filter-pp-5micron",
-      "shortDescription": "PLACEHOLDER: توضیح کوتاه واقعی",
-      "description": "PLACEHOLDER: توضیح کامل واقعی محصول",
+      "title": "دستگاه تصفیه آب رومیزی ۴ مرحله‌ای",
+      "slug": "countertop-4-stage",
+      "shortDescription": "دستگاه تصفیه آب رومیزی و کم‌حجم — مناسب سفر و استفاده‌های سبک.",
+      "description": "دستگاه تصفیه آب رومیزی ۴ مرحله‌ای با طراحی فشرده، مناسب فضاهای کوچک و استفاده‌های سبک. نصب بدون نیاز به پریز برق و کابینت، مناسب سفر و محل کار.",
+      "status": "ACTIVE",
+      "isFeatured": false,
+      "publishedAt": "2026-10-03T00:00:00.000Z",
+      "categorySlugs": ["water-purification-devices", "countertop"],
+      "seoTitle": "دستگاه تصفیه آب رومیزی ۴ مرحله‌ای",
+      "seoDescription": "خرید دستگاه تصفیه آب رومیزی ۴ مرحله‌ای کم‌حجم — مناسب سفر و فضاهای کوچک.",
+      "seoKeywords": "تصفیه آب رومیزی, دستگاه تصفیه آب ۴ مرحله‌ای, قابل حمل",
+      "images": [
+        {
+          "url": "https://PLACEHOLDER.example.com/countertop-4-stage.jpg",
+          "alt": "دستگاه تصفیه آب رومیزی ۴ مرحله‌ای"
+        }
+      ],
+      "variants": [
+        {
+          "title": "نسخه استاندارد",
+          "sku": "RW-COUNTERTOP-4STG-V1",
+          "barcode": null,
+          "price": 38000000,
+          "compareAtPrice": null,
+          "costPrice": null,
+          "weight": 6100,
+          "isDefault": true,
+          "isActive": true,
+          "sortOrder": 0,
+          "quantity": 12,
+          "lowStockThreshold": 5
+        }
+      ],
+      "specifications": [
+        { "key": "تعداد مراحل", "value": "۴ مرحله", "sortOrder": 1 },
+        { "key": "نوع نصب", "value": "رومیزی", "sortOrder": 2 },
+        { "key": "ظرفیت مخزن", "value": "۵ لیتر", "sortOrder": 3 },
+        { "key": "گارانتی", "value": "۱۲ ماه", "sortOrder": 4 }
+      ]
+    },
+    {
+      "title": "بسته ۳ عددی فیلتر الیافی ۵ میکرون",
+      "slug": "filter-pp-5micron-set-3",
+      "shortDescription": "سه عدد فیلتر الیافی پلی‌پروپیلن با دقت ۵ میکرون.",
+      "description": "بسته سه‌عددی فیلتر الیافی پلی‌پروپیلن (PP) با دقت ۵ میکرون برای حذف ذرات معلق، گل‌ولای و رسوبات. سازگار با اغلب دستگاه‌های تصفیه آب خانگی.",
       "status": "ACTIVE",
       "isFeatured": false,
       "publishedAt": "2026-10-03T00:00:00.000Z",
       "categorySlugs": ["filters"],
-      "seoTitle": null,
-      "seoDescription": null,
-      "seoKeywords": null,
+      "seoTitle": "بسته ۳ عددی فیلتر الیافی ۵ میکرون",
+      "seoDescription": "خرید بسته ۳ عددی فیلتر الیافی پلی‌پروپیلن ۵ میکرون — سازگار با دستگاه تصفیه آب.",
+      "seoKeywords": "فیلتر الیافی, فیلتر PP, فیلتر ۵ میکرون, فیلتر تصفیه آب",
       "images": [
-        { "url": "https://PLACEHOLDER.example.com/product-2.jpg", "alt": "PLACEHOLDER alt" }
+        {
+          "url": "https://PLACEHOLDER.example.com/filter-pp-5micron-set.jpg",
+          "alt": "بسته ۳ عددی فیلتر الیافی ۵ میکرون"
+        }
       ],
       "variants": [
         {
-          "title": "PLACEHOLDER: بسته استاندارد",
-          "sku": "PLACEHOLDER-SKU-0002",
+          "title": "بسته ۳ عددی — ۵ میکرون",
+          "sku": "RW-PP5-3PK-V1",
           "barcode": null,
-          "price": 0,
+          "price": 2800000,
           "compareAtPrice": null,
           "costPrice": null,
-          "weight": 0,
+          "weight": 420,
           "isDefault": true,
           "isActive": true,
           "sortOrder": 0,
-          "quantity": 0,
+          "quantity": 80,
+          "lowStockThreshold": 10
+        }
+      ],
+      "specifications": [
+        { "key": "جنس", "value": "پلی‌پروپیلن (PP)", "sortOrder": 1 },
+        { "key": "دقت", "value": "۵ میکرون", "sortOrder": 2 },
+        { "key": "تعداد", "value": "۳ عدد", "sortOrder": 3 },
+        { "key": "سازگاری", "value": "عمومی — اکثر دستگاه‌های خانگی", "sortOrder": 4 }
+      ]
+    },
+    {
+      "title": "فیلتر کربن بلاک",
+      "slug": "filter-carbon-block",
+      "shortDescription": "فیلتر کربن بلاک برای حذف کلر، طعم و بوی نامطلوب آب.",
+      "description": "فیلتر کربن بلاک با کیفیت بالا برای جذب کلر، مواد شیمیایی و بهبود طعم و بوی آب. سازگار با دستگاه‌های تصفیه آب خانگی.",
+      "status": "ACTIVE",
+      "isFeatured": false,
+      "publishedAt": "2026-10-03T00:00:00.000Z",
+      "categorySlugs": ["filters"],
+      "seoTitle": "فیلتر کربن بلاک",
+      "seoDescription": "خرید فیلتر کربن بلاک — حذف کلر و بهبود طعم و بوی آب.",
+      "seoKeywords": "فیلتر کربن, کربن بلاک, فیلتر تصفیه آب",
+      "images": [
+        {
+          "url": "https://PLACEHOLDER.example.com/filter-carbon-block.jpg",
+          "alt": "فیلتر کربن بلاک"
+        }
+      ],
+      "variants": [
+        {
+          "title": "کربن بلاک استاندارد",
+          "sku": "RW-CARBON-BLOCK-V1",
+          "barcode": null,
+          "price": 3200000,
+          "compareAtPrice": null,
+          "costPrice": null,
+          "weight": 380,
+          "isDefault": true,
+          "isActive": true,
+          "sortOrder": 0,
+          "quantity": 60,
+          "lowStockThreshold": 10
+        }
+      ],
+      "specifications": [
+        { "key": "نوع", "value": "کربن بلاک", "sortOrder": 1 },
+        { "key": "عمر مفید", "value": "حدود ۶ ماه", "sortOrder": 2 },
+        { "key": "سازگاری", "value": "عمومی — اکثر دستگاه‌های خانگی", "sortOrder": 3 }
+      ]
+    },
+    {
+      "title": "ممبران ۷۵ گالن در روز (75GPD)",
+      "slug": "membrane-75gpd",
+      "shortDescription": "ممبران اسمز معکوس ۷۵ گالن در روز — سازگار با دستگاه‌های خانگی.",
+      "description": "ممبران اسمز معکوس (RO) با ظرفیت ۷۵ گالن در روز برای حذف مؤثر ناخالصی‌ها و املاح محلول. سازگار با هوزینگ استاندارد ۱۱ اینچی دستگاه‌های تصفیه آب خانگی.",
+      "status": "ACTIVE",
+      "isFeatured": true,
+      "publishedAt": "2026-10-03T00:00:00.000Z",
+      "categorySlugs": ["filters", "spare-parts"],
+      "seoTitle": "ممبران ۷۵ گالن در روز",
+      "seoDescription": "خرید ممبران اسمز معکوس ۷۵GPD — سازگار با دستگاه تصفیه آب خانگی.",
+      "seoKeywords": "ممبران, ممبران ۷۵ گالن, فیلتر RO, اسمز معکوس",
+      "images": [
+        {
+          "url": "https://PLACEHOLDER.example.com/membrane-75gpd.jpg",
+          "alt": "ممبران ۷۵ گالن در روز"
+        }
+      ],
+      "variants": [
+        {
+          "title": "ممبران 75GPD — استاندارد",
+          "sku": "RW-MEM75-V1",
+          "barcode": null,
+          "price": 4500000,
+          "compareAtPrice": 5200000,
+          "costPrice": null,
+          "weight": 250,
+          "isDefault": true,
+          "isActive": true,
+          "sortOrder": 0,
+          "quantity": 40,
+          "lowStockThreshold": 8
+        }
+      ],
+      "specifications": [
+        { "key": "ظرفیت", "value": "۷۵ گالن در روز (GPD)", "sortOrder": 1 },
+        { "key": "سازگاری", "value": "هوزینگ استاندارد ۱۱ اینچی", "sortOrder": 2 },
+        { "key": "نوع", "value": "اسمز معکوس (RO)", "sortOrder": 3 }
+      ]
+    },
+    {
+      "title": "شیر برداشت اهرمی غازی",
+      "slug": "faucet-gooseneck",
+      "shortDescription": "شیر برداشت غازی با روکش کروم برای دستگاه تصفیه آب.",
+      "description": "شیر برداشت اهرمی غازی با روکش کروم، مناسب نصب روی سینک برای برداشت آب تصفیه‌شده. اتصال استاندارد ۱/۴ اینچ.",
+      "status": "ACTIVE",
+      "isFeatured": false,
+      "publishedAt": "2026-10-03T00:00:00.000Z",
+      "categorySlugs": ["spare-parts", "accessories"],
+      "seoTitle": "شیر برداشت اهرمی غازی",
+      "seoDescription": "خرید شیر برداشت اهرمی غازی با روکش کروم — مناسب دستگاه تصفیه آب.",
+      "seoKeywords": "شیر برداشت, شیر تصفیه آب, شیر غازی, قطعات تصفیه آب",
+      "images": [
+        {
+          "url": "https://PLACEHOLDER.example.com/faucet-gooseneck.jpg",
+          "alt": "شیر برداشت اهرمی غازی"
+        }
+      ],
+      "variants": [
+        {
+          "title": "شیر غازی — کروم",
+          "sku": "RW-FAUCET-GN-V1",
+          "barcode": null,
+          "price": 1900000,
+          "compareAtPrice": null,
+          "costPrice": null,
+          "weight": 520,
+          "isDefault": true,
+          "isActive": true,
+          "sortOrder": 0,
+          "quantity": 35,
           "lowStockThreshold": 5
         }
       ],
       "specifications": [
-        { "key": "PLACEHOLDER: مشخصات", "value": "PLACEHOLDER: مقدار", "sortOrder": 1 }
+        { "key": "جنس", "value": "استیل با روکش کروم", "sortOrder": 1 },
+        { "key": "اتصال", "value": "۱/۴ اینچ", "sortOrder": 2 }
+      ]
+    },
+    {
+      "title": "مخزن ذخیره ۱۶ لیتری",
+      "slug": "pressure-tank-16l",
+      "shortDescription": "مخزن تحت فشار ۴ گالن (حدود ۱۶ لیتر) برای ذخیره آب تصفیه‌شده.",
+      "description": "مخزن ذخیره تحت فشار با ظرفیت ۴ گالن (حدود ۱۶ لیتر) برای ذخیره آب تصفیه‌شده دستگاه اسمز معکوس. دارای شیر و اتصالات استاندارد.",
+      "status": "ACTIVE",
+      "isFeatured": false,
+      "publishedAt": "2026-10-03T00:00:00.000Z",
+      "categorySlugs": ["spare-parts"],
+      "seoTitle": "مخزن ذخیره ۱۶ لیتری",
+      "seoDescription": "خرید مخزن ذخیره تحت فشار ۱۶ لیتری — مناسب دستگاه تصفیه آب.",
+      "seoKeywords": "مخزن تصفیه آب, مخزن ذخیره, مخزن تحت فشار, قطعات تصفیه آب",
+      "images": [
+        {
+          "url": "https://PLACEHOLDER.example.com/pressure-tank-16l.jpg",
+          "alt": "مخزن ذخیره ۱۶ لیتری"
+        }
+      ],
+      "variants": [
+        {
+          "title": "مخزن ۱۶ لیتری — استاندارد",
+          "sku": "RW-TANK16-V1",
+          "barcode": null,
+          "price": 7500000,
+          "compareAtPrice": null,
+          "costPrice": null,
+          "weight": 3400,
+          "isDefault": true,
+          "isActive": true,
+          "sortOrder": 0,
+          "quantity": 18,
+          "lowStockThreshold": 4
+        }
+      ],
+      "specifications": [
+        { "key": "حجم کل", "value": "۱۶ لیتر (۴ گالن)", "sortOrder": 1 },
+        { "key": "فشار پیش‌بار", "value": "۷ PSI", "sortOrder": 2 }
+      ]
+    },
+    {
+      "title": "کیت نصب استاندارد",
+      "slug": "install-kit-standard",
+      "shortDescription": "کیت کامل نصب شامل شلنگ، بست و اتصالات برای دستگاه تصفیه آب.",
+      "description": "کیت نصب استاندارد شامل شلنگ ۱/۴ اینچ، سه‌راه، بست و اتصالات لازم برای نصب دستگاه تصفیه آب خانگی.",
+      "status": "ACTIVE",
+      "isFeatured": false,
+      "publishedAt": "2026-10-03T00:00:00.000Z",
+      "categorySlugs": ["accessories"],
+      "seoTitle": "کیت نصب استاندارد",
+      "seoDescription": "خرید کیت نصب استاندارد شامل شلنگ، بست و اتصالات — مناسب دستگاه تصفیه آب.",
+      "seoKeywords": "کیت نصب, لوازم جانبی تصفیه آب, شلنگ تصفیه آب",
+      "images": [
+        {
+          "url": "https://PLACEHOLDER.example.com/install-kit-standard.jpg",
+          "alt": "کیت نصب استاندارد"
+        }
+      ],
+      "variants": [
+        {
+          "title": "کیت نصب — استاندارد",
+          "sku": "RW-INSTKIT-V1",
+          "barcode": null,
+          "price": 850000,
+          "compareAtPrice": null,
+          "costPrice": null,
+          "weight": 900,
+          "isDefault": true,
+          "isActive": true,
+          "sortOrder": 0,
+          "quantity": 100,
+          "lowStockThreshold": 15
+        }
+      ],
+      "specifications": [
+        { "key": "شامل", "value": "شلنگ ۱/۴ اینچ، سه‌راه، بست و اتصالات", "sortOrder": 1 },
+        { "key": "سازگاری", "value": "عمومی — اکثر دستگاه‌های خانگی", "sortOrder": 2 }
       ]
     }
   ],
   "banners": [
     {
       "placement": "HERO",
-      "title": "PLACEHOLDER: عنوان هیرو",
-      "description": "PLACEHOLDER: توضیح هیرو",
+      "title": "آب سالم برای هر خانه",
+      "description": "دستگاه‌ها و فیلترهای تصفیه آب با کیفیت — آب سالم و گوارا برای خانواده شما.",
       "imageUrl": "https://PLACEHOLDER.example.com/hero.jpg",
       "primaryLinkHref": "/products",
       "primaryLinkLabel": "مشاهده محصولات",
+      "secondaryLinkHref": "/categories/water-purification-devices",
+      "secondaryLinkLabel": "دستگاه‌های تصفیه آب",
+      "isActive": true,
+      "sortOrder": 1
+    },
+    {
+      "placement": "PROMO",
+      "title": "فیلترهای تصفیه آب",
+      "description": "انواع فیلتر الیافی، کربن و ممبران برای دستگاه شما.",
+      "imageUrl": "https://PLACEHOLDER.example.com/promo-filters.jpg",
+      "primaryLinkHref": "/categories/filters",
+      "primaryLinkLabel": "خرید فیلتر",
       "secondaryLinkHref": null,
       "secondaryLinkLabel": null,
       "isActive": true,
