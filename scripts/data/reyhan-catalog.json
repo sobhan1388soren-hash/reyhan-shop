@@ -1,0 +1,162 @@
+{
+  "categories": [
+    {
+      "slug": "water-purification-devices",
+      "name": "دستگاه تصفیه آب",
+      "description": "دستگاه‌های خانگی تصفیه آب شهری — زیرسینکی و رومیزی.",
+      "image": null,
+      "sortOrder": 10,
+      "level": 0,
+      "parentSlug": null,
+      "status": "ACTIVE",
+      "seoTitle": "دستگاه تصفیه آب خانگی",
+      "seoDescription": "خرید انواع دستگاه تصفیه آب خانگی — زیرسینکی و رومیزی با قیمت واقعی."
+    },
+    {
+      "slug": "filters",
+      "name": "فیلترها",
+      "description": "فیلترهای الیافی، کربنی و ممبران — انواع فیلتر تصفیه آب.",
+      "image": null,
+      "sortOrder": 20,
+      "level": 0,
+      "parentSlug": null,
+      "status": "ACTIVE",
+      "seoTitle": "فیلتر تصفیه آب",
+      "seoDescription": "خرید انواع فیلتر تصفیه آب — الیافی، کربن و ممبران."
+    },
+    {
+      "slug": "spare-parts",
+      "name": "قطعات یدکی",
+      "description": "قطعات یدکی سازگار با دستگاه‌های تصفیه آب خانگی.",
+      "image": null,
+      "sortOrder": 30,
+      "level": 0,
+      "parentSlug": null,
+      "status": "ACTIVE",
+      "seoTitle": "قطعات یدکی تصفیه آب",
+      "seoDescription": "خرید قطعات یدکی دستگاه تصفیه آب — شیر برداشت، مخزن و اتصالات."
+    },
+    {
+      "slug": "accessories",
+      "name": "لوازم جانبی",
+      "description": "لوازم نصب و جانبی دستگاه تصفیه آب.",
+      "image": null,
+      "sortOrder": 40,
+      "level": 0,
+      "parentSlug": null,
+      "status": "ACTIVE",
+      "seoTitle": "لوازم جانبی تصفیه آب",
+      "seoDescription": "لوازم نصب و جانبی دستگاه تصفیه آب — کیت نصب، شلنگ و اتصالات."
+    },
+    {
+      "slug": "under-sink",
+      "name": "زیرسینکی",
+      "description": "دستگاه‌های زیرسینکی — نصب زیر کابینت.",
+      "image": null,
+      "sortOrder": 1,
+      "level": 1,
+      "parentSlug": "water-purification-devices",
+      "status": "ACTIVE",
+      "seoTitle": "دستگاه تصفیه آب زیرسینکی",
+      "seoDescription": "خرید دستگاه تصفیه آب زیرسینکی — نصب زیر کابینت."
+    },
+    {
+      "slug": "countertop",
+      "name": "رومیزی",
+      "description": "دستگاه‌های رومیزی و قابل حمل.",
+      "image": null,
+      "sortOrder": 2,
+      "level": 1,
+      "parentSlug": "water-purification-devices",
+      "status": "ACTIVE",
+      "seoTitle": "دستگاه تصفیه آب رومیزی",
+      "seoDescription": "خرید دستگاه تصفیه آب رومیزی — قابل حمل و کم‌حجم."
+    }
+  ],
+  "products": [
+    {
+      "title": "PLACEHOLDER: نام واقعی دستگاه (مثال: دستگاه تصفیه آب زیرسینکی ۶ مرحله‌ای)",
+      "slug": "PLACEHOLDER-unic-under-sink-6-stage",
+      "shortDescription": "PLACEHOLDER: توضیح کوتاه واقعی",
+      "description": "PLACEHOLDER: توضیح کامل واقعی محصول",
+      "status": "ACTIVE",
+      "isFeatured": true,
+      "publishedAt": "2026-10-03T00:00:00.000Z",
+      "categorySlugs": ["under-sink"],
+      "seoTitle": "PLACEHOLDER: سئو تایتل",
+      "seoDescription": "PLACEHOLDER: سئو توضیح",
+      "seoKeywords": "PLACEHOLDER: کلیدواژه‌ها",
+      "images": [
+        { "url": "https://PLACEHOLDER.example.com/product-1.jpg", "alt": "PLACEHOLDER alt" }
+      ],
+      "variants": [
+        {
+          "title": "PLACEHOLDER: پکیج استاندارد",
+          "sku": "PLACEHOLDER-SKU-0001",
+          "barcode": null,
+          "price": 0,
+          "compareAtPrice": null,
+          "costPrice": null,
+          "weight": 0,
+          "isDefault": true,
+          "isActive": true,
+          "sortOrder": 0,
+          "quantity": 0,
+          "lowStockThreshold": 5
+        }
+      ],
+      "specifications": [
+        { "key": "PLACEHOLDER: مشخصات", "value": "PLACEHOLDER: مقدار", "sortOrder": 1 }
+      ]
+    },
+    {
+      "title": "PLACEHOLDER: نام واقعی محصول دوم",
+      "slug": "PLACEHOLDER-unic-filter-pp-5micron",
+      "shortDescription": "PLACEHOLDER: توضیح کوتاه واقعی",
+      "description": "PLACEHOLDER: توضیح کامل واقعی محصول",
+      "status": "ACTIVE",
+      "isFeatured": false,
+      "publishedAt": "2026-10-03T00:00:00.000Z",
+      "categorySlugs": ["filters"],
+      "seoTitle": null,
+      "seoDescription": null,
+      "seoKeywords": null,
+      "images": [
+        { "url": "https://PLACEHOLDER.example.com/product-2.jpg", "alt": "PLACEHOLDER alt" }
+      ],
+      "variants": [
+        {
+          "title": "PLACEHOLDER: بسته استاندارد",
+          "sku": "PLACEHOLDER-SKU-0002",
+          "barcode": null,
+          "price": 0,
+          "compareAtPrice": null,
+          "costPrice": null,
+          "weight": 0,
+          "isDefault": true,
+          "isActive": true,
+          "sortOrder": 0,
+          "quantity": 0,
+          "lowStockThreshold": 5
+        }
+      ],
+      "specifications": [
+        { "key": "PLACEHOLDER: مشخصات", "value": "PLACEHOLDER: مقدار", "sortOrder": 1 }
+      ]
+    }
+  ],
+  "banners": [
+    {
+      "placement": "HERO",
+      "title": "PLACEHOLDER: عنوان هیرو",
+      "description": "PLACEHOLDER: توضیح هیرو",
+      "imageUrl": "https://PLACEHOLDER.example.com/hero.jpg",
+      "primaryLinkHref": "/products",
+      "primaryLinkLabel": "مشاهده محصولات",
+      "secondaryLinkHref": null,
+      "secondaryLinkLabel": null,
+      "isActive": true,
+      "sortOrder": 1
+    }
+  ]
+}

@@ -27,6 +27,7 @@
     "test:sms": "node --test src/lib/auth/sms.test.mjs",
     "test:notifications": "node --test src/lib/notifications/notifications.test.mjs",
     "seed:dev": "node prisma/seed-dev.mjs",
+    "ingest": "node scripts/ingest-supabase.mjs",
     "bootstrap:admin": "node scripts/bootstrap-admin.mjs",
     "verify:purchase-flow": "node scripts/verify-purchase-flow.mjs",
     "test:purchase-flow": "node scripts/verify-purchase-flow.mjs",
