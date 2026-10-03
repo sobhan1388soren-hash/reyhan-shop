@@ -1,0 +1,12 @@
+# Netlify configuration for reyhan-web (Next.js 16 App Router)
+#
+# Netlify auto-detects Next.js and injects @netlify/plugin-nextjs at build time;
+# this file only pins the build steps and the Node runtime that the Next.js
+# integration does not infer on its own.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

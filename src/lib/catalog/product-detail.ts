@@ -8,7 +8,8 @@ import type { Prisma } from "@prisma/client";
 async function safe<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
   try {
     return await fn();
-  } catch {
+  } catch (e) {
+    console.error("[product-detail] DB query failed; returning fallback:", e);
     return fallback;
   }
 }

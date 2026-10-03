@@ -37,7 +37,8 @@ import type { BlogPostCard } from "../blog/queries.ts";
 async function safe<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
   try {
     return await fn();
-  } catch {
+  } catch (e) {
+    console.error("[homepage] DB query failed; returning fallback:", e);
     return fallback;
   }
 }

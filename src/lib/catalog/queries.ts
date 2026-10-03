@@ -14,11 +14,14 @@ import { buildFilterWhere } from "./filtering";
 import { getProductAvailability } from "./availability";
 import { selectRankedProducts } from "@/lib/marketing/ranking";
 
-// Safe wrapper — if DB is empty or unreachable, return empty result instead of crashing build
+// Safe wrapper — if DB is empty or unreachable, return empty result instead of crashing build.
+// Errors are logged (not swallowed) so serverless function logs on Netlify/Vercel
+// surface the real cause instead of silently degrading to an empty catalog.
 async function safe<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
   try {
     return await fn();
-  } catch {
+  } catch (e) {
+    console.error("[catalog] DB query failed; returning fallback:", e);
     return fallback;
   }
 }

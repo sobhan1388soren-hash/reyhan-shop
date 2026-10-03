@@ -55,7 +55,8 @@ function canManageBanners(actor: Actor): boolean {
 async function safe<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
   try {
     return await fn();
-  } catch {
+  } catch (e) {
+    console.error("[banners] DB query failed; returning fallback:", e);
     return fallback;
   }
 }
