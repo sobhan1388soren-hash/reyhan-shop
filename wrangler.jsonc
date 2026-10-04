@@ -2,7 +2,6 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "reyhan-shop",
   "main": ".open-next/worker.js",
-  // Set this to today's date
   "compatibility_date": "2026-10-04",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
@@ -11,6 +10,9 @@
   },
   "observability": {
     "enabled": true
+  },
+  "vars": {
+    "DATABASE_URL": "postgresql://postgres.banmwcbbwypvlbpctmyi:Sobhan1388s@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
   },
   "services": [
     {
