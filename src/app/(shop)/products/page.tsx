@@ -12,6 +12,12 @@ import { toFaDigits } from "@/lib/catalog/format";
 import { buildMetadata } from "@/lib/seo/metadata";
 import type { Metadata } from "next";
 
+// Live catalog data (Supabase/Postgres via Prisma, status: "ACTIVE" only) —
+// never serve a stale build-time static cache on Cloudflare. Every request
+// re-reads the database through getProductsPaginated().
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function generateMetadata({
   searchParams,
 }: {

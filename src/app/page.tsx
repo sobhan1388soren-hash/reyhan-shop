@@ -30,6 +30,13 @@ export const metadata: Metadata = {
   alternates: { canonical: canonicalUrl("/") },
 };
 
+// Live storefront data (Supabase/Postgres) — never serve a stale
+// build-time static cache on Cloudflare. Every request re-reads the
+// database through getHomepageData() (ACTIVE products/categories,
+// PUBLISHED posts only).
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function Home() {
   const { hero, promos, categories, featured, bestSelling, posts } =
     await getHomepageData();
