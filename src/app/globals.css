@@ -74,6 +74,19 @@
   --shadow-md: 0 4px 6px -1px rgb(15 23 42 / 0.06), 0 2px 4px -2px rgb(15 23 42 / 0.06);
   --shadow-lg: 0 10px 15px -3px rgb(15 23 42 / 0.08), 0 4px 6px -4px rgb(15 23 42 / 0.06);
   --shadow-card: 0 2px 8px rgb(15 23 42 / 0.06);
+
+  /* Phase 1 — Ultra-luxury ambient glows (ocean/cyan, never gray) */
+  --shadow-glow-card: 0 2px 12px -2px rgb(12 107 138 / 0.12), 0 8px 32px -12px rgb(14 165 200 / 0.18);
+  --shadow-glow-lift: 0 12px 40px -12px rgb(12 107 138 / 0.35), 0 4px 16px -4px rgb(14 165 200 / 0.3);
+  --shadow-glow-cta: 0 8px 24px -6px rgb(14 165 200 / 0.65), 0 2px 8px -2px rgb(12 107 138 / 0.4);
+  --shadow-glow-ocean: 0 8px 32px -8px rgb(12 107 138 / 0.25), 0 2px 12px -2px rgb(14 165 200 / 0.2);
+
+  /* Phases 4-6 — Ice Crystal & Neon Emerald palette */
+  --reyhan-ice: #22d3ee; /* ice cyan highlight */
+  --reyhan-emerald: #00f5a0; /* neon emerald accent */
+  --reyhan-mint: #10b981; /* mint water depth */
+  --reyhan-emerald-ink: #046c4e; /* dark emerald text on light emerald glass */
+  --shadow-glow-emerald: 0 0 20px -4px rgba(0, 245, 160, 0.5);
 }
 
 /* Tailwind v4 theme bridge — semantic tokens become utilities */
@@ -105,6 +118,11 @@
   --color-reyhan-green-50: var(--reyhan-green-50);
   --color-reyhan-green-600: var(--reyhan-green-600);
 
+  /* Ice Crystal & Neon Emerald accents */
+  --color-reyhan-ice: var(--reyhan-ice);
+  --color-reyhan-emerald: var(--reyhan-emerald);
+  --color-reyhan-mint: var(--reyhan-mint);
+
   --font-sans: var(--font-vazirmatn);
   --font-mono: var(--font-vazirmatn);
 
@@ -125,7 +143,8 @@ html {
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(to bottom, #ffffff, #f6fafc, #eef3f6);
+  background-color: #ffffff;
   color: var(--foreground);
   font-family: var(--font-sans), Vazirmatn, system-ui, -apple-system, sans-serif;
   font-feature-settings: "rlig" 1, "calt" 1;
@@ -156,6 +175,96 @@ body {
 /* Shadows as utilities */
 @utility shadow-card {
   box-shadow: var(--shadow-card);
+}
+
+/* Phase 1 — Ultra-luxury ambient glows (ocean/cyan, never gray) */
+@utility glow-card {
+  box-shadow: var(--shadow-glow-card);
+}
+
+@utility glow-lift {
+  box-shadow: var(--shadow-glow-lift);
+}
+
+@utility glow-cta {
+  box-shadow: var(--shadow-glow-cta);
+}
+
+@utility glow-ocean {
+  box-shadow: var(--shadow-glow-ocean);
+}
+
+/* Phases 4-6 — emerald highlight glow */
+@utility glow-emerald {
+  box-shadow: var(--shadow-glow-emerald);
+}
+
+/* Phase 4 — fade-up entrance (homepage product grids, luxury stagger) */
+@keyframes luxury-fade-up {
+  from {
+    opacity: 0;
+    translate: 0 16px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@utility animate-fade-up {
+  animation: luxury-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Staggered children entrance — pure CSS, no render logic involved */
+@utility luxury-stagger {
+  & > * {
+    animation: luxury-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  & > *:nth-child(2) {
+    animation-delay: 60ms;
+  }
+  & > *:nth-child(3) {
+    animation-delay: 120ms;
+  }
+  & > *:nth-child(4) {
+    animation-delay: 180ms;
+  }
+  & > *:nth-child(5) {
+    animation-delay: 240ms;
+  }
+  & > *:nth-child(6) {
+    animation-delay: 300ms;
+  }
+  & > *:nth-child(7) {
+    animation-delay: 360ms;
+  }
+  & > *:nth-child(8) {
+    animation-delay: 420ms;
+  }
+}
+
+/* Phase 4 — crystal-ice shimmer sweep for loading skeletons */
+@keyframes ice-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@utility skeleton-ice {
+  background: linear-gradient(100deg, #e6eef3 40%, #ffffff 50%, #e6eef3 60%);
+  background-size: 200% 100%;
+  animation: ice-shimmer 1.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .luxury-stagger > *,
+  .skeleton-ice {
+    animation: none;
+  }
 }
 
 /* =========================================================

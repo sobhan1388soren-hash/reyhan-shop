@@ -16,7 +16,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
   const purchasable = isPurchasable(product.availability);
 
   return (
-    <Card className="group flex flex-col overflow-hidden rounded-xl border bg-card transition-all hover:border-[var(--reyhan-blue-200)] hover:shadow-md">
+    <Card className="group flex flex-col overflow-hidden rounded-xl border bg-card transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:glow-lift hover:border-cyan-200/70">
       <Link href={`/products/${product.slug}`} className="block">
         <div className="relative aspect-[4/3] overflow-hidden bg-muted">
           {primaryImage ? (
@@ -24,7 +24,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
             <img
               src={primaryImage.url}
               alt={primaryImage.alt ?? product.title}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+              className="h-full w-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.05]"
               loading="lazy"
               decoding="async"
             />
@@ -36,7 +36,11 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
             />
           )}
           <div className="absolute start-3 top-3">
-            <ProductAvailability state={product.availability} size="sm" />
+            <ProductAvailability
+              state={product.availability}
+              size="sm"
+              className="border-white/60 bg-white/75 shadow-[0_0_16px_-2px_rgb(34_211_238/0.5)] backdrop-blur-md"
+            />
           </div>
           {!purchasable && (
             <div className="absolute inset-0 bg-white/55 backdrop-blur-[0.5px]" aria-hidden="true" />
@@ -51,7 +55,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
               <Link
                 key={cat.id}
                 href={`/categories/${cat.slug}`}
-                className="inline-flex rounded-full border bg-white px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground transition-colors hover:border-[var(--reyhan-blue-200)] hover:bg-[var(--reyhan-blue-50)] hover:text-[var(--reyhan-blue-700)]"
+                className="inline-flex rounded-full border border-white/60 bg-white/75 px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground shadow-[0_0_16px_-2px_rgb(34_211_238/0.5)] backdrop-blur-md transition-colors hover:border-cyan-200/70 hover:bg-white/90 hover:text-[var(--reyhan-blue-700)]"
               >
                 {cat.name}
               </Link>
@@ -101,7 +105,7 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
           <Link
             href={`/products/${product.slug}`}
             aria-disabled={!purchasable}
-            className="inline-flex h-8 shrink-0 items-center justify-center rounded-md bg-primary px-3.5 text-xs font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-[var(--reyhan-blue-700)] disabled:pointer-events-none disabled:opacity-50"
+            className="inline-flex h-8 shrink-0 items-center justify-center rounded-md bg-[#042e3a] px-3.5 text-xs font-semibold text-white transition-all duration-300 hover:bg-[#083f52] hover:shadow-[0_8px_24px_-6px_rgba(14,165,200,0.5)] disabled:pointer-events-none disabled:opacity-50"
           >
             مشاهده
           </Link>

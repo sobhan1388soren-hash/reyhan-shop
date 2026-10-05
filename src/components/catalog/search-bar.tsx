@@ -39,7 +39,11 @@ export function SearchBar({
   );
 
   return (
-    <form onSubmit={handleSubmit} className="relative w-full" role="search">
+    <form
+      onSubmit={handleSubmit}
+      className="relative w-full rounded-xl border border-slate-200/60 bg-white/70 shadow-[0_2px_12px_-2px_rgb(12_107_138/0.12)] backdrop-blur-md transition-shadow focus-within:ring-2 focus-within:ring-emerald-400/70"
+      role="search"
+    >
       <svg
         aria-hidden="true"
         viewBox="0 0 16 16"
@@ -54,7 +58,7 @@ export function SearchBar({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
-        className="ps-10"
+        className="border-transparent bg-transparent ps-10 focus-visible:ring-0 focus-visible:ring-offset-0"
         aria-label="جستجوی محصولات"
       />
     </form>

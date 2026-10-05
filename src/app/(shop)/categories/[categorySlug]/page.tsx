@@ -80,13 +80,13 @@ export default async function CategoryDetailPage({ params, searchParams }: PageP
   ]);
 
   return (
-    <Section className="border-b bg-gradient-to-b from-[var(--reyhan-blue-50)]/60 via-white to-white py-12 sm:py-16 lg:py-20">
+    <Section className="border-b bg-gradient-to-b from-white via-[#f6fafc] to-[#eef3f6] py-12 sm:py-16 lg:py-20">
       <Container>
         <JsonLd id="category" data={breadcrumbJsonLd} />
 
         <CategoryBreadcrumb ancestors={ancestors} />
         <div className="mx-auto mt-4 mb-10 max-w-3xl text-center">
-          <h1 className="text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
+          <h1 className="text-3xl font-extrabold text-[#042e3a] sm:text-4xl lg:text-5xl">
             {category.name}
           </h1>
           {category.description && (

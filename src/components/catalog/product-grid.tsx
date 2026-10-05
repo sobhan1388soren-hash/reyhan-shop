@@ -27,11 +27,11 @@ export function ProductGridSkeleton({ count = 6 }: { count?: number }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="animate-pulse rounded-xl border bg-card p-4">
-          <div className="aspect-[4/3] rounded-lg bg-muted" />
-          <div className="mt-4 h-4 rounded bg-muted" />
-          <div className="mt-2 h-3 w-2/3 rounded bg-muted" />
-          <div className="mt-4 h-8 rounded bg-muted" />
+        <div key={i} className="rounded-xl border border-slate-200/60 bg-white/70 p-4 backdrop-blur-md">
+          <div className="aspect-[4/3] rounded-lg skeleton-ice" />
+          <div className="mt-4 h-4 rounded skeleton-ice" />
+          <div className="mt-2 h-3 w-2/3 rounded skeleton-ice" />
+          <div className="mt-4 h-8 rounded skeleton-ice" />
         </div>
       ))}
     </div>

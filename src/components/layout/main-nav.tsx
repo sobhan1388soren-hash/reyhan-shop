@@ -28,11 +28,14 @@ export function MainNav() {
               href={section.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                "relative rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 "hover:bg-muted hover:text-foreground",
+                // RTL-safe sliding underline: scale-x is direction-agnostic,
+                // insets ride on logical start/end properties.
+                "after:absolute after:bottom-1 after:start-3 after:end-3 after:h-0.5 after:origin-center after:rounded-full after:bg-gradient-to-l after:from-[#22d3ee] after:to-[#00f5a0] after:transition-transform after:duration-300",
                 active
-                  ? "bg-[var(--reyhan-blue-50)] text-[var(--reyhan-blue-700)]"
-                  : "text-muted-foreground"
+                  ? "bg-[var(--reyhan-blue-50)] text-[var(--reyhan-blue-700)] after:scale-x-100"
+                  : "text-muted-foreground after:scale-x-0 hover:after:scale-x-100"
               )}
             >
               {section.label}
@@ -47,11 +50,13 @@ export function MainNav() {
               href={section.href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                "relative inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 "hover:bg-muted hover:text-foreground",
+                // RTL-safe sliding underline (see simple links above).
+                "after:absolute after:bottom-1 after:start-3 after:end-3 after:h-0.5 after:origin-center after:rounded-full after:bg-gradient-to-l after:from-[#22d3ee] after:to-[#00f5a0] after:transition-transform after:duration-300",
                 active
-                  ? "bg-[var(--reyhan-blue-50)] text-[var(--reyhan-blue-700)]"
-                  : "text-muted-foreground"
+                  ? "bg-[var(--reyhan-blue-50)] text-[var(--reyhan-blue-700)] after:scale-x-100"
+                  : "text-muted-foreground after:scale-x-0 hover:after:scale-x-100"
               )}
             >
               {section.label}

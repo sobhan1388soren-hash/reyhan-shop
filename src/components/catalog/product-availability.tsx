@@ -2,11 +2,11 @@ import { Badge } from "@/components/ui/badge";
 import { availabilityLabel, availabilityVariant } from "@/lib/catalog/availability";
 import type { AvailabilityState } from "@/lib/catalog/types";
 
-export function ProductAvailability({ state, size = "default" }: { state: AvailabilityState; size?: "default" | "sm" }) {
+export function ProductAvailability({ state, size = "default", className }: { state: AvailabilityState; size?: "default" | "sm"; className?: string }) {
   return (
     <Badge
       variant={availabilityVariant(state)}
-      className={size === "sm" ? "px-2 py-0 text-[11px]" : undefined}
+      className={size === "sm" ? `px-2 py-0 text-[11px] ${className ?? ""}` : className}
     >
       <span className="inline-flex items-center gap-1.5">
         <span

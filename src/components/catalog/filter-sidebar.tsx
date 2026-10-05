@@ -152,9 +152,9 @@ export function FilterSidebar({
   void buildUrl;
 
   return (
-    <aside className={cn("space-y-6")}>
-      {/* Availability */}
-      <div>
+    <aside className={cn("space-y-4")}>
+      {/* Availability — frosted glass card */}
+      <div className="rounded-xl border border-slate-200/60 bg-white/70 p-4 shadow-[0_2px_12px_-2px_rgb(12_107_138/0.12)] backdrop-blur-md">
         <h3 className="mb-3 text-sm font-semibold text-foreground">موجودی</h3>
         <div className="space-y-2">
           {availabilityOptions.map((opt) => (
@@ -166,7 +166,7 @@ export function FilterSidebar({
                 type="checkbox"
                 checked={selectedAvailability.includes(opt.value)}
                 onChange={() => toggleAvailability(opt.value)}
-                className="size-4 rounded border-input"
+                className="size-4 rounded border-input accent-[#10b981]"
               />
               {opt.label}
             </label>
@@ -174,8 +174,8 @@ export function FilterSidebar({
         </div>
       </div>
 
-      {/* Price range */}
-      <div>
+      {/* Price range — frosted glass card */}
+      <div className="rounded-xl border border-slate-200/60 bg-white/70 p-4 shadow-[0_2px_12px_-2px_rgb(12_107_138/0.12)] backdrop-blur-md">
         <h3 className="mb-3 text-sm font-semibold text-foreground">محدوده قیمت (تومان)</h3>
         <div className="flex items-center gap-2">
           <input
@@ -187,7 +187,7 @@ export function FilterSidebar({
               schedulePricePush(val, localMax);
             }}
             placeholder="از"
-            className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm"
+            className="h-9 w-full rounded-md border border-white/60 bg-white/70 px-2 text-sm backdrop-blur-md focus:border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-400/70"
             aria-label="حداقل قیمت"
             min={0}
           />
@@ -201,7 +201,7 @@ export function FilterSidebar({
               schedulePricePush(localMin, val);
             }}
             placeholder="تا"
-            className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm"
+            className="h-9 w-full rounded-md border border-white/60 bg-white/70 px-2 text-sm backdrop-blur-md focus:border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-400/70"
             aria-label="حداکثر قیمت"
             min={0}
           />
@@ -210,7 +210,7 @@ export function FilterSidebar({
 
       {/* Specification filters - dynamic from product data */}
       {filterOptions.map((fo) => (
-        <div key={fo.key}>
+        <div key={fo.key} className="rounded-xl border border-slate-200/60 bg-white/70 p-4 shadow-[0_2px_12px_-2px_rgb(12_107_138/0.12)] backdrop-blur-md">
           <h3 className="mb-3 text-sm font-semibold text-foreground">{fo.label}</h3>
           <div className="space-y-2">
             {fo.values.map((opt) => {
@@ -224,7 +224,7 @@ export function FilterSidebar({
                     type="checkbox"
                     checked={checked}
                     onChange={() => toggleSpec(fo.key, opt.value)}
-                    className="size-4 rounded border-input"
+                    className="size-4 rounded border-input accent-[#10b981]"
                   />
                   {opt.label}
                   {opt.count != null && (
@@ -241,7 +241,7 @@ export function FilterSidebar({
       <button
         type="button"
         onClick={clearAll}
-        className="w-full rounded-md border border-input bg-background py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+        className="w-full rounded-xl border border-slate-200/60 bg-white/70 py-2 text-sm font-medium backdrop-blur-md transition-colors hover:border-emerald-300 hover:text-[#046c4e]"
       >
         حذف همه فیلترها
       </button>

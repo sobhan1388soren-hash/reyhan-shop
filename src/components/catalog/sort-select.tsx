@@ -44,7 +44,7 @@ export function SortSelect({
       value={currentSort}
       onChange={handleChange}
       aria-label="مرتب‌سازی محصولات"
-      className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="h-10 w-full rounded-xl border border-slate-200/60 bg-white/70 px-3 py-2 text-sm shadow-[0_2px_12px_-2px_rgb(12_107_138/0.12)] backdrop-blur-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/70"
     >
       {SORT_OPTIONS.map((opt) => (
         <option key={opt.value} value={opt.value}>

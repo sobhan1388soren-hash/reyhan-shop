@@ -5,15 +5,26 @@ import { footerNavigation } from "@/lib/navigation";
 import { SITE_NAME } from "@/lib/constants";
 import { toFaDigits } from "@/lib/catalog/format";
 
-// Reyhan Footer — trust footer, Blue/Green/White, medical clean
-// 4-column, responsive, Persian RTL logical spacing
+// Reyhan Footer — Deep Ocean Abyss (Phase 5: Ice Crystal & Neon Emerald)
+// Dark abyss gradient, ice-cyan hairlines, frosted trust badges, glowing
+// emerald actions. All links/routes unchanged — presentation only.
 export function Footer() {
   const year = toFaDigits(new Date().getFullYear());
 
   return (
-    <footer className="border-t bg-muted/30">
+    <footer className="relative overflow-hidden border-t border-cyan-500/20 bg-gradient-to-b from-[#042e3a] to-[#021d24] text-cyan-50">
+      {/* Ice-cyan top hairline */}
+      <div
+        aria-hidden="true"
+        className="h-px bg-gradient-to-l from-transparent via-[#22d3ee]/60 to-transparent"
+      />
+      {/* Ambient abyss glows (decorative, non-interactive) */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-20 start-[12%] size-64 rounded-full bg-[#22d3ee]/10 blur-3xl" />
+        <div className="absolute bottom-0 end-[8%] size-72 rounded-full bg-[#00f5a0]/10 blur-3xl" />
+      </div>
       {/* Main footer */}
-      <Container className="py-10 lg:py-14">
+      <Container className="relative py-10 lg:py-14">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           {/* Brand — spans 4 */}
           <div className="sm:col-span-2 lg:col-span-4">
@@ -29,21 +40,21 @@ export function Footer() {
                   <path d="M12 17.05C12 17.05 13.1 19 15.2 19.8" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" opacity="0.9" />
                 </svg>
               </span>
-              <span className="text-[16px] font-semibold tracking-tight text-foreground">
+              <span className="text-[16px] font-semibold tracking-tight text-white">
                 {SITE_NAME}
               </span>
             </Link>
-            <p className="mt-4 max-w-sm text-sm leading-6 text-muted-foreground">
+            <p className="mt-4 max-w-sm text-sm leading-6 text-cyan-100/70">
               فروشگاه تخصصی تصفیه آب خانگی — دستگاه‌ها، فیلترها، قطعات یدکی و لوازم جانبی. اعتماد، سلامت و تخصص در هر قطره آب.
             </p>
-            {/* Trust badges — visual only */}
+            {/* Trust badges — frosted glass on the abyss */}
             <div className="mt-6 flex flex-wrap gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border bg-background px-3 py-1 text-xs font-medium text-muted-foreground">
-                <span className="size-1.5 rounded-full bg-[var(--reyhan-green-500)]" aria-hidden="true" />
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-cyan-50 backdrop-blur-md">
+                <span className="size-1.5 rounded-full bg-[#00f5a0] shadow-[0_0_8px_1px_rgba(0,245,160,0.7)]" aria-hidden="true" />
                 تضمین اصالت کالا
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border bg-background px-3 py-1 text-xs font-medium text-muted-foreground">
-                <span className="size-1.5 rounded-full bg-[var(--reyhan-blue-500)]" aria-hidden="true" />
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-cyan-50 backdrop-blur-md">
+                <span className="size-1.5 rounded-full bg-[#22d3ee] shadow-[0_0_8px_1px_rgba(34,211,238,0.7)]" aria-hidden="true" />
                 ارسال به سراسر ایران
               </span>
             </div>
@@ -51,13 +62,13 @@ export function Footer() {
 
           {/* Products */}
           <div className="lg:col-span-3 lg:col-start-6">
-            <h3 className="text-sm font-semibold tracking-wide text-foreground">محصولات</h3>
+            <h3 className="text-sm font-semibold tracking-wide text-white">محصولات</h3>
             <ul className="mt-4 space-y-3">
               {footerNavigation.products.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground hover:underline underline-offset-4"
+                    className="text-sm text-cyan-100/70 transition-colors hover:text-white hover:underline underline-offset-4"
                   >
                     {item.label}
                   </Link>
@@ -66,7 +77,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/products"
-                  className="text-sm font-medium text-[var(--reyhan-blue-600)] hover:text-[var(--reyhan-blue-700)] hover:underline underline-offset-4"
+                  className="text-sm font-medium text-[#00f5a0] hover:text-[#00f5a0]/80 hover:underline underline-offset-4"
                 >
                   مشاهده همه محصولات ←
                 </Link>
@@ -76,13 +87,13 @@ export function Footer() {
 
           {/* Support */}
           <div className="lg:col-span-2">
-            <h3 className="text-sm font-semibold tracking-wide text-foreground">پشتیبانی</h3>
+            <h3 className="text-sm font-semibold tracking-wide text-white">پشتیبانی</h3>
             <ul className="mt-4 space-y-3">
               {footerNavigation.support.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground hover:underline underline-offset-4"
+                    className="text-sm text-cyan-100/70 transition-colors hover:text-white hover:underline underline-offset-4"
                   >
                     {item.label}
                   </Link>
@@ -93,14 +104,14 @@ export function Footer() {
 
           {/* Contact */}
           <div className="sm:col-span-2 lg:col-span-3">
-            <h3 className="text-sm font-semibold tracking-wide text-foreground">تماس با ما</h3>
-            <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
+            <h3 className="text-sm font-semibold tracking-wide text-white">تماس با ما</h3>
+            <ul className="mt-4 space-y-3 text-sm text-cyan-100/70">
               <li className="flex gap-2.5">
                 <svg aria-hidden="true" viewBox="0 0 16 16" className="mt-0.5 size-4 shrink-0 opacity-60" fill="none">
                   <path d="M2 5.5L8 9L14 5.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
                   <rect x="2" y="3.5" width="12" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.3" />
                 </svg>
-                <a href="mailto:contact@reyhan.com" className="hover:text-foreground hover:underline underline-offset-4">
+                <a href="mailto:contact@reyhan.com" className="hover:text-white hover:underline underline-offset-4">
                   contact@reyhan.com
                 </a>
               </li>
@@ -122,7 +133,7 @@ export function Footer() {
             <div className="mt-6">
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center rounded-md border bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent"
+                className="inline-flex items-center justify-center rounded-md bg-[#00f5a0] px-4 py-2 text-sm font-semibold text-[#021d24] shadow-[0_0_20px_-4px_rgba(0,245,160,0.5)] transition-all hover:bg-[#00f5a0]/90 hover:shadow-[0_0_28px_-4px_rgba(0,245,160,0.7)]"
               >
                 گفت‌وگو با پشتیبانی
               </Link>
@@ -131,23 +142,23 @@ export function Footer() {
         </div>
       </Container>
 
-      <Separator />
+      <Separator className="bg-white/10" />
 
       {/* Bottom bar */}
-      <Container className="flex flex-col gap-3 py-6 text-xs leading-5 text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+      <Container className="relative flex flex-col gap-3 py-6 text-xs leading-5 text-cyan-100/60 sm:flex-row sm:items-center sm:justify-between">
         <p>
           © {year} {SITE_NAME} — تمامی حقوق محفوظ است.{" "}
           <span className="hidden sm:inline">·</span> <span className="sm:ms-1">آب پاک، خانه‌ای سالم.</span>
         </p>
         <div className="flex items-center gap-4">
-          <Link href="/privacy" className="hover:text-foreground hover:underline underline-offset-4">
+          <Link href="/privacy" className="hover:text-white hover:underline underline-offset-4">
             حریم خصوصی
           </Link>
-          <Link href="/terms" className="hover:text-foreground hover:underline underline-offset-4">
+          <Link href="/terms" className="hover:text-white hover:underline underline-offset-4">
             قوانین و مقررات
           </Link>
           <span className="hidden items-center gap-1.5 sm:inline-flex">
-            <span className="size-1 rounded-full bg-[var(--reyhan-blue-600)]" aria-hidden="true" />
+            <span className="size-1 rounded-full bg-[#22d3ee]" aria-hidden="true" />
             طراحی مدرن و تمیز
           </span>
         </div>

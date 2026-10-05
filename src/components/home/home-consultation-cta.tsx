@@ -16,17 +16,27 @@ export function HomeConsultationCta() {
   return (
     <section
       aria-labelledby="home-consultation-title"
-      className="border-t py-12 sm:py-16"
+      className="relative overflow-hidden bg-gradient-to-b from-[#042e3a] to-[#021d24] py-12 sm:py-16"
     >
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-2xl border bg-gradient-to-l from-[var(--reyhan-blue-50)] via-white to-[var(--reyhan-green-50)] px-6 py-10 text-center sm:px-10 sm:py-14">
+      {/* Ice-cyan top hairline + ambient ocean glows */}
+      <div
+        aria-hidden="true"
+        className="h-px bg-gradient-to-l from-transparent via-[#22d3ee]/60 to-transparent"
+      />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-16 start-[15%] size-64 rounded-full bg-[#22d3ee]/15 blur-3xl" />
+        <div className="absolute bottom-0 end-[10%] size-72 rounded-full bg-[#00f5a0]/15 blur-3xl" />
+      </div>
+      <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Frosted glass card over the ocean field */}
+        <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 px-6 py-10 text-center backdrop-blur-xl sm:px-10 sm:py-14">
           <h2
             id="home-consultation-title"
-            className="text-balance text-xl font-bold text-foreground sm:text-2xl"
+            className="text-balance text-xl font-bold text-white sm:text-2xl"
           >
             در انتخاب محصول تخصصی کمک می‌خواهید؟
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-muted-foreground">
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-cyan-100/70">
             برای انتخاب دستگاه تصفیه آب، فیلتر جایگزین یا قطعه یدکی متناسب با
             نیازتان، محصولات ریحان را بررسی کنید و مقالات تخصصی ما را مطالعه
             کنید.
@@ -35,13 +45,13 @@ export function HomeConsultationCta() {
           <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               href="/products"
-              className="inline-flex h-11 w-full items-center justify-center rounded-md bg-primary px-8 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-[var(--reyhan-blue-700)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:w-auto"
+              className="inline-flex h-11 w-full items-center justify-center rounded-md bg-[#00f5a0] px-8 text-sm font-semibold text-[#021d24] shadow-[0_0_20px_-4px_rgba(0,245,160,0.5)] transition-all hover:bg-[#00f5a0]/90 hover:shadow-[0_0_28px_-4px_rgba(0,245,160,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00f5a0] focus-visible:ring-offset-2 focus-visible:ring-offset-[#042e3a] sm:w-auto"
             >
               مشاهده محصولات
             </Link>
             <Link
               href="/blog"
-              className="inline-flex h-11 w-full items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:w-auto"
+              className="inline-flex h-11 w-full items-center justify-center rounded-md border border-white/20 bg-white/10 px-8 text-sm font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22d3ee] focus-visible:ring-offset-2 focus-visible:ring-offset-[#042e3a] sm:w-auto"
             >
               راهنمای خرید و انتخاب
             </Link>
@@ -49,7 +59,7 @@ export function HomeConsultationCta() {
               <a
                 href={telHref}
                 dir="ltr"
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-input bg-background px-8 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:w-auto"
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md border border-white/20 bg-white/10 px-8 text-sm font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22d3ee] focus-visible:ring-offset-2 focus-visible:ring-offset-[#042e3a] sm:w-auto"
               >
                 <svg aria-hidden="true" viewBox="0 0 24 24" className="size-4" fill="none">
                   <path
@@ -65,18 +75,18 @@ export function HomeConsultationCta() {
           </div>
 
           {!hasPhone && (
-            <p className="mt-5 text-xs text-muted-foreground">
+            <p className="mt-5 text-xs text-cyan-100/60">
               مسیرهای کمکی:{" "}
               <Link
                 href="/products"
-                className="font-medium text-[var(--reyhan-blue-600)] hover:underline"
+                className="font-medium text-[#00f5a0] hover:underline"
               >
                 کاتالوگ محصولات
               </Link>{" "}
               و{" "}
               <Link
                 href="/blog"
-                className="font-medium text-[var(--reyhan-blue-600)] hover:underline"
+                className="font-medium text-[#00f5a0] hover:underline"
               >
                 مرکز دانش
               </Link>{" "}

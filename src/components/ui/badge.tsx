@@ -17,9 +17,9 @@ const variantClasses: Record<BadgeVariant, string> = {
   secondary: "border-transparent bg-secondary text-secondary-foreground",
   // Outline — medical border
   outline: "text-foreground border-border",
-  // Success — Reyhan Green health
+  // Success — Neon Emerald health (in-stock / active status)
   success:
-    "border-transparent bg-[var(--reyhan-green-50)] text-[var(--reyhan-green-700)] border border-[var(--reyhan-green-100)]",
+    "border border-[rgba(0,245,160,0.5)] bg-[rgba(0,245,160,0.12)] text-[var(--reyhan-emerald-ink)]",
   // Destructive
   destructive:
     "border-transparent bg-destructive text-destructive-foreground",

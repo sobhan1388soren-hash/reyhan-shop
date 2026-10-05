@@ -60,11 +60,11 @@ export default async function ProductsPage({ searchParams }: PageProps) {
   const urlParams = catalogParamsToUrlSearch(params);
 
   return (
-    <Section className="py-10 sm:py-12">
+    <Section className="bg-gradient-to-b from-white via-[#f6fafc] to-[#eef3f6] py-10 sm:py-12">
       <Container>
         <div className="mx-auto mb-8 max-w-3xl text-center">
           <p className="text-xs font-semibold tracking-widest text-[var(--reyhan-blue-600)]">فروشگاه ریحان</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-[#042e3a] sm:text-4xl">
             فروشگاه محصولات
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-pretty text-sm leading-7 text-muted-foreground sm:text-[15px]">

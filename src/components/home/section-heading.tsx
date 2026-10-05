@@ -35,7 +35,7 @@ export function HomeSectionHeading({
         {eyebrow && (
           <p className="text-xs font-semibold text-[var(--reyhan-blue-600)]">{eyebrow}</p>
         )}
-        <h2 id={id} className="mt-1.5 text-2xl font-bold text-foreground sm:text-3xl">
+        <h2 id={id} className="mt-1.5 text-2xl font-extrabold text-[#042e3a] sm:text-3xl">
           {title}
         </h2>
         {description && (

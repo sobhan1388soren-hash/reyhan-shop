@@ -13,10 +13,15 @@ import type { HeroContentView } from "@/lib/marketing/banner-rules";
 export function HomeHero({ hero }: { hero: HeroContentView }) {
   return (
     <section
-      className="border-b bg-gradient-to-b from-[var(--reyhan-blue-50)]/60 via-white to-white py-10 sm:py-14 lg:py-20"
+      className="relative overflow-hidden border-b bg-gradient-to-b from-[var(--reyhan-blue-50)]/60 via-white to-white py-10 sm:py-14 lg:py-20"
       aria-labelledby="home-hero-title"
     >
-      <div className="mx-auto grid w-full max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-12 lg:px-8 xl:gap-16">
+      {/* Phase 3 — ambient light-field blobs (decorative, non-interactive) */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-24 start-[8%] size-72 rounded-full bg-cyan-300/30 blur-3xl" />
+        <div className="absolute top-1/3 end-[4%] size-80 rounded-full bg-[#0ea5c8]/20 blur-3xl" />
+      </div>
+      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-12 lg:px-8 xl:gap-16">
         {/* Content side */}
         <div className="max-w-xl">
           <Badge variant="success" className="mb-4">
@@ -58,7 +63,7 @@ export function HomeHero({ hero }: { hero: HeroContentView }) {
         {/* Visual side — admin image URL, or the placeholder surface */}
         <div className="relative order-first mx-auto w-full max-w-md px-2 sm:max-w-lg lg:order-none lg:max-w-none lg:px-0">
           {hero.imageUrl ? (
-            <div className="overflow-hidden rounded-2xl border bg-card shadow-card">
+            <div className="overflow-hidden rounded-3xl border border-white/60 bg-white/50 shadow-[0_24px_60px_-16px_rgb(4_46_58/0.35)] ring-1 ring-white/50 backdrop-blur-xl">
               {/* Fixed aspect container avoids layout shifts while loading. */}
               <div className="aspect-[4/3] w-full">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -72,13 +77,18 @@ export function HomeHero({ hero }: { hero: HeroContentView }) {
               </div>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-2xl border bg-card shadow-card">
+            <div className="overflow-hidden rounded-3xl border border-white/60 bg-white/50 shadow-[0_24px_60px_-16px_rgb(4_46_58/0.35)] ring-1 ring-white/50 backdrop-blur-xl">
               {/* Same fixed aspect + card chrome as the image branch. */}
               <div className="aspect-[4/3] w-full">
                 <MediaPlaceholder tone="mixed" glyph="drop" />
               </div>
             </div>
           )}
+          {/* Subtle bottom cyan water-glow reflection pool */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-8 left-1/2 h-16 w-3/4 -translate-x-1/2 rounded-full bg-cyan-400/30 blur-2xl"
+          />
         </div>
       </div>
     </section>

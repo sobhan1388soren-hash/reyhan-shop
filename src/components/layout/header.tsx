@@ -6,10 +6,11 @@ import { HeaderAccountLink } from "@/components/layout/header-account-link";
 import { HeaderCartLink } from "@/components/layout/header-cart-link";
 
 // Reyhan Header — trust & expertise, modern clean
-// Sticky, backdrop-blur, blue+green+white palette, Persian RTL logical props
+// Phase 2 — crystal glassmorphism over the Pearl Platinum canvas.
+// Sticky, backdrop-blur-xl + saturate, white/50 hairline, ocean ambient glow.
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+    <header className="sticky top-0 z-40 w-full border-b border-white/50 bg-white/65 shadow-[0_8px_32px_-8px_rgb(12_107_138/0.25)] backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/65">
       {/* Top trust bar — desktop only, health signal */}
       <div className="hidden border-b bg-[var(--reyhan-blue-50)]/70 lg:block">
         <Container className="flex h-8 items-center justify-between text-xs">
@@ -98,7 +99,7 @@ export function Header() {
 
           <Link
             href="/contact"
-            className="hidden items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-[var(--reyhan-blue-700)] sm:inline-flex lg:px-5"
+            className="hidden items-center justify-center rounded-md bg-[#042e3a] px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:bg-[#083f52] hover:shadow-[0_8px_24px_-6px_rgba(14,165,200,0.5)] sm:inline-flex lg:px-5"
           >
             مشاوره خرید
           </Link>
@@ -107,6 +108,12 @@ export function Header() {
           <MobileNav />
         </div>
       </Container>
+
+      {/* 1px cyan gradient hairline — ultra-luxury light refraction edge */}
+      <div
+        aria-hidden="true"
+        className="h-px bg-gradient-to-l from-transparent via-[rgb(14_165_200/0.5)] to-transparent"
+      />
     </header>
   );
 }
