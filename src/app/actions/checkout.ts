@@ -282,5 +282,5 @@ export async function submitCheckout(
     (err: unknown) => console.error("[NOTIFICATION] order placed failed:", err)
   );
 
-  redirect(`/account/orders/${order.id}?placed=1`);
+  redirect(`/checkout/success?orderId=${order.id}`);
 }

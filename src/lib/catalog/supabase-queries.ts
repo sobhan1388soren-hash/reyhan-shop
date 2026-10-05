@@ -1,5 +1,14 @@
 import { cache } from "react";
 import supabase from "@/lib/supabase";
+import {
+  getFallbackBestSellingProducts,
+  getFallbackCategoryBySlug,
+  getFallbackCategoryTree,
+  getFallbackFeaturedProducts,
+  getFallbackHomepageCategories,
+  getFallbackProductBySlug,
+  getFallbackRelatedProducts,
+} from "./fallback";
 import type {
   CatalogProduct,
   CatalogCategory,
@@ -17,6 +26,29 @@ async function safe<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
   } catch (e) {
     console.error("[catalog.supabase] query failed; returning fallback:", e);
     return fallback;
+  }
+}
+
+/**
+ * Resilience policy for display surfaces: when the database is unreachable
+ * (missing/invalid env, network failure) or a list query returns empty rows,
+ * the static real-catalog snapshot (./fallback) is served instead of an empty
+ * storefront. Single-record lookups only use the snapshot when the database
+ * itself was unreachable — a genuinely absent slug on a healthy database is
+ * still a real "not found".
+ */
+async function safeList<T>(
+  isEmpty: (v: T) => boolean,
+  fn: () => Promise<T>,
+  snapshot: () => T
+): Promise<T> {
+  if (!supabase) return snapshot();
+  try {
+    const result = await fn();
+    return isEmpty(result) ? snapshot() : result;
+  } catch (e) {
+    console.error("[catalog.supabase] query failed; serving static catalog snapshot:", e);
+    return snapshot();
   }
 }
 
@@ -116,40 +148,50 @@ async function fetchProductWithRelations(
   else return null;
 
   const { data, error } = await query;
-  if (error || !data?.length) return null;
+  // Throw on transport/RLS errors so safe() serves the static snapshot;
+  // an empty result on a healthy database stays a real "not found".
+  if (error) throw error;
+  if (!data?.length) return null;
   return data[0] as Record<string, unknown>;
 }
 
 export const getProductBySlug = cache(async (slug: string): Promise<CatalogProduct | null> => {
+  // Snapshot only when the database itself is unreachable; a healthy
+  // database returning no row is a real "not found" (null).
+  if (!supabase) return getFallbackProductBySlug(slug);
   return safe(async () => {
     const row = await fetchProductWithRelations(undefined, slug);
     if (!row) return null;
     return toCatalogProductView(row);
-  }, null);
+  }, getFallbackProductBySlug(slug));
 });
 
 export async function getFeaturedProducts(take = 8): Promise<CatalogProduct[]> {
-  return safe(async () => {
-    if (!supabase) return [];
-    const { data, error } = await supabase
-      .from("products")
-      .select(`
-        id, title, slug, description, shortDescription, status, isFeatured,
-        seoTitle, seoDescription, createdAt, updatedAt,
-        variants:product_variants(id, title, sku, price, compareAtPrice, isActive, isDefault, sortOrder,
-          inventory:inventories(quantity, reservedQuantity, lowStockThreshold)),
-        specifications:product_specifications(key, value, sortOrder),
-        images:product_images(url, alt, sortOrder),
-        categories:product_categories(category:categories(id, name, slug))
-      `)
-      .eq("isFeatured", true)
-      .eq("status", "ACTIVE")
-      .order("updatedAt", { ascending: false })
-      .limit(take);
+  return safeList(
+    (list) => list.length === 0,
+    async () => {
+      if (!supabase) return [];
+      const { data, error } = await supabase
+        .from("products")
+        .select(`
+          id, title, slug, description, shortDescription, status, isFeatured,
+          seoTitle, seoDescription, createdAt, updatedAt,
+          variants:product_variants(id, title, sku, price, compareAtPrice, isActive, isDefault, sortOrder,
+            inventory:inventories(quantity, reservedQuantity, lowStockThreshold)),
+          specifications:product_specifications(key, value, sortOrder),
+          images:product_images(url, alt, sortOrder),
+          categories:product_categories(category:categories(id, name, slug))
+        `)
+        .eq("isFeatured", true)
+        .eq("status", "ACTIVE")
+        .order("updatedAt", { ascending: false })
+        .limit(take);
 
-    if (error || !data) return [];
-    return (data as Record<string, unknown>[]).map(toCatalogProductView);
-  }, []);
+      if (error || !data) return [];
+      return (data as Record<string, unknown>[]).map(toCatalogProductView);
+    },
+    () => getFallbackFeaturedProducts(take)
+  );
 }
 
 const VALID_SALE_ORDER_STATUS: OrderStatus[] = [
@@ -161,18 +203,20 @@ const VALID_SALE_ORDER_STATUS: OrderStatus[] = [
 ];
 
 export async function getBestSellingProducts(take = 8): Promise<CatalogProduct[]> {
-  return safe(async () => {
-    if (!supabase) return [];
-    const { data: orderItems, error: oiError } = await supabase
-      .from("order_items")
-      .select("productId, quantity")
-      .in(
-        "order.status",
-        VALID_SALE_ORDER_STATUS.map((s) => s)
-      )
-      .eq("order.paymentStatus", "PAID");
+  return safeList(
+    (list) => list.length === 0,
+    async () => {
+      if (!supabase) return [];
+      const { data: orderItems, error: oiError } = await supabase
+        .from("order_items")
+        .select("productId, quantity")
+        .in(
+          "order.status",
+          VALID_SALE_ORDER_STATUS.map((s) => s)
+        )
+        .eq("order.paymentStatus", "PAID");
 
-    if (oiError || !orderItems) return [];
+      if (oiError || !orderItems) return [];
 
     const quantityByProduct = new Map<string, number>();
     for (const item of orderItems) {
@@ -185,39 +229,42 @@ export async function getBestSellingProducts(take = 8): Promise<CatalogProduct[]
       .slice(0, take)
       .map(([productId]) => productId);
 
-    if (!sorted.length) return [];
+      if (!sorted.length) return [];
 
-    if (!supabase) return [];
-    const { data: products, error: pError } = await supabase
-      .from("products")
-      .select(`
-        id, title, slug, description, shortDescription, status, isFeatured,
-        seoTitle, seoDescription, createdAt, updatedAt,
-        variants:product_variants(id, title, sku, price, compareAtPrice, isActive, isDefault, sortOrder,
-          inventory:inventories(quantity, reservedQuantity, lowStockThreshold)),
-        specifications:product_specifications(key, value, sortOrder),
-        images:product_images(url, alt, sortOrder),
-        categories:product_categories(category:categories(id, name, slug))
-      `)
-      .in("id", sorted)
-      .eq("status", "ACTIVE");
+      if (!supabase) return [];
+      const { data: products, error: pError } = await supabase
+        .from("products")
+        .select(`
+          id, title, slug, description, shortDescription, status, isFeatured,
+          seoTitle, seoDescription, createdAt, updatedAt,
+          variants:product_variants(id, title, sku, price, compareAtPrice, isActive, isDefault, sortOrder,
+            inventory:inventories(quantity, reservedQuantity, lowStockThreshold)),
+          specifications:product_specifications(key, value, sortOrder),
+          images:product_images(url, alt, sortOrder),
+          categories:product_categories(category:categories(id, name, slug))
+        `)
+        .in("id", sorted)
+        .eq("status", "ACTIVE");
 
-    if (pError || !products) return [];
+      if (pError || !products) return [];
 
-    const productMap = new Map(
-      (products as Record<string, unknown>[]).map((p) => [p.id as string, p])
-    );
+      const productMap = new Map(
+        (products as Record<string, unknown>[]).map((p) => [p.id as string, p])
+      );
 
-    return sorted
-      .map((id) => productMap.get(id))
-      .filter(Boolean)
-      .map((p) => toCatalogProductView(p!));
-  }, []);
+      return sorted
+        .map((id) => productMap.get(id))
+        .filter(Boolean)
+        .map((p) => toCatalogProductView(p!));
+    },
+    () => getFallbackBestSellingProducts(take)
+  );
 }
 
 export async function getCategoryBySlug(
   slug: string
 ): Promise<CatalogCategory | null> {
+  if (!supabase) return getFallbackCategoryBySlug(slug);
   return safe(async () => {
     if (!supabase) return null;
     const { data, error } = await supabase
@@ -228,55 +275,63 @@ export async function getCategoryBySlug(
 
     if (error || !data) return null;
     return data as unknown as CatalogCategory;
-  }, null);
+  }, getFallbackCategoryBySlug(slug));
 }
 
 export async function getCategoryTree(): Promise<CatalogCategory[]> {
-  return safe(async () => {
-    if (!supabase) return [];
-    const { data, error } = await supabase
-      .from("categories")
-      .select("id, name, slug, description, image, parentId, level, status, sortOrder, seoTitle, seoDescription")
-      .eq("status", "ACTIVE")
-      .order("sortOrder", { ascending: true })
-      .order("name", { ascending: true });
-
-    if (error || !data) return [];
-    return data as unknown as CatalogCategory[];
-  }, []);
-}
-
-export async function getHomepageCategories(take = 6) {
-  return safe(async () => {
-    if (!supabase) return [];
-    const [categories, { data: productCounts }] = await Promise.all([
-      supabase
+  return safeList(
+    (list) => list.length === 0,
+    async () => {
+      if (!supabase) return [];
+      const { data, error } = await supabase
         .from("categories")
         .select("id, name, slug, description, image, parentId, level, status, sortOrder, seoTitle, seoDescription")
         .eq("status", "ACTIVE")
-        .is("parentId", null)
         .order("sortOrder", { ascending: true })
-        .order("name", { ascending: true })
-        .limit(take),
-      supabase
-        .from("product_categories")
-        .select("categoryId")
-        .eq("product.status", "ACTIVE"),
-    ]);
+        .order("name", { ascending: true });
 
-    const cats = (categories.data ?? []) as unknown as CatalogCategory[];
-    const countById = new Map<string, number>();
-    if (productCounts) {
-      for (const pc of productCounts as { categoryId: string }[]) {
-        countById.set(pc.categoryId, (countById.get(pc.categoryId) ?? 0) + 1);
+      if (error || !data) return [];
+      return data as unknown as CatalogCategory[];
+    },
+    () => getFallbackCategoryTree()
+  );
+}
+
+export async function getHomepageCategories(take = 6) {
+  return safeList(
+    (list) => list.length === 0,
+    async () => {
+      if (!supabase) return [];
+      const [categories, { data: productCounts }] = await Promise.all([
+        supabase
+          .from("categories")
+          .select("id, name, slug, description, image, parentId, level, status, sortOrder, seoTitle, seoDescription")
+          .eq("status", "ACTIVE")
+          .is("parentId", null)
+          .order("sortOrder", { ascending: true })
+          .order("name", { ascending: true })
+          .limit(take),
+        supabase
+          .from("product_categories")
+          .select("categoryId")
+          .eq("product.status", "ACTIVE"),
+      ]);
+
+      const cats = (categories.data ?? []) as unknown as CatalogCategory[];
+      const countById = new Map<string, number>();
+      if (productCounts) {
+        for (const pc of productCounts as { categoryId: string }[]) {
+          countById.set(pc.categoryId, (countById.get(pc.categoryId) ?? 0) + 1);
+        }
       }
-    }
 
-    return cats.map((c) => ({
-      ...c,
-      productCount: countById.get(c.id) ?? 0,
-    }));
-  }, []);
+      return cats.map((c) => ({
+        ...c,
+        productCount: countById.get(c.id) ?? 0,
+      }));
+    },
+    () => getFallbackHomepageCategories(take)
+  );
 }
 
 export async function getRelatedProducts(
@@ -284,28 +339,32 @@ export async function getRelatedProducts(
   categoryIds: string[],
   take = 4
 ): Promise<CatalogProduct[]> {
-  return safe(async () => {
-    if (!supabase) return [];
-    if (!categoryIds.length) return [];
+  return safeList(
+    (list) => list.length === 0,
+    async () => {
+      if (!supabase) return [];
+      if (!categoryIds.length) return [];
 
-    const { data, error } = await supabase
-      .from("products")
-      .select(`
-        id, title, slug, description, shortDescription, status, isFeatured,
-        seoTitle, seoDescription, createdAt, updatedAt,
-        variants:product_variants(id, title, sku, price, compareAtPrice, isActive, isDefault, sortOrder,
-          inventory:inventories(quantity, reservedQuantity, lowStockThreshold)),
-        specifications:product_specifications(key, value, sortOrder),
-        images:product_images(url, alt, sortOrder),
-        categories:product_categories(category:categories(id, name, slug))
-      `)
-      .eq("status", "ACTIVE")
-      .neq("id", productId)
-      .in("product_categories.categoryId", categoryIds)
-      .order("createdAt", { ascending: false })
-      .limit(take);
+      const { data, error } = await supabase
+        .from("products")
+        .select(`
+          id, title, slug, description, shortDescription, status, isFeatured,
+          seoTitle, seoDescription, createdAt, updatedAt,
+          variants:product_variants(id, title, sku, price, compareAtPrice, isActive, isDefault, sortOrder,
+            inventory:inventories(quantity, reservedQuantity, lowStockThreshold)),
+          specifications:product_specifications(key, value, sortOrder),
+          images:product_images(url, alt, sortOrder),
+          categories:product_categories(category:categories(id, name, slug))
+        `)
+        .eq("status", "ACTIVE")
+        .neq("id", productId)
+        .in("product_categories.categoryId", categoryIds)
+        .order("createdAt", { ascending: false })
+        .limit(take);
 
-    if (error || !data) return [];
-    return (data as Record<string, unknown>[]).map(toCatalogProductView);
-  }, []);
+      if (error || !data) return [];
+      return (data as Record<string, unknown>[]).map(toCatalogProductView);
+    },
+    () => getFallbackRelatedProducts(productId, categoryIds, take)
+  );
 }

@@ -3,7 +3,9 @@
   "name": "reyhan-shop",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-10-04",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
@@ -12,7 +14,8 @@
     "enabled": true
   },
   "vars": {
-    "DATABASE_URL": "postgresql://postgres.banmwcbbwypvlbpctmyi:Sobhan1388s@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres?connect_timeout=60"
+    "NEXT_PUBLIC_SUPABASE_URL": "https://banmwcbbwypvlbpctmyi.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_nTwhN7Som7Mf6n3IBA9dnA_ZDE1mmhu"
   },
   "services": [
     {

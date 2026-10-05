@@ -4,9 +4,11 @@ import { Container, Section } from "@/components/layout/container";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { PublicChrome } from "@/components/layout/public-chrome";
+import { CartDrawer } from "@/components/cart/cart-drawer";
 
 // Reusable shell — ensures sticky header + footer layout, flex column.
 // Public chrome is suppressed on /admin (admin pages render AdminShell).
+// CartDrawer mounts once here so every page can open the slide-over sheet.
 export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col">
@@ -17,6 +19,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <PublicChrome>
         <Footer />
       </PublicChrome>
+      <CartDrawer />
     </div>
   );
 }

@@ -2,14 +2,20 @@ import Link from "next/link";
 import { Container } from "@/components/layout/container";
 import { MainNav } from "@/components/layout/main-nav";
 import { MobileNav } from "@/components/layout/mobile-nav";
-import { HeaderAccountLink } from "@/components/layout/header-account-link";
 import { HeaderCartLink } from "@/components/layout/header-cart-link";
+import { HeaderAuthSection } from "@/components/layout/header-auth-section";
+import { AuthModalProvider } from "@/components/auth/auth-modal-context";
+import { AuthModal } from "@/components/auth/auth-modal";
+import { getCurrentUser } from "@/lib/auth/dal";
 
 // Reyhan Header — trust & expertise, modern clean
 // Phase 2 — crystal glassmorphism over the Pearl Platinum canvas.
 // Sticky, backdrop-blur-xl + saturate, white/50 hairline, ocean ambient glow.
-export function Header() {
+export async function Header() {
+  const user = await getCurrentUser();
+
   return (
+    <AuthModalProvider>
     <header className="sticky top-0 z-40 w-full border-b border-white/50 bg-white/65 shadow-[0_8px_32px_-8px_rgb(12_107_138/0.25)] backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/65">
       {/* Top trust bar — desktop only, health signal */}
       <div className="hidden border-b bg-[var(--reyhan-blue-50)]/70 lg:block">
@@ -95,7 +101,7 @@ export function Header() {
           <HeaderCartLink />
 
           {/* Account / login */}
-          <HeaderAccountLink />
+          <HeaderAuthSection user={user} />
 
           <Link
             href="/contact"
@@ -115,5 +121,7 @@ export function Header() {
         className="h-px bg-gradient-to-l from-transparent via-[rgb(14_165_200/0.5)] to-transparent"
       />
     </header>
+    <AuthModal />
+    </AuthModalProvider>
   );
 }

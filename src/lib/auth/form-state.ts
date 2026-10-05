@@ -13,6 +13,24 @@ export type AuthFormState = {
 
 export const initialAuthState: AuthFormState = { step: "phone" };
 
+export type EmailLoginFormState = {
+  step: "email";
+  message?: string;
+  error?: string;
+  fieldErrors?: Record<string, string>;
+};
+
+export const initialEmailLoginState: EmailLoginFormState = { step: "email" };
+
+export type EmailRegisterFormState = {
+  step: "email";
+  message?: string;
+  error?: string;
+  fieldErrors?: Record<string, string>;
+};
+
+export const initialEmailRegisterState: EmailRegisterFormState = { step: "email" };
+
 export type ProfileFormState = {
   message?: string;
   error?: string;

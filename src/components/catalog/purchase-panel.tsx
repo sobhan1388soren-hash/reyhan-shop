@@ -14,6 +14,7 @@ import {
 } from "@/lib/catalog/availability";
 import type { CatalogVariant, AvailabilityState } from "@/lib/catalog/types";
 import { useCart } from "@/hooks/use-cart";
+import { openCartDrawer } from "@/components/cart/cart-drawer";
 
 type PurchasePanelProps = {
   productTitle: string;
@@ -83,6 +84,7 @@ export function PurchasePanel({
         kind: "success",
         message: `«${productTitle}» با موفقیت به سبد خرید اضافه شد.`,
       });
+      openCartDrawer();
     } else {
       setFeedback({
         kind: "error",

@@ -3,19 +3,22 @@
 // Header cart indicator — live item count synced with the guest cart store.
 // Renders on the client; count is read from the same useSyncExternalStore
 // the rest of the app uses, so it updates instantly on every cart change.
-// The server snapshot is empty (SSR renders no badge; no hydration mismatch).
+// Opens the FrostedCartDrawer instead of navigating; the full cart page
+// stays reachable from the drawer's secondary action.
 
-import Link from "next/link";
 import { useCart } from "@/hooks/use-cart";
 import { toFaDigits } from "@/lib/catalog/format";
+import { openCartDrawer } from "@/components/cart/cart-drawer";
 
 export function HeaderCartLink() {
   const { count } = useCart();
   const hasCount = count > 0;
 
   return (
-    <Link
-      href="/cart"
+    <button
+      type="button"
+      onClick={openCartDrawer}
+      aria-haspopup="dialog"
       aria-label={
         hasCount ? `سبد خرید — ${toFaDigits(count)} قلم کالا` : "سبد خرید"
       }
@@ -40,6 +43,6 @@ export function HeaderCartLink() {
           {toFaDigits(count)}
         </span>
       )}
-    </Link>
+    </button>
   );
 }

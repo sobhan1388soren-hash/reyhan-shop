@@ -6,6 +6,7 @@ import { formatPriceToman } from "@/lib/catalog/format";
 import { isPurchasable } from "@/lib/catalog/availability";
 import type { CatalogVariant } from "@/lib/catalog/types";
 import { useCart } from "@/hooks/use-cart";
+import { openCartDrawer } from "@/components/cart/cart-drawer";
 
 // Mobile sticky purchase bar — keeps Add to Cart reachable while scrolling.
 // Mirrors the default variant choice from the purchase panel and scrolls
@@ -63,7 +64,8 @@ export function MobilePurchaseBar({
       document.getElementById("purchase-panel")?.scrollIntoView({ behavior: "smooth" });
       return;
     }
-    addToCart(defaultVariant.id, 1, defaultVariant.price);
+    const ok = addToCart(defaultVariant.id, 1, defaultVariant.price);
+    if (ok) openCartDrawer();
   };
 
   return (

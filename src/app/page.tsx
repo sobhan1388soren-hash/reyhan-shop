@@ -7,13 +7,14 @@
 // fake/demo data is ever introduced.
 //
 // Information architecture (fixed order, intentionally not a page builder):
-// hero → categories → featured → trust strip → best-selling → promo
-// banners → knowledge/blog → consultation CTA.
+// hero → categories → featured → trust strip → best-selling → water
+// clarity → promo banners → knowledge/blog → consultation CTA.
 
 import { getHomepageData } from "@/lib/marketing/homepage";
 import { HomeHero } from "@/components/home/home-hero";
 import { HomeCategories } from "@/components/home/home-categories";
 import { HomeProductSection } from "@/components/home/home-product-section";
+import { HomeWaterClarity } from "@/components/home/home-water-clarity";
 import { HomeTrustStrip } from "@/components/home/home-trust-strip";
 import { HomePromoBanners } from "@/components/home/home-promo-banners";
 import { HomeBlogSection } from "@/components/home/home-blog-section";
@@ -79,6 +80,10 @@ export default async function Home() {
         viewAllHref="/products"
         viewAllLabel="مشاهده همه محصولات"
       />
+
+      {/* Water clarity — lightweight CSS-only before/after comparison,
+          right below the product showcase */}
+      <HomeWaterClarity />
 
       {/* Promotional banners — admin-managed, ordered */}
       <HomePromoBanners banners={promos} />

@@ -16,9 +16,9 @@ export function ProductCard({ product }: { product: CatalogProduct }) {
   const purchasable = isPurchasable(product.availability);
 
   return (
-    <Card className="group flex flex-col overflow-hidden rounded-xl border bg-card transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:glow-lift hover:border-cyan-200/70">
+    <Card className="group flex flex-col overflow-hidden rounded-xl border bg-card [perspective:1000px] perspective-1000 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:glow-lift hover:border-cyan-200/70 motion-safe:hover:rotate-x-1 motion-safe:hover:rotate-y-1">
       <Link href={`/products/${product.slug}`} className="block">
-        <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+        <div className="relative aspect-[4/3] overflow-hidden bg-muted after:content-[''] after:pointer-events-none after:absolute after:inset-0 after:z-10 after:-translate-x-full after:bg-gradient-to-r after:from-transparent after:via-white/20 after:to-transparent after:transition-transform after:duration-1000 after:ease-out motion-safe:hover:after:translate-x-full motion-safe:group-hover:after:translate-x-full motion-reduce:after:hidden">
           {primaryImage ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img

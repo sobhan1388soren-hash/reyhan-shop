@@ -153,6 +153,13 @@ The existing framework-generated block is preserved at the top of this file (`<!
 - URL/slug policy: existing route structures and slugs are preserved — no URL migrations, no invented redirects. Public SEO slugs are the existing stable Latin/ASCII values.
 - Tests: `src/lib/seo/seo.test.mjs` (`npm run test:seo`, also in `npm test`) — origin/canonical normalization, title/description strategy, robots vocabulary, sitemap inclusion/exclusion + canonical consistency, all JSON-LD builders (incl. omission of absent facts and `<`-escape safety), and duplicate-graph prevention.
 
+## Storefront Resilience (Supabase/Cloudflare)
+
+- `src/lib/supabase.ts` — single public Supabase client factory. Accepts `NEXT_PUBLIC_SUPABASE_ANON_KEY` or `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`; validates the URL scheme and wraps `createClient` in try/catch, so missing/invalid env yields `null` (`isSupabaseConfigured = false`) instead of a module-eval crash. Never put the service-role key in client-reachable env.
+- `src/lib/catalog/fallback.ts` — static snapshot of the REAL catalog derived 1:1 from `scripts/data/reyhan-catalog.json` (the ingest source of truth). Not invented mock data; placeholder `*.example.com` image URLs are stripped (components render branded no-image visuals). Synthetic ids are `fb-`-prefixed. Transactional paths (cart/checkout/orders/payments/admin) NEVER read it.
+- `src/lib/catalog/supabase-queries.ts` — display-surface reads use `safeList()`: DB unreachable OR error OR empty rows → the real-catalog snapshot; single-slug lookups use the snapshot only when the DB is unreachable (a healthy DB returning no row stays a real "not found"). No query ever throws to the page.
+- Cloudflare: `wrangler.jsonc` `vars` must include `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` (public-by-design) alongside `DATABASE_URL`. **Known issue: `DATABASE_URL` with credentials is committed in `wrangler.jsonc` — rotate the password and move it to `wrangler secret put DATABASE_URL`.**
+
 ## Preserve existing architecture
 
 - Do not make architectural decisions (ORM, database, authentication, payment, storage, hosting, deployment) without approval.

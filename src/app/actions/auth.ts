@@ -1,8 +1,6 @@
 "use server";
 
-// Authentication server actions — phone + OTP flow.
-// All state transitions happen server-side; the client never sees codes.
-
+// Authentication server actions — phone + OTP flow + email/password.
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
@@ -10,7 +8,8 @@ import { normalizePhone, validateOptionalEmail, validateOptionalName } from "@/l
 import { requestOtp, verifyOtp } from "@/lib/auth/otp";
 import { createSession, destroySession } from "@/lib/auth/session";
 import { getCurrentUser } from "@/lib/auth/dal";
-import type { AuthFormState, ProfileFormState } from "@/lib/auth/form-state";
+import { hashPassword, verifyPassword, validateNationalCode, validatePasswordStrength } from "@/lib/auth/password";
+import type { AuthFormState, ProfileFormState, EmailLoginFormState, EmailRegisterFormState } from "@/lib/auth/form-state";
 
 function safeNextPath(raw: FormDataEntryValue | null): string {
   const value = typeof raw === "string" ? raw : "";
@@ -276,6 +275,106 @@ export async function verifyRegisterOtp(
       phone,
       error: "خطایی در تکمیل ثبت‌نام رخ داد. دوباره تلاش کنید.",
     };
+  }
+
+  redirect("/account");
+}
+
+// ── Email/Password Login ──────────────────────────────────────────
+
+export async function loginWithEmail(
+  _prev: EmailLoginFormState,
+  formData: FormData
+): Promise<EmailLoginFormState> {
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const password = String(formData.get("password") ?? "");
+  const nextPath = safeNextPath(formData.get("next"));
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+    return { step: "email", fieldErrors: { email: "نشانی ایمیل معتبر نیست." } };
+  }
+  if (!password) {
+    return { step: "email", fieldErrors: { password: "رمز عبور را وارد کنید." } };
+  }
+
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user || user.status !== "ACTIVE") {
+      return { step: "email", error: "اطلاعات واردشده صحیح نیست." };
+    }
+    if (!user.passwordHash) {
+      return { step: "email", error: "این حساب کاربری با ایمیل/رمز عبور قابل ورود نیست." };
+    }
+    const valid = verifyPassword(password, user.passwordHash);
+    if (!valid) {
+      return { step: "email", error: "اطلاعات واردشده صحیح نیست." };
+    }
+
+    await createSession(user.id, user.role);
+  } catch {
+    return { step: "email", error: "خطایی رخ داد. لطفاً دوباره تلاش کنید." };
+  }
+
+  redirect(nextPath);
+}
+
+// ── Email/Password Registration ───────────────────────────────────
+
+export async function registerWithEmail(
+  _prev: EmailRegisterFormState,
+  formData: FormData
+): Promise<EmailRegisterFormState> {
+  const fieldErrors: Record<string, string> = {};
+
+  const emailRaw = String(formData.get("email") ?? "").trim().toLowerCase();
+  const emailCheck = validateOptionalEmail(emailRaw);
+  if (!emailCheck.ok) fieldErrors.email = emailCheck.error;
+
+  const password = String(formData.get("password") ?? "");
+  const passwordCheck = validatePasswordStrength(password);
+  if (!passwordCheck.ok) fieldErrors.password = passwordCheck.error;
+
+  const nationalCode = String(formData.get("nationalCode") ?? "").trim();
+  if (!nationalCode) {
+    fieldErrors.nationalCode = "کد ملی را وارد کنید.";
+  } else if (!validateNationalCode(nationalCode)) {
+    fieldErrors.nationalCode = "کد ملی معتبر نیست.";
+  }
+
+  const firstNameRaw = String(formData.get("firstName") ?? "").trim();
+  const firstNameCheck = validateOptionalName(firstNameRaw);
+  if (!firstNameRaw) fieldErrors.firstName = "نام را وارد کنید.";
+  else if (!firstNameCheck.ok) fieldErrors.firstName = firstNameCheck.error;
+
+  const lastNameCheck = validateOptionalName(String(formData.get("lastName") ?? ""));
+  if (!lastNameCheck.ok) fieldErrors.lastName = lastNameCheck.error;
+
+  if (Object.keys(fieldErrors).length > 0) {
+    return { step: "email", fieldErrors };
+  }
+
+  try {
+    const existingEmail = await prisma.user.findUnique({ where: { email: emailCheck.value } });
+    if (existingEmail) {
+      return { step: "email", fieldErrors: { email: "این ایمیل قبلاً ثبت شده است." } };
+    }
+
+    const passwordHash = hashPassword(password);
+    const user = await prisma.user.create({
+      data: {
+        email: emailCheck.value,
+        passwordHash,
+        nationalCode,
+        firstName: firstNameCheck.value || null,
+        lastName: lastNameCheck.ok && lastNameCheck.value ? lastNameCheck.value : null,
+        role: "CUSTOMER",
+        status: "ACTIVE",
+      },
+    });
+
+    await createSession(user.id, user.role);
+  } catch {
+    return { step: "email", error: "خطایی در ثبت‌نام رخ داد. لطفاً دوباره تلاش کنید." };
   }
 
   redirect("/account");
