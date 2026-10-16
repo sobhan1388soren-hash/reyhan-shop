@@ -122,15 +122,17 @@ export default async function AdminUserDetailPage({ params }: PageProps) {
           {/* Display-safe fields only — no OTP tokens, sessions, or hashes. */}
           <dl className="mt-4">
             <Fact label="شماره موبایل">
-              <span dir="ltr" className="tabular-nums">{user.phone}</span>
+              <span dir="ltr" className="tabular-nums">{user.phone ?? "—"}</span>
             </Fact>
-            <Fact label="تأیید شماره">
-              {user.phoneVerified ? (
-                <AdminStatusBadge tone="success">تأیید شده</AdminStatusBadge>
-              ) : (
-                <AdminStatusBadge tone="warning">تأیید نشده</AdminStatusBadge>
-              )}
-            </Fact>
+            {user.phone && (
+              <Fact label="تأیید شماره">
+                {user.phoneVerified ? (
+                  <AdminStatusBadge tone="success">تأیید شده</AdminStatusBadge>
+                ) : (
+                  <AdminStatusBadge tone="warning">تأیید نشده</AdminStatusBadge>
+                )}
+              </Fact>
+            )}
             <Fact label="ایمیل">
               <span dir="ltr" className="break-all">{user.email ?? "—"}</span>
             </Fact>

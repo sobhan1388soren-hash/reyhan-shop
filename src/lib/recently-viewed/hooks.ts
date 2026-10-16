@@ -6,11 +6,9 @@ import { readRecentSlugs, addRecentSlug } from "@/lib/recently-viewed/storage";
 const RECENTLY_VIEWED_CHANGE_EVENT = "reyhan-recent-change";
 
 export function useRecentlyViewed() {
-  const [slugs, setSlugs] = useState<string[]>([]);
+  const [slugs, setSlugs] = useState(() => readRecentSlugs());
 
   useEffect(() => {
-    setSlugs(readRecentSlugs());
-
     function handleChange() {
       setSlugs(readRecentSlugs());
     }

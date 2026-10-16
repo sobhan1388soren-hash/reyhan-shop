@@ -37,6 +37,27 @@ function normalizeConnectionString(raw: string | undefined): string | null {
   return value;
 }
 
+/**
+ * Supabase connection strings are generated with `sslmode=require`, which libpq
+ * interprets as "encrypt but do NOT verify the certificate". node-postgres
+ * instead treats `require` as an alias for `verify-full`, and Supabase presents a
+ * self-signed certificate chain — so every connection fails with
+ * "self-signed certificate in certificate chain".
+ *
+ * `uselibpqcompat=true` restores libpq semantics, which is Supabase's documented
+ * fix for the pg/Prisma drivers. The link stays TLS-encrypted; only certificate
+ * verification is relaxed. A URL that already opts out of TLS (`sslmode=disable`)
+ * or already sets `uselibpqcompat` is left untouched.
+ */
+function applySupabaseSslCompat(url: string): string {
+  const [base, query = ""] = url.split("?", 2);
+  const params = new URLSearchParams(query);
+  if (!params.has("sslmode") || params.get("sslmode") === "disable") return url;
+  if (params.has("uselibpqcompat")) return url;
+  params.set("uselibpqcompat", "true");
+  return `${base}?${params.toString()}`;
+}
+
 // Lazy initialization: constructing PrismaClient without a driver adapter
 // throws at module-evaluation time on Prisma 7, which breaks `next build`
 // when no database is reachable. Defer construction until first query so
@@ -44,12 +65,13 @@ function normalizeConnectionString(raw: string | undefined): string | null {
 function createClient(): PrismaClient {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { PrismaClient: Client } = require("@prisma/client") as typeof import("@prisma/client");
-  const url = normalizeConnectionString(process.env.DIRECT_URL ?? process.env.DATABASE_URL);
-  if (!url) {
+  const raw = normalizeConnectionString(process.env.DIRECT_URL ?? process.env.DATABASE_URL);
+  if (!raw) {
     throw new Error(
       "[prisma] DATABASE_URL is not set or invalid — configure it in the environment"
     );
   }
+  const url = applySupabaseSslCompat(raw);
   try {
     // Adapter package may not be installed in offline envs — load lazily via
     // eval'd require so Turbopack does not try to statically resolve it.

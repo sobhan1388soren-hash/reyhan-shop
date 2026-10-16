@@ -1,4 +1,5 @@
 import { Container, Section } from "@/components/layout/container";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 // Blog listing skeleton — mirrors the card grid so navigation between the
 // blog index, category pages and articles doesn't flash a blank page.
@@ -7,7 +8,6 @@ export default function BlogLoading() {
     <Section className="py-10 sm:py-14">
       <Container>
         <div role="status" aria-label="در حال بارگذاری مقالات">
-          <span className="sr-only">در حال بارگذاری مقالات…</span>
           <div className="grid animate-pulse gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-hidden="true">
             {[0, 1, 2, 3, 4, 5].map((i) => (
               <div key={i} className="overflow-hidden rounded-xl border bg-card">
@@ -20,6 +20,7 @@ export default function BlogLoading() {
               </div>
             ))}
           </div>
+          <LoadingSpinner size="md" label="در حال بارگذاری مقالات…" className="mx-auto mt-6" />
         </div>
       </Container>
     </Section>

@@ -34,8 +34,8 @@ export default async function AccountLayout({ children }: { children: React.Reac
                 <p className="truncate text-sm font-semibold text-foreground">
                   {userDisplayName(user)}
                 </p>
-                <p className="mt-0.5 text-xs text-muted-foreground" dir="ltr">
-                  {formatPhoneForDisplay(user.phone)}
+                <p className="mt-0.5 truncate text-xs text-muted-foreground" dir="ltr">
+                  {user.phone ? formatPhoneForDisplay(user.phone) : (user.email ?? "—")}
                 </p>
               </div>
             </div>

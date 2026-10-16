@@ -65,8 +65,7 @@ export default async function AdminBlogCategoriesPage() {
         <AdminListErrorState />
       ) : (
         <CategoryManager
-          categories={result.categories}
-          getCount={(c) => c.postCount}
+          categories={result.categories.map((c) => ({ ...c, itemCount: c.postCount }))}
           actions={blogCategoryActions}
           labels={blogCategoryLabels}
         />

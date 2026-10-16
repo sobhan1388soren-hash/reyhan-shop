@@ -63,7 +63,7 @@ const columns: AdminColumn<AdminOrderRow>[] = [
         <div className="min-w-0">
           <p className="truncate font-medium text-foreground">{row.customer.name}</p>
           <p className="truncate text-xs tabular-nums text-muted-foreground" dir="ltr">
-            {row.customer.phone}
+            {row.customer.phone ?? "—"}
           </p>
         </div>
       ) : (

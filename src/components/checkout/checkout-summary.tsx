@@ -11,6 +11,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { formatPriceToman, toFaDigits } from "@/lib/catalog/format";
 import type { CartValidationResult } from "@/lib/cart/types";
+import { InlineSpinner } from "@/components/ui/loading-spinner";
 
 /** Client-side mirror of the server preview (all numbers server-derived). */
 export type AppliedDiscountPreview = {
@@ -250,16 +251,25 @@ export function CheckoutSummary({
             "disabled:cursor-not-allowed disabled:opacity-50"
           )}
         >
-          {pending ? "در حال ثبت سفارش…" : "ثبت سفارش و پرداخت"}
-          <svg aria-hidden="true" viewBox="0 0 16 16" className="size-4 rtl:rotate-180" fill="none">
-            <path
-              d="M6 4L10 8L6 12"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          {pending ? (
+            <>
+              <InlineSpinner size="sm" />
+              در حال ثبت سفارش…
+            </>
+          ) : (
+            <>
+              ثبت سفارش و پرداخت
+              <svg aria-hidden="true" viewBox="0 0 16 16" className="size-4 rtl:rotate-180" fill="none">
+                <path
+                  d="M6 4L10 8L6 12"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </>
+          )}
         </button>
         {!addressSelected && !updating && (
           <p role="status" className="text-[11px] font-medium text-amber-700">

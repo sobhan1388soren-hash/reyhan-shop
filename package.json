@@ -13,6 +13,7 @@
     "lint": "eslint",
     "type-check": "tsc --noEmit",
     "test:checkout": "node --test src/lib/checkout/checkout.test.mjs",
+    "test:cart": "node --test src/lib/cart/cart.test.mjs",
     "test:payments": "node --test src/lib/payments/payments.test.mjs",
     "test:reviews": "node --test src/lib/reviews/reviews.test.mjs",
     "test:discounts": "node --test src/lib/discounts/discounts.test.mjs",
@@ -23,6 +24,7 @@
     "test:admin-users": "node --test src/lib/admin/users-admin.test.mjs",
     "test:admin-discounts": "node --test src/lib/admin/discounts-admin.test.mjs",
     "test:admin-moderation": "node --test src/lib/admin/moderation-admin.test.mjs",
+    "test:admin-drafts": "node --test src/lib/admin/drafts-boundary.test.mjs",
     "test:blog": "node --test src/lib/blog/blog.test.mjs",
     "test:marketing": "node --test src/lib/marketing/marketing.test.mjs",
     "test:seo": "node --test src/lib/seo/seo.test.mjs",
@@ -30,11 +32,13 @@
     "test:sms": "node --test src/lib/auth/sms.test.mjs",
     "test:notifications": "node --test src/lib/notifications/notifications.test.mjs",
     "seed:dev": "node prisma/seed-dev.mjs",
+    "db:seed": "node scripts/seed-products.ts",
     "ingest": "node scripts/ingest-supabase.mjs",
     "bootstrap:admin": "node scripts/bootstrap-admin.mjs",
     "verify:purchase-flow": "node scripts/verify-purchase-flow.mjs",
     "test:purchase-flow": "node scripts/verify-purchase-flow.mjs",
-    "test": "node --test src/lib/checkout/checkout.test.mjs src/lib/payments/payments.test.mjs src/lib/reviews/reviews.test.mjs src/lib/discounts/discounts.test.mjs src/lib/admin/admin.test.mjs src/lib/admin/categories.test.mjs src/lib/admin/products.test.mjs src/lib/admin/orders-admin.test.mjs src/lib/admin/users-admin.test.mjs src/lib/admin/discounts-admin.test.mjs src/lib/admin/moderation-admin.test.mjs src/lib/blog/blog.test.mjs src/lib/marketing/marketing.test.mjs src/lib/seo/seo.test.mjs src/lib/auth/security.test.mjs src/lib/auth/sms.test.mjs src/lib/notifications/notifications.test.mjs"
+    "test": "node --test src/lib/checkout/checkout.test.mjs src/lib/cart/cart.test.mjs src/lib/payments/payments.test.mjs src/lib/reviews/reviews.test.mjs src/lib/discounts/discounts.test.mjs src/lib/admin/admin.test.mjs src/lib/admin/categories.test.mjs src/lib/admin/products.test.mjs src/lib/admin/orders-admin.test.mjs src/lib/admin/users-admin.test.mjs src/lib/admin/discounts-admin.test.mjs src/lib/admin/moderation-admin.test.mjs src/lib/admin/drafts-boundary.test.mjs src/lib/blog/blog.test.mjs src/lib/marketing/marketing.test.mjs src/lib/seo/seo.test.mjs src/lib/auth/security.test.mjs src/lib/auth/email-rules.test.mjs src/lib/auth/sms.test.mjs src/lib/notifications/notifications.test.mjs",
+    "test:auth-email": "node --test src/lib/auth/email-rules.test.mjs"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.20.8",

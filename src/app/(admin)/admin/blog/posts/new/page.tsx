@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { requireAdmin } from "@/lib/admin/dal";
 import { getPostFormContext } from "@/lib/blog/post-service";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
-import { PostForm, emptyPostDraft } from "@/components/admin/post-form";
+import { PostForm } from "@/components/admin/post-form";
+import { emptyPostDraft } from "@/components/admin/post-draft";
 
 export const metadata: Metadata = {
   title: "مقاله جدید",

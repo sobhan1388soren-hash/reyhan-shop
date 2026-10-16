@@ -14,7 +14,6 @@ import {
   BANNER_LINK_HREF_MAX,
   BANNER_IMAGE_URL_MAX,
 } from "@/lib/marketing/banner-rules";
-import type { AdminBannerDetail } from "@/lib/marketing/banner-service";
 import { Input } from "@/components/ui/input";
 import {
   AdminField,
@@ -25,52 +24,12 @@ import {
   adminSelectClass,
   adminTextareaClass,
 } from "@/components/admin/admin-form";
+import { type BannerDraft } from "@/components/admin/banner-draft";
 
 // BannerForm — create/edit for one hero or promo banner. Server-side
 // validation is authoritative (validateBannerInput in the service); the
 // HTML constraints here are UX only. Placement drives which CTA fields are
 // relevant (the secondary CTA is hero-only).
-
-export type BannerDraft = {
-  placement: string;
-  title: string;
-  description: string;
-  imageUrl: string;
-  primaryLinkLabel: string;
-  primaryLinkHref: string;
-  secondaryLinkLabel: string;
-  secondaryLinkHref: string;
-  isActive: boolean;
-  sortOrder: string;
-};
-
-export const emptyBannerDraft: BannerDraft = {
-  placement: "PROMO",
-  title: "",
-  description: "",
-  imageUrl: "",
-  primaryLinkLabel: "",
-  primaryLinkHref: "",
-  secondaryLinkLabel: "",
-  secondaryLinkHref: "",
-  isActive: true,
-  sortOrder: "0",
-};
-
-export function draftFromBanner(banner: AdminBannerDetail): BannerDraft {
-  return {
-    placement: banner.placement,
-    title: banner.title,
-    description: banner.description ?? "",
-    imageUrl: banner.imageUrl ?? "",
-    primaryLinkLabel: banner.primaryLinkLabel ?? "",
-    primaryLinkHref: banner.primaryLinkHref ?? "",
-    secondaryLinkLabel: banner.secondaryLinkLabel ?? "",
-    secondaryLinkHref: banner.secondaryLinkHref ?? "",
-    isActive: banner.isActive,
-    sortOrder: String(banner.sortOrder),
-  };
-}
 
 export function BannerForm({
   mode,

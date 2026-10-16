@@ -7,14 +7,14 @@
 // fake/demo data is ever introduced.
 //
 // Information architecture (fixed order, intentionally not a page builder):
-// hero → categories → featured → trust strip → best-selling → water
-// clarity → promo banners → knowledge/blog → consultation CTA.
+// hero → categories → featured → trust strip → best-selling → product
+// finder → promo banners → knowledge/blog → consultation CTA.
 
 import { getHomepageData } from "@/lib/marketing/homepage";
 import { HomeHero } from "@/components/home/home-hero";
 import { HomeCategories } from "@/components/home/home-categories";
 import { HomeProductSection } from "@/components/home/home-product-section";
-import { HomeWaterClarity } from "@/components/home/home-water-clarity";
+import { ProductFinderWidget } from "@/components/home/product-finder-widget";
 import { HomeTrustStrip } from "@/components/home/home-trust-strip";
 import { HomePromoBanners } from "@/components/home/home-promo-banners";
 import { HomeBlogSection } from "@/components/home/home-blog-section";
@@ -39,8 +39,16 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default async function Home() {
-  const { hero, promos, categories, featured, bestSelling, posts } =
+  const { promos, categories, featured, bestSelling, posts } =
     await getHomepageData();
+
+  // Finder pool — real catalog products only (featured + best-selling,
+  // de-duplicated). The widget ranks within this list; it never invents
+  // products.
+  const finderProducts = [...featured, ...bestSelling].filter(
+    (product, index, list) =>
+      list.findIndex((p) => p.id === product.id) === index
+  );
 
   return (
     <div className="flex flex-1 flex-col">
@@ -50,8 +58,8 @@ export default async function Home() {
         data={[buildOrganizationJsonLd(), buildWebSiteJsonLd()]}
       />
 
-      {/* Hero — static, single, admin-editable */}
-      <HomeHero hero={hero} />
+      {/* Hero — static, water-themed with product image */}
+      <HomeHero />
 
       {/* Categories — top-level active categories only */}
       <HomeCategories categories={categories} />
@@ -81,9 +89,8 @@ export default async function Home() {
         viewAllLabel="مشاهده همه محصولات"
       />
 
-      {/* Water clarity — lightweight CSS-only before/after comparison,
-          right below the product showcase */}
-      <HomeWaterClarity />
+      {/* Product finder — interactive 2-question purifier guide */}
+      <ProductFinderWidget products={finderProducts} />
 
       {/* Promotional banners — admin-managed, ordered */}
       <HomePromoBanners banners={promos} />

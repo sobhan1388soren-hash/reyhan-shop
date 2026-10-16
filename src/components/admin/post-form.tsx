@@ -40,71 +40,13 @@ import {
 } from "@/components/admin/post-related-products";
 import { buildCategoryTree, type CategoryTreeNode } from "@/lib/admin/category-rules";
 import { cn } from "@/lib/utils";
+import { type PostDraft } from "@/components/admin/post-draft";
 
 // PostForm — create/edit an article. Server-side validation is
 // authoritative (validatePostInput in the pure rules + relation checks in
 // the service); HTML constraints here are UX only. On a successful CREATE
 // the browser moves to the edit URL so the admin keeps editing the saved
 // post instead of re-submitting a duplicate.
-
-export type PostDraft = {
-  title: string;
-  slug: string;
-  excerpt: string;
-  content: string;
-  coverImage: string;
-  status: string;
-  seoTitle: string;
-  seoDescription: string;
-  seoKeywords: string;
-  authorId: string;
-  categoryIds: string[];
-};
-
-export function emptyPostDraft(): PostDraft {
-  return {
-    title: "",
-    slug: "",
-    excerpt: "",
-    content: "",
-    coverImage: "",
-    status: "DRAFT",
-    seoTitle: "",
-    seoDescription: "",
-    seoKeywords: "",
-    authorId: "",
-    categoryIds: [],
-  };
-}
-
-/** Build the editable draft from a loaded admin post detail. */
-export function draftFromPost(post: {
-  title: string;
-  slug: string;
-  excerpt: string | null;
-  content: string;
-  coverImage: string | null;
-  status: string;
-  seoTitle: string | null;
-  seoDescription: string | null;
-  seoKeywords: string | null;
-  authorId: string | null;
-  categories: { id: string }[];
-}): PostDraft {
-  return {
-    title: post.title,
-    slug: post.slug,
-    excerpt: post.excerpt ?? "",
-    content: post.content,
-    coverImage: post.coverImage ?? "",
-    status: post.status,
-    seoTitle: post.seoTitle ?? "",
-    seoDescription: post.seoDescription ?? "",
-    seoKeywords: post.seoKeywords ?? "",
-    authorId: post.authorId ?? "",
-    categoryIds: post.categories.map((c) => c.id),
-  };
-}
 
 type FlatCategory = { depth: number; node: CategoryTreeNode<AdminPostCategoryNode> };
 

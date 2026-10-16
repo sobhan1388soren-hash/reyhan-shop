@@ -101,6 +101,15 @@ export function CartView() {
     if (!result) return;
     const item = result.items.find((i) => i.variantId === variantId);
     if (!item || !item.purchasable) return;
+    if (
+      typeof nextQuantity !== "number" ||
+      !Number.isFinite(nextQuantity) ||
+      typeof item.maxQuantity !== "number" ||
+      !Number.isFinite(item.maxQuantity) ||
+      item.maxQuantity <= 0
+    ) {
+      return;
+    }
     const clamped = Math.min(Math.max(1, nextQuantity), item.maxQuantity);
     if (clamped === item.quantity) return;
 

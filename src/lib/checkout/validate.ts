@@ -217,25 +217,28 @@ export async function validateCheckoutFinal(
 /** Assemble the page-level snapshot for the checkout UI. */
 export async function getCheckoutSnapshot(input: {
   userId: string;
-  cartEntries: unknown;
+  cartEntries?: unknown;
 }): Promise<CheckoutSnapshot> {
-  const [addresses, cart, shippingMethods, paymentMethods] = await Promise.all([
+  // NOTE: the cart is intentionally NOT validated here. The checkout view
+  // re-validates the live cart against the DB immediately on mount (and on
+  // every change), so validating it again in this snapshot was a duplicate
+  // round-trip with a result nobody rendered. Cart totals remain
+  // server-derived at submission via validateCheckoutFinal.
+  void input.cartEntries;
+  const [addresses, shippingMethods, paymentMethods] = await Promise.all([
     getCheckoutAddresses(input.userId),
-    validateCart(input.cartEntries).catch(() => null),
     Promise.resolve(getShippingMethodsServer()),
     Promise.resolve(getPaymentMethodsServer()),
   ]);
 
-  const validatedCart =
-    cart ??
-    ({
-      items: [],
-      subtotal: 0,
-      totalCount: 0,
-      purchasableCount: 0,
-      allPurchasable: true,
-      hasIssues: false,
-    } as CartValidationResult);
+  const validatedCart: CartValidationResult = {
+    items: [],
+    subtotal: 0,
+    totalCount: 0,
+    purchasableCount: 0,
+    allPurchasable: true,
+    hasIssues: false,
+  };
 
   const defaultAddress = addresses.find((a) => a.isDefault) ?? addresses[0] ?? null;
   const totals = computeCheckoutTotals({

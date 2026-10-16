@@ -262,9 +262,44 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up,
   .luxury-stagger > *,
-  .skeleton-ice {
+  .skeleton-ice,
+  .animate-spin-reyhan,
+  .animate-spin-reyhan-arc {
     animation: none;
   }
+}
+
+/* Reyhan loading spinner — subtle wave-inspired arc animation */
+@keyframes spin-reyhan {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin-reyhan-arc {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 200;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 200;
+    stroke-dashoffset: -124;
+  }
+}
+
+@utility animate-spin-reyhan {
+  animation: spin-reyhan 1.2s linear infinite;
+}
+
+@utility animate-spin-reyhan-arc {
+  animation: spin-reyhan-arc 1.2s ease-in-out infinite;
 }
 
 /* =========================================================

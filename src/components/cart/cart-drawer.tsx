@@ -139,6 +139,7 @@ export function CartDrawer() {
       }
       previouslyFocusedRef.current =
         document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setRendered(true);
       enterTimerRef.current = window.setTimeout(() => setEntered(true), 20);
     } else if (rendered) {
@@ -231,6 +232,15 @@ export function CartDrawer() {
     if (!result) return;
     const item = result.items.find((i) => i.variantId === variantId);
     if (!item || !item.purchasable) return;
+    if (
+      typeof nextQuantity !== "number" ||
+      !Number.isFinite(nextQuantity) ||
+      typeof item.maxQuantity !== "number" ||
+      !Number.isFinite(item.maxQuantity) ||
+      item.maxQuantity <= 0
+    ) {
+      return;
+    }
     const clamped = Math.min(Math.max(1, nextQuantity), item.maxQuantity);
     if (clamped === item.quantity) return;
     setPendingVariant(variantId);

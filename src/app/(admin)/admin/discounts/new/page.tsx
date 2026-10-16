@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/dal";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
-import { DiscountForm, emptyDiscountDraft } from "@/components/admin/discount-form";
+import { DiscountForm } from "@/components/admin/discount-form";
+import { emptyDiscountDraft } from "@/components/admin/discount-draft";
 
 export const metadata: Metadata = {
   title: "کد تخفیف جدید",

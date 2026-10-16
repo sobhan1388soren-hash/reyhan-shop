@@ -33,7 +33,7 @@ export type AdminQuestionRow = {
   status: QuestionStatus;
   createdAt: Date;
   product: { id: string; title: string; slug: string } | null;
-  asker: { id: string; name: string; phone: string } | null;
+  asker: { id: string; name: string; phone: string | null } | null;
   answers: AdminQuestionAnswer[];
   answerCount: number;
 };

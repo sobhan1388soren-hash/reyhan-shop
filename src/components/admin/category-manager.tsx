@@ -33,7 +33,8 @@ import { cn } from "@/lib/utils";
 // authority — the service rules).
 //
 // Shared by BOTH category trees (catalog products + blog posts): the caller
-// injects its own server actions, item-count accessor and Persian copy.
+// injects its own server actions, item count (pre-computed per node) and
+// Persian copy.
 
 /** Node contract both admin category services already return. */
 export type CategoryManagerNode = {
@@ -50,6 +51,8 @@ export type CategoryManagerNode = {
   seoDescription: string | null;
   createdAt: Date;
   updatedAt: Date;
+  /** Direct item count per node (products for the catalog tree, posts for the blog tree). */
+  itemCount: number;
 };
 
 export type CategoryManagerActions = CategoryFormActions & {
@@ -257,13 +260,10 @@ function DeleteCategoryForm({
 
 export function CategoryManager<N extends CategoryManagerNode>({
   categories,
-  getCount,
   actions = productManagerActions,
   labels: labelOverrides,
 }: {
   categories: N[];
-  /** Direct-item count for a node (products for the catalog tree, posts for the blog tree). */
-  getCount: (node: N) => number;
   /** Injected server actions for this tree (defaults to the catalog actions). */
   actions?: CategoryManagerActions;
   /** Persian copy overrides (defaults to the catalog copy). */
@@ -337,9 +337,9 @@ export function CategoryManager<N extends CategoryManagerNode>({
   const deleteBlockReason = React.useMemo(() => {
     if (!selected) return null;
     if ((childCounts.get(selected.id) ?? 0) > 0) return labels.deleteBlockedChildren;
-    if (getCount(selected) > 0) return labels.deleteBlockedItems;
+    if (selected.itemCount > 0) return labels.deleteBlockedItems;
     return null;
-  }, [selected, childCounts, labels, getCount]);
+  }, [selected, childCounts, labels]);
 
   return (
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
@@ -421,9 +421,9 @@ export function CategoryManager<N extends CategoryManagerNode>({
                             {statusLabel(node.status)}
                           </AdminStatusBadge>
                         )}
-                        {getCount(node) > 0 && (
+                        {node.itemCount > 0 && (
                           <span className="text-[11px] tabular-nums text-muted-foreground">
-                            {toFaDigits(getCount(node))} {labels.itemNoun}
+                            {toFaDigits(node.itemCount)} {labels.itemNoun}
                           </span>
                         )}
                       </span>
@@ -525,7 +525,7 @@ export function CategoryManager<N extends CategoryManagerNode>({
                   </div>
                   <div className="flex items-center justify-between gap-4">
                     <dt className="text-muted-foreground">{labels.itemsLabel}</dt>
-                    <dd className="tabular-nums font-medium text-foreground">{toFaDigits(getCount(selected))}</dd>
+                    <dd className="tabular-nums font-medium text-foreground">{toFaDigits(selected.itemCount)}</dd>
                   </div>
                   {selected.description && (
                     <div>

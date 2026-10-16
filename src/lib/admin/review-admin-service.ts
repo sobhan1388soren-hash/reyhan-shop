@@ -29,7 +29,7 @@ export type AdminReviewRow = {
   status: ReviewStatus;
   createdAt: Date;
   product: { id: string; title: string; slug: string } | null;
-  reviewer: { id: string; name: string; phone: string } | null;
+  reviewer: { id: string; name: string; phone: string | null } | null;
 };
 
 export type AdminReviewListResult =

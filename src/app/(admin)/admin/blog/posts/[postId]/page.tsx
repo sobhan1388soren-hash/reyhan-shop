@@ -7,7 +7,8 @@ import { postStatusLabels, postStatusTones } from "@/lib/admin/labels";
 import { AdminStatusBadge } from "@/components/admin/admin-status-badge";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminListErrorState } from "@/components/admin/admin-list";
-import { PostForm, draftFromPost } from "@/components/admin/post-form";
+import { PostForm } from "@/components/admin/post-form";
+import { draftFromPost } from "@/components/admin/post-draft";
 import { PostStatusActions } from "@/components/admin/post-status-actions";
 import { formatFaDate } from "@/lib/catalog/format";
 

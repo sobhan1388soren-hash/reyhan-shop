@@ -50,15 +50,27 @@ export function AuthModalRegisterForm() {
     router.refresh();
   }, [closeModal, router]);
 
+  // `initialAuthState` is { step: "phone" } with no error, so a bare
+  // "no error" test would fire on mount and close the modal the instant it
+  // opens. The ref records that the OTP form was actually submitted.
+  const verifySubmittedRef = React.useRef(false);
+
   React.useEffect(() => {
-    if (verifyState.step === "phone" && !verifyState.error && !verifyBounced) {
+    if (!verifySubmittedRef.current) return;
+    if (verifyState.step === "phone" && !verifyState.error) {
       handleSuccess();
     }
-  }, [verifyState.step, verifyState.error, verifyBounced, handleSuccess]);
+  }, [verifyState.step, verifyState.error, handleSuccess]);
 
   if (step === "otp") {
     return (
-      <form action={verifyAction} className="space-y-4">
+      <form
+        action={verifyAction}
+        className="space-y-4"
+        onSubmit={() => {
+          verifySubmittedRef.current = true;
+        }}
+      >
         <input type="hidden" name="phone" value={requestState.phone ?? form.phone} />
         <input
           type="hidden"

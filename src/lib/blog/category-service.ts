@@ -330,7 +330,8 @@ export async function getPostAuthorOptions(): Promise<PostAuthorOption[]> {
       name:
         u.displayName?.trim() ||
         [u.firstName, u.lastName].filter(Boolean).join(" ").trim() ||
-        u.phone,
+        u.phone ||
+        "کاربر بدون نام",
     }));
   } catch {
     return [];

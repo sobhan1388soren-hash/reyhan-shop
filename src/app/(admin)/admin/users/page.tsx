@@ -53,7 +53,7 @@ const columns: AdminColumn<AdminUserRow>[] = [
             {row.name}
           </Link>
           <p className="truncate text-xs tabular-nums text-muted-foreground" dir="ltr">
-            {row.phone}
+            {row.phone ?? row.email ?? "—"}
           </p>
         </div>
       </div>
@@ -198,7 +198,7 @@ export default async function AdminUsersPage({
                           {row.name}
                         </Link>
                         <p className="truncate text-xs tabular-nums text-muted-foreground" dir="ltr">
-                          {row.phone}
+                          {row.phone ?? row.email ?? "—"}
                         </p>
                       </div>
                     </div>

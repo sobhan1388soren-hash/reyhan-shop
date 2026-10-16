@@ -11,11 +11,9 @@ import {
 } from "@/lib/compare/storage";
 
 export function useCompare() {
-  const [slugs, setSlugs] = useState<string[]>([]);
+  const [slugs, setSlugs] = useState(() => readCompareSlugs());
 
   useEffect(() => {
-    setSlugs(readCompareSlugs());
-
     function handleChange() {
       setSlugs(readCompareSlugs());
     }

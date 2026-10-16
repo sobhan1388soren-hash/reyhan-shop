@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRecentlyViewed } from "@/lib/recently-viewed/hooks";
-import { readRecentSlugs } from "@/lib/recently-viewed/storage";
+import { addRecentSlug } from "@/lib/recently-viewed/storage";
 import type { CatalogProduct } from "@/lib/catalog/types";
 import { ProductCard } from "@/components/catalog/product-card";
 import { Container } from "@/components/layout/container";
@@ -22,20 +22,16 @@ async function fetchProductsBySlugs(slugs: string[]): Promise<CatalogProduct[]> 
 export function RecentlyViewedSection() {
   const { slugs } = useRecentlyViewed();
   const [products, setProducts] = useState<CatalogProduct[]>([]);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (slugs.length === 0) {
-      setProducts([]);
       return;
     }
-    setLoading(true);
     fetchProductsBySlugs(slugs)
       .then((p) => {
         const map = new Map(p.map((pr) => [pr.slug, pr]));
         setProducts(slugs.map((s) => map.get(s)).filter(Boolean) as CatalogProduct[]);
-      })
-      .finally(() => setLoading(false));
+      });
   }, [slugs]);
 
   if (slugs.length === 0 || products.length === 0) return null;
@@ -67,7 +63,6 @@ export function RecentlyViewedSection() {
 
 export function TrackProductView({ slug }: { slug: string }) {
   useEffect(() => {
-    const { addRecentSlug } = require("@/lib/recently-viewed/storage");
     addRecentSlug(slug);
   }, [slug]);
   return null;

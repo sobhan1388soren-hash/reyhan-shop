@@ -17,7 +17,6 @@ import {
   PRODUCT_SEO_DESCRIPTION_MAX,
   PRODUCT_SEO_KEYWORDS_MAX,
 } from "@/lib/admin/product-rules";
-import type { AdminProductDetail } from "@/lib/admin/product-service";
 import type { AdminCategoryOption } from "@/lib/admin/product-service";
 import { Input } from "@/components/ui/input";
 import {
@@ -30,57 +29,12 @@ import {
   adminTextareaClass,
 } from "@/components/admin/admin-form";
 import { cn } from "@/lib/utils";
+import { type ProductDraft } from "@/components/admin/product-draft";
 
 // ProductForm — create/edit for one product's core content. Server actions
 // are authoritative (validateProductInput in the service); the HTML
 // constraints here are UX only. Slug auto-derives from the title until the
 // admin edits it by hand (same normalization as the server).
-
-export type ProductDraft = {
-  mode: "create" | "edit";
-  productId?: string;
-  title: string;
-  slug: string;
-  status: string;
-  isFeatured: boolean;
-  shortDescription: string;
-  description: string;
-  seoTitle: string;
-  seoDescription: string;
-  seoKeywords: string;
-  categoryIds: string[];
-};
-
-export const emptyProductDraft: ProductDraft = {
-  mode: "create",
-  title: "",
-  slug: "",
-  status: "DRAFT",
-  isFeatured: false,
-  shortDescription: "",
-  description: "",
-  seoTitle: "",
-  seoDescription: "",
-  seoKeywords: "",
-  categoryIds: [],
-};
-
-export function draftFromProduct(product: AdminProductDetail): ProductDraft {
-  return {
-    mode: "edit",
-    productId: product.id,
-    title: product.title,
-    slug: product.slug,
-    status: product.status,
-    isFeatured: product.isFeatured,
-    shortDescription: product.shortDescription ?? "",
-    description: product.description ?? "",
-    seoTitle: product.seoTitle ?? "",
-    seoDescription: product.seoDescription ?? "",
-    seoKeywords: product.seoKeywords ?? "",
-    categoryIds: product.categories.map((c) => c.id),
-  };
-}
 
 export function ProductForm({
   draft: initialDraft,

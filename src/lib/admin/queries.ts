@@ -36,7 +36,7 @@ export type AdminOrderRow = {
   totalAmount: number;
   itemCount: number;
   createdAt: Date;
-  customer: { id: string; name: string; phone: string } | null;
+  customer: { id: string; name: string; phone: string | null } | null;
   recipientName: string | null;
   city: string | null;
 };
@@ -145,7 +145,7 @@ export type AdminOrderDetail = {
   notes: string | null;
   createdAt: Date;
   updatedAt: Date;
-  customer: { id: string; name: string; phone: string; role: string } | null;
+  customer: { id: string; name: string; phone: string | null; role: string } | null;
   recipientName: string | null;
   recipientPhone: string | null;
   province: string | null;
@@ -252,7 +252,7 @@ export async function getAdminOrderById(orderId: string): Promise<AdminDetailRes
 export type AdminUserRow = {
   id: string;
   name: string;
-  phone: string;
+  phone: string | null;
   email: string | null;
   role: UserRole;
   status: UserStatus;
@@ -340,7 +340,7 @@ export async function getAdminUsers(
 export type AdminUserDetail = {
   id: string;
   name: string;
-  phone: string;
+  phone: string | null;
   phoneVerified: boolean;
   email: string | null;
   role: UserRole;

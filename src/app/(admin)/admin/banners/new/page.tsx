@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/dal";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
-import { BannerForm, emptyBannerDraft } from "@/components/admin/banner-form";
+import { BannerForm } from "@/components/admin/banner-form";
+import { emptyBannerDraft } from "@/components/admin/banner-draft";
 
 export const metadata: Metadata = {
   title: "بنر جدید",

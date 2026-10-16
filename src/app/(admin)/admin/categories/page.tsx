@@ -23,7 +23,9 @@ export default async function AdminCategoriesPage() {
       {result.state === "error" ? (
         <AdminListErrorState />
       ) : (
-        <CategoryManager categories={result.categories} getCount={(c) => c.productCount} />
+        <CategoryManager
+          categories={result.categories.map((c) => ({ ...c, itemCount: c.productCount }))}
+        />
       )}
     </div>
   );

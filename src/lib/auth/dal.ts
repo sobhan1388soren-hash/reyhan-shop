@@ -7,19 +7,15 @@ import { cache } from "react";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { getSession } from "./session";
+import type { CurrentUser } from "./user-display";
 
-export type CurrentUser = {
-  id: string;
-  phone: string;
-  phoneVerified: boolean;
-  email: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  displayName: string | null;
-  role: string;
-  status: string;
-  createdAt: Date;
-};
+// `CurrentUser`, `userDisplayName` and `userContactLabel` are pure and have no
+// server-only dependency, so they live in ./user-display and are re-exported
+// here. Client Components must import them from ./user-display directly —
+// importing them from this module drags `server-only`/`next/headers` across the
+// client boundary and fails the build.
+export type { CurrentUser, UserContactSource, UserDisplayNameSource } from "./user-display";
+export { userContactLabel, userDisplayName } from "./user-display";
 
 /** Read the current user without redirecting. Null when logged out. */
 export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
@@ -33,16 +29,19 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
         phone: true,
         phoneVerified: true,
         email: true,
+        nationalCode: true,
         firstName: true,
         lastName: true,
         displayName: true,
         role: true,
         status: true,
         createdAt: true,
+        passwordHash: true,
       },
     });
     if (!user || user.status !== "ACTIVE") return null;
-    return user;
+    const { passwordHash, ...rest } = user;
+    return { ...rest, hasPassword: Boolean(passwordHash) };
   } catch {
     return null;
   }
@@ -54,15 +53,3 @@ export const requireUser = cache(async (): Promise<CurrentUser> => {
   if (!user) redirect("/login?next=/account");
   return user;
 });
-
-/** Display name helper — Persian fallback. */
-export function userDisplayName(user: {
-  displayName: string | null;
-  firstName: string | null;
-  lastName: string | null;
-}): string {
-  if (user.displayName?.trim()) return user.displayName.trim();
-  const parts = [user.firstName?.trim(), user.lastName?.trim()].filter(Boolean);
-  if (parts.length > 0) return parts.join(" ");
-  return "کاربر ریحان";
-}

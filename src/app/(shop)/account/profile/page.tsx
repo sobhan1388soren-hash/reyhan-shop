@@ -35,32 +35,53 @@ export default async function ProfilePage() {
       <div className="rounded-xl border bg-card p-5 shadow-card sm:p-6">
         <h2 className="text-base font-semibold text-foreground">امنیت حساب</h2>
         <dl className="mt-4 space-y-3 text-sm">
-          <div className="flex items-center justify-between gap-3 rounded-lg bg-muted/40 px-4 py-3">
-            <dt className="text-muted-foreground">شماره موبایل (شناسه ورود)</dt>
-            <dd className="flex items-center gap-2">
-              <span className="font-semibold tabular-nums text-foreground" dir="ltr">
-                {formatPhoneForDisplay(user.phone)}
-              </span>
-              {user.phoneVerified && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-[var(--reyhan-green-50)] px-2 py-0.5 text-[11px] font-medium text-[var(--reyhan-green-700)]">
-                  تأیید شده
+          {user.phone ? (
+            <div className="flex items-center justify-between gap-3 rounded-lg bg-muted/40 px-4 py-3">
+              <dt className="text-muted-foreground">شماره موبایل</dt>
+              <dd className="flex items-center gap-2">
+                <span className="font-semibold tabular-nums text-foreground" dir="ltr">
+                  {formatPhoneForDisplay(user.phone)}
                 </span>
-              )}
-            </dd>
-          </div>
+                {user.phoneVerified && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[var(--reyhan-green-50)] px-2 py-0.5 text-[11px] font-medium text-[var(--reyhan-green-700)]">
+                    تأیید شده
+                  </span>
+                )}
+              </dd>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between gap-3 rounded-lg bg-muted/40 px-4 py-3">
+              <dt className="text-muted-foreground">شماره موبایل</dt>
+              <dd className="font-semibold text-muted-foreground">ثبت نشده است</dd>
+            </div>
+          )}
           <div className="flex items-center justify-between gap-3 rounded-lg bg-muted/40 px-4 py-3">
             <dt className="text-muted-foreground">روش ورود</dt>
-            <dd className="font-semibold text-foreground">پیامک با کد یک‌بارمصرف</dd>
+            <dd className="font-semibold text-foreground">
+              {user.hasPassword && user.phone
+                ? "ایمیل و رمز عبور، یا پیامک"
+                : user.hasPassword
+                  ? "ایمیل و رمز عبور"
+                  : "پیامک با کد یک‌بارمصرف"}
+            </dd>
           </div>
+          {user.nationalCode && (
+            <div className="flex items-center justify-between gap-3 rounded-lg bg-muted/40 px-4 py-3">
+              <dt className="text-muted-foreground">کد ملی</dt>
+              <dd className="font-semibold tabular-nums text-foreground" dir="ltr">
+                {user.nationalCode}
+              </dd>
+            </div>
+          )}
           <div className="flex items-center justify-between gap-3 rounded-lg bg-muted/40 px-4 py-3">
             <dt className="text-muted-foreground">عضویت از</dt>
             <dd className="font-semibold text-foreground">{formatFaDate(user.createdAt)}</dd>
           </div>
         </dl>
         <p className="mt-4 text-xs leading-6 text-muted-foreground">
-          ورود به حساب ریحان فقط از طریق شماره موبایل و کد یک‌بارمصرف انجام می‌شود؛
-          بنابراین هیچ رمز عبوری برای نگهداری وجود ندارد و امنیت حساب شما به شماره
-          موبایلتان وابسته است.
+          {user.hasPassword
+            ? "ورود به حساب ریحان با ایمیل و رمز عبور یا با شماره موبایل و کد یک‌بارمzufص انجام می‌شود. رمز عبور شما به‌صورت هش‌شده نگهداری می‌شود و هرگز به‌صورت متن ساده ذخیره نمی‌گردد."
+            : "ورود به حساب ریحان فقط از طریق شماره موبایل و کد یک‌بارمصرف انجام می‌شود؛ بنابراین هیچ رمز عبوری برای نگهداری وجود ندارد و امنیت حساب شما به شماره موبایلتان وابسته است."}
         </p>
       </div>
     </div>

@@ -10,6 +10,7 @@ import {
 import { initialAuthState, type AuthFormState } from "@/lib/auth/form-state";
 import { OtpStep } from "@/components/auth/otp-step";
 import { Input } from "@/components/ui/input";
+import { InlineSpinner } from "@/components/ui/loading-spinner";
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
@@ -72,9 +73,16 @@ export function RegisterForm() {
         <button
           type="submit"
           disabled={verifyPending || code.length !== 6}
-          className="inline-flex h-11 w-full items-center justify-center rounded-md bg-primary text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-[var(--reyhan-blue-700)] disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-primary text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-[var(--reyhan-blue-700)] disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {verifyPending ? "در حال بررسی…" : "تأیید و تکمیل ثبت‌نام"}
+          {verifyPending ? (
+            <>
+              <InlineSpinner size="sm" />
+              در حال بررسی…
+            </>
+          ) : (
+            "تأیید و تکمیل ثبت‌نام"
+          )}
         </button>
       </form>
     );
@@ -164,9 +172,16 @@ export function RegisterForm() {
         type="submit"
         disabled={requestPending}
         onClick={() => setForcePhoneStep(false)}
-        className="inline-flex h-11 w-full items-center justify-center rounded-md bg-primary text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-[var(--reyhan-blue-700)] disabled:cursor-not-allowed disabled:opacity-50"
+        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-md bg-primary text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-[var(--reyhan-blue-700)] disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {requestPending ? "در حال ارسال…" : "دریافت کد تأیید"}
+        {requestPending ? (
+          <>
+            <InlineSpinner size="sm" />
+            در حال ارسال…
+          </>
+        ) : (
+          "دریافت کد تأیید"
+        )}
       </button>
 
       <p className="text-center text-sm text-muted-foreground">

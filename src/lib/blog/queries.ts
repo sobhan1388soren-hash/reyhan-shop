@@ -76,7 +76,7 @@ function authorName(user: {
   firstName: string | null;
   lastName: string | null;
   displayName: string | null;
-  phone: string;
+  phone: string | null;
 } | null): string | null {
   if (!user) return null;
   return (

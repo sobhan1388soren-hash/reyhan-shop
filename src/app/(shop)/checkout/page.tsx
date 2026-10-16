@@ -19,10 +19,11 @@ export default async function CheckoutPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login?next=/checkout");
 
-  // DB failures surface as a clear state, never fake data.
+  // The checkout view re-validates the cart from localStorage on mount;
+  // the snapshot only needs user-scoped data (addresses, methods).
   let snapshot;
   try {
-    snapshot = await getCheckoutSnapshot({ userId: user.id, cartEntries: [] });
+    snapshot = await getCheckoutSnapshot({ userId: user.id });
   } catch {
     return (
       <Container className="py-10">

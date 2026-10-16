@@ -5,8 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthModal } from "@/components/auth/auth-modal-context";
 import { logout } from "@/app/actions/auth";
-import type { CurrentUser } from "@/lib/auth/dal";
-import { userDisplayName } from "@/lib/auth/dal";
+// Client-safe module only. Importing from "@/lib/auth/dal" would drag
+// `server-only` + `next/headers` across the client boundary and fail the build.
+// The user object itself arrives as a prop from the parent Server Component.
+import { userDisplayName, userContactLabel, type CurrentUser } from "@/lib/auth/user-display";
+import { isAdminCapableRole } from "@/lib/admin/rules";
 import { cn } from "@/lib/utils";
 
 export function HeaderAuthSection({ user }: { user: CurrentUser | null }) {
@@ -87,8 +90,23 @@ export function HeaderAuthSection({ user }: { user: CurrentUser | null }) {
         >
           <div className="border-b border-border/50 px-4 py-2.5">
             <p className="truncate text-sm font-semibold text-foreground">{userDisplayName(user)}</p>
-            <p className="mt-0.5 text-xs text-muted-foreground" dir="ltr">{user.phone}</p>
+            <p className="mt-0.5 truncate text-xs text-muted-foreground" dir="ltr">
+              {userContactLabel(user)}
+            </p>
           </div>
+          {isAdminCapableRole(user.role) && (
+            <Link
+              href="/admin"
+              role="menuitem"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-foreground transition-colors hover:bg-accent"
+            >
+              <svg aria-hidden="true" viewBox="0 0 16 16" className="size-4 text-muted-foreground" fill="none">
+                <path d="M2.5 6.5h11M4 6.5v6h8v-6M6.5 9.5h3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              پنل مدیریت
+            </Link>
+          )}
           <Link
             href="/account/orders"
             role="menuitem"

@@ -4,10 +4,12 @@ import * as React from "react";
 import { useAuthModal } from "./auth-modal-context";
 import { AuthModalLoginForm } from "./auth-modal-login-form";
 import { AuthModalRegisterForm } from "./auth-modal-register-form";
+import { AuthModalEmailLoginForm } from "./auth-modal-email-login-form";
+import { AuthModalEmailRegisterForm } from "./auth-modal-email-register-form";
 import { cn } from "@/lib/utils";
 
 export function AuthModal() {
-  const { isOpen, activeTab, closeModal, openModal } = useAuthModal();
+  const { isOpen, activeTab, authType, closeModal, openModal, setAuthType } = useAuthModal();
   const [mounted, setMounted] = React.useState(false);
   const [visible, setVisible] = React.useState(false);
   const panelRef = React.useRef<HTMLDivElement>(null);
@@ -23,6 +25,7 @@ export function AuthModal() {
       document.body.style.overflow = "hidden";
       return () => cancelAnimationFrame(raf);
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisible(false);
       document.body.style.overflow = "";
       const timer = setTimeout(() => setMounted(false), 200);
@@ -63,7 +66,7 @@ export function AuthModal() {
       const firstInput = panelRef.current.querySelector<HTMLElement>("input");
       firstInput?.focus();
     }
-  }, [isOpen, activeTab]);
+  }, [isOpen, activeTab, authType]);
 
   React.useEffect(() => {
     if (!isOpen && previousFocusRef.current) {
@@ -93,7 +96,7 @@ export function AuthModal() {
       <div
         ref={panelRef}
         className={cn(
-          "relative w-full max-w-md rounded-3xl border border-white/80 bg-white/90 p-6 shadow-[0_25px_60px_rgba(4,46,58,0.3)] backdrop-blur-2xl transition-transform duration-200 sm:p-8",
+          "relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-3xl border border-white/80 bg-white/90 p-6 shadow-[0_25px_60px_rgba(4,46,58,0.3)] backdrop-blur-2xl transition-transform duration-200 sm:p-8",
           visible ? "scale-100" : "scale-95"
         )}
       >
@@ -117,42 +120,102 @@ export function AuthModal() {
           </p>
         </div>
 
-        <div className="relative mb-6 flex rounded-xl bg-muted/60 p-1" role="tablist" aria-label="نوع ورود">
+        <div className="relative mb-3 flex rounded-xl bg-muted/60 p-1" role="tablist" aria-label="روش ورود">
           <span
             aria-hidden="true"
             className={cn(
               "absolute inset-y-1 w-[calc(50%-4px)] rounded-lg bg-gradient-to-l from-[#22d3ee] to-[#00f5a0] opacity-20 transition-transform duration-300 ease-out",
-              activeTab === "login" ? "start-1" : "start-[calc(50%+3px)]"
+              authType === "phone" ? "start-1" : "start-[calc(50%+3px)]"
             )}
           />
           <button
             type="button"
             role="tab"
-            aria-selected={activeTab === "login"}
-            onClick={() => openModal("login")}
+            id="auth-tab-phone"
+            aria-selected={authType === "phone"}
+            aria-controls="auth-panel"
+            onClick={() => setAuthType("phone")}
             className={cn(
-              "relative z-10 flex-1 rounded-lg py-2.5 text-sm font-semibold transition-colors duration-300",
-              activeTab === "login" ? "text-[#042e3a]" : "text-muted-foreground hover:text-foreground"
+              "relative z-10 flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2.5 text-sm font-semibold transition-colors duration-300",
+              authType === "phone" ? "text-[#042e3a]" : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <svg aria-hidden="true" viewBox="0 0 16 16" className="size-4" fill="none">
+              <path
+                d="M3 2.5h3l1.5 3.5-2 1.5a10 10 0 0 0 4 4l1.5-2 3.5 1.5v3a1.5 1.5 0 0 1-1.7 1.5C7.4 15.5.5 8.6.5 3.2A1.5 1.5 0 0 1 2 2.5Z"
+                stroke="currentColor"
+                strokeWidth="1.3"
+                strokeLinejoin="round"
+              />
+            </svg>
+            شماره موبایل
+          </button>
+          <button
+            type="button"
+            role="tab"
+            id="auth-tab-email"
+            aria-selected={authType === "email"}
+            aria-controls="auth-panel"
+            onClick={() => setAuthType("email")}
+            className={cn(
+              "relative z-10 flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2.5 text-sm font-semibold transition-colors duration-300",
+              authType === "email" ? "text-[#042e3a]" : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <svg aria-hidden="true" viewBox="0 0 16 16" className="size-4" fill="none">
+              <rect x="1.5" y="3.5" width="13" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.3" />
+              <path d="m2 4.5 6 4 6-4" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
+            </svg>
+            ایمیل
+          </button>
+        </div>
+
+        <div className="mb-6 flex rounded-lg bg-muted/40 p-0.5" role="group" aria-label="نوع حساب">
+          <button
+            type="button"
+            aria-pressed={activeTab === "login"}
+            onClick={() => openModal("login", authType)}
+            className={cn(
+              "flex-1 rounded-md py-1.5 text-xs font-semibold transition-all duration-300",
+              activeTab === "login"
+                ? "bg-white/80 text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             ورود
           </button>
           <button
             type="button"
-            role="tab"
-            aria-selected={activeTab === "register"}
-            onClick={() => openModal("register")}
+            aria-pressed={activeTab === "register"}
+            onClick={() => openModal("register", authType)}
             className={cn(
-              "relative z-10 flex-1 rounded-lg py-2.5 text-sm font-semibold transition-colors duration-300",
-              activeTab === "register" ? "text-[#042e3a]" : "text-muted-foreground hover:text-foreground"
+              "flex-1 rounded-md py-1.5 text-xs font-semibold transition-all duration-300",
+              activeTab === "register"
+                ? "bg-white/80 text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             ثبت‌نام
           </button>
         </div>
 
-        <div className={cn("transition-opacity duration-200", visible ? "opacity-100" : "opacity-0")}>
-          {activeTab === "login" ? <AuthModalLoginForm /> : <AuthModalRegisterForm />}
+        <div
+          id="auth-panel"
+          role="tabpanel"
+          aria-labelledby={authType === "phone" ? "auth-tab-phone" : "auth-tab-email"}
+          className={cn("transition-opacity duration-200", visible ? "opacity-100" : "opacity-0")}
+        >
+          {authType === "phone" ? (
+            activeTab === "login" ? (
+              <AuthModalLoginForm />
+            ) : (
+              <AuthModalRegisterForm />
+            )
+          ) : activeTab === "login" ? (
+            <AuthModalEmailLoginForm />
+          ) : (
+            <AuthModalEmailRegisterForm />
+          )}
         </div>
       </div>
     </div>

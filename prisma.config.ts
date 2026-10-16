@@ -1,5 +1,20 @@
-import "dotenv/config";
+import { config as loadEnv } from "dotenv";
 import { defineConfig } from "prisma/config";
+
+loadEnv({ path: ".env" });
+loadEnv({ path: ".env.local", override: true });
+
+function applySupabaseSslCompat(url: string): string {
+  const [base, query = ""] = url.split("?", 2);
+  const params = new URLSearchParams(query);
+  if (!params.has("sslmode") || params.get("sslmode") === "disable") return url;
+  if (params.has("uselibpqcompat")) return url;
+  params.set("uselibpqcompat", "true");
+  return `${base}?${params.toString()}`;
+}
+
+const rawUrl = process.env.DIRECT_URL ?? process.env.DATABASE_URL ?? "";
+const datasourceUrl = rawUrl ? applySupabaseSslCompat(rawUrl) : "";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -7,11 +22,6 @@ export default defineConfig({
     seed: "node prisma/seed-dev.mjs",
   },
   datasource: {
-    // Prisma 7's config Datasource has no `directUrl` field, so the CLI
-    // (migrate/db pull) resolves everything from this `url`. Point it at the
-    // session pooler (DIRECT_URL) so the schema engine gets a session-capable
-    // connection; the app runtime keeps using DATABASE_URL (transaction pooler)
-    // via the driver adapter in src/lib/prisma.ts.
-    url: process.env.DIRECT_URL ?? process.env.DATABASE_URL ?? "",
+    url: datasourceUrl,
   },
 });

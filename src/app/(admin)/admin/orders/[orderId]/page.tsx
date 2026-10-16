@@ -130,7 +130,7 @@ export default async function AdminOrderDetailPage({ params }: PageProps) {
                 </Link>
               </p>
               <p className="tabular-nums text-muted-foreground" dir="ltr">
-                {order.customer.phone}
+                {order.customer.phone ?? "—"}
               </p>
             </div>
           ) : (

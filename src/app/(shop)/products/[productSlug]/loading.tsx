@@ -1,4 +1,5 @@
 import { Container } from "@/components/layout/container";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 // Product detail skeleton — the detail page fans out to ~7 parallel
 // queries (product, related, ancestors, reviews, questions, posts, session),
@@ -7,7 +8,6 @@ export default function ProductDetailLoading() {
   return (
     <Container className="py-6 pb-24 lg:pb-10">
       <div role="status" aria-label="در حال بارگذاری محصول">
-        <span className="sr-only">در حال بارگذاری محصول…</span>
         <div aria-hidden="true">
           <div className="h-3.5 w-56 rounded skeleton-ice" />
           <div className="mt-4 grid gap-8 lg:grid-cols-12">
@@ -29,6 +29,7 @@ export default function ProductDetailLoading() {
           </div>
           <div className="mt-8 h-40 rounded-xl border border-slate-200/60 bg-white/70 backdrop-blur-md" />
         </div>
+        <LoadingSpinner size="md" label="در حال بارگذاری محصول…" className="mx-auto mt-6" />
       </div>
     </Container>
   );

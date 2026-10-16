@@ -7,6 +7,8 @@ type AuthModalContextValue = {
   authType: "phone" | "email";
   activeTab: "login" | "register";
   openModal: (tab?: "login" | "register", authType?: "phone" | "email") => void;
+  /** Switch the credential method without closing the modal. */
+  setAuthType: (authType: "phone" | "email") => void;
   closeModal: () => void;
 };
 
@@ -28,7 +30,7 @@ export function AuthModalProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = React.useMemo(
-    () => ({ isOpen, authType, activeTab, openModal, closeModal }),
+    () => ({ isOpen, authType, activeTab, openModal, setAuthType, closeModal }),
     [isOpen, authType, activeTab, openModal, closeModal]
   );
 

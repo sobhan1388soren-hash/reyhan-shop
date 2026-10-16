@@ -111,7 +111,7 @@ function authorName(user: {
   firstName: string | null;
   lastName: string | null;
   displayName: string | null;
-  phone: string;
+  phone: string | null;
 }): string | null {
   return (
     user.displayName?.trim() ||

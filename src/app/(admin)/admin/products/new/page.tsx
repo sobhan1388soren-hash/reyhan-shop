@@ -4,7 +4,8 @@ import { requireAdmin } from "@/lib/admin/dal";
 import { getAdminCategoryOptions } from "@/lib/admin/product-service";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminListErrorState } from "@/components/admin/admin-list";
-import { ProductForm, emptyProductDraft } from "@/components/admin/product-form";
+import { ProductForm } from "@/components/admin/product-form";
+import { emptyProductDraft } from "@/components/admin/product-draft";
 
 export const metadata: Metadata = {
   title: "محصول جدید",

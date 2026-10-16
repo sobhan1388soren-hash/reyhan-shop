@@ -15,6 +15,8 @@ export const initialAuthState: AuthFormState = { step: "phone" };
 
 export type EmailLoginFormState = {
   step: "email";
+  /** True only when the server actually established a session. */
+  success?: boolean;
   message?: string;
   error?: string;
   fieldErrors?: Record<string, string>;
@@ -23,7 +25,9 @@ export type EmailLoginFormState = {
 export const initialEmailLoginState: EmailLoginFormState = { step: "email" };
 
 export type EmailRegisterFormState = {
-  step: "email";
+  step: "email" | "email_pending";
+  /** True only when the server actually created the account + session. */
+  success?: boolean;
   message?: string;
   error?: string;
   fieldErrors?: Record<string, string>;

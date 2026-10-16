@@ -7,39 +7,49 @@ datasource db {
 }
 
 model User {
-  id               String                @id @default(cuid())
-  phone            String                @unique
-  phoneVerified    Boolean               @default(false)
-  email            String?               @unique
-  firstName        String?
-  lastName         String?
-  displayName      String?
-  role             UserRole              @default(CUSTOMER)
-  status           UserStatus            @default(ACTIVE)
-  province         String?
-  city             String?
-  postalCode       String?
-  addressLine      String?
-  createdAt        DateTime              @default(now())
-  updatedAt        DateTime              @updatedAt
-  addresses        Address[]
-  carts            Cart[]
-  discountUsages   DiscountUsage[]
-  notificationLogs NotificationLog[]
-  orders           Order[]
-  otpTokens        OtpToken[]
-  blogPosts        Post[]                @relation("PostAuthor")
-  priceAlerts      PriceAlert[]
-  answers          ProductAnswer[]
-  priceChanges     ProductPriceHistory[] @relation("PriceChangedBy")
-  questions        ProductQuestion[]
-  reviews          Review[]
-  stockAlerts      StockAlert[]
-  wishlists        Wishlist?
+  id                  String                @id @default(cuid())
+  // Nullable: accounts may be created via email/password instead of phone OTP.
+  // At least one of phone / email is always present, enforced in the auth layer.
+  phone               String?               @unique
+  phoneVerified       Boolean               @default(false)
+  email               String?               @unique
+  emailVerified      Boolean               @default(false)
+  passwordHash        String?
+  nationalCode        String?               @unique
+  firstName           String?
+  lastName            String?
+  displayName         String?
+  role                UserRole              @default(CUSTOMER)
+  status              UserStatus            @default(ACTIVE)
+  emailVerificationToken               String?
+  // Deadline for the pending verification link (set on issue, enforced
+  // on verify). NULL means "no valid link" and is treated as expired.
+  emailVerificationExpires             DateTime?
+  province            String?
+  city                String?
+  postalCode          String?
+  addressLine         String?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  addresses           Address[]
+  carts               Cart[]
+  discountUsages      DiscountUsage[]
+  notificationLogs    NotificationLog[]
+  orders              Order[]
+  otpTokens           OtpToken[]
+  blogPosts           Post[]                @relation("PostAuthor")
+  priceAlerts         PriceAlert[]
+  answers             ProductAnswer[]
+  priceChanges        ProductPriceHistory[] @relation("PriceChangedBy")
+  questions           ProductQuestion[]
+  reviews             Review[]
+  stockAlerts         StockAlert[]
+  wishlists           Wishlist?
 
   @@index([role])
   @@index([status])
   @@index([createdAt])
+  @@index([emailVerificationToken])
   @@map("users")
 }
 
@@ -79,6 +89,26 @@ model OtpToken {
   @@index([expiresAt])
   @@index([userId])
   @@map("otp_tokens")
+}
+
+model RegisterIntent {
+  id           String   @id @default(cuid())
+  requestId    String   @unique
+  email        String?
+  phone        String?
+  firstName    String?
+  lastName     String?
+  passwordHash String?
+  nationalCode String?
+  purpose      String
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  @@index([requestId])
+  @@index([email, purpose])
+  @@index([phone, purpose])
+  @@index([expiresAt])
+  @@map("register_intents")
 }
 
 model Category {

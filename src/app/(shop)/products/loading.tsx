@@ -1,4 +1,5 @@
 import { Container, Section } from "@/components/layout/container";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 // Products listing skeleton — shown during navigation while the server
 // re-queries the catalog (filters/sort/search/pagination). Mirrors the
@@ -12,7 +13,6 @@ export default function ProductsLoading() {
           aria-label="در حال بارگذاری محصولات"
           className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[280px_1fr]"
         >
-          <span className="sr-only">در حال بارگذاری محصولات…</span>
           <div className="hidden space-y-6 lg:block" aria-hidden="true">
             <div className="h-11 rounded-md skeleton-ice" />
             <div className="h-10 rounded-md skeleton-ice" />
@@ -40,6 +40,7 @@ export default function ProductsLoading() {
               ))}
             </div>
           </div>
+          <LoadingSpinner size="md" label="در حال بارگذاری محصولات…" className="lg:hidden mx-auto mt-4" />
         </div>
       </Container>
     </Section>
