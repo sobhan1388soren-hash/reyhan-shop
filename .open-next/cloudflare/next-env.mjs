@@ -1,0 +1,3 @@
+export const production = {"DATABASE_URL":"postgresql://postgres.banmwcbbwypvlbpctmyi:Sobhan1234soren@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres","DIRECT_URL":"postgresql://postgres.banmwcbbwypvlbpctmyi:Sobhan1234soren@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres"};
+export const development = {"DATABASE_URL":"postgresql://postgres.banmwcbbwypvlbpctmyi:Sobhan1234soren@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres","DIRECT_URL":"postgresql://postgres.banmwcbbwypvlbpctmyi:Sobhan1234soren@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres"};
+export const test = {};

@@ -1,5 +1,6 @@
 import { cache } from "react";
 import supabase from "@/lib/supabase";
+import { getProductAvailability } from "./availability";
 import {
   getFallbackBestSellingProducts,
   getFallbackCategoryBySlug,
@@ -12,7 +13,6 @@ import {
 import type {
   CatalogProduct,
   CatalogCategory,
-  AvailabilityState,
   PriceRange,
   CatalogSpecification,
   CatalogImage,
@@ -52,36 +52,6 @@ async function safeList<T>(
   }
 }
 
-function toAvailabilityState(
-  status: string,
-  variants: {
-    isActive: boolean;
-    inventory: {
-      quantity: number;
-      reservedQuantity: number;
-      lowStockThreshold: number;
-    } | null;
-  }[]
-): AvailabilityState {
-  if (status !== "ACTIVE") return "unavailable";
-  const active = variants.filter((v) => v.isActive);
-  if (!active.length) return "unavailable";
-  const totalQty = active.reduce(
-    (sum, v) =>
-      sum + (v.inventory?.quantity ?? 0) - (v.inventory?.reservedQuantity ?? 0),
-    0
-  );
-  if (totalQty <= 0) return "out_of_stock";
-  const lowStock = active.some(
-    (v) =>
-      v.inventory &&
-      v.inventory.quantity - v.inventory.reservedQuantity <=
-        (v.inventory.lowStockThreshold ?? 5)
-  );
-  if (lowStock) return "low_stock";
-  return "in_stock";
-}
-
 function toCatalogProductView(row: Record<string, unknown>): CatalogProduct {
   const variants = ((row.variants as Record<string, unknown>[]) ?? []).map((v) => ({
     id: v.id as string,
@@ -118,7 +88,7 @@ function toCatalogProductView(row: Record<string, unknown>): CatalogProduct {
     variants,
     specifications: (row.specifications as CatalogSpecification[]) ?? [],
     images: (row.images as CatalogImage[]) ?? [],
-    availability: toAvailabilityState(row.status as string, variants),
+    availability: getProductAvailability(row.status as string, variants),
     priceRange,
     createdAt: new Date(row.createdAt as string),
     updatedAt: new Date(row.updatedAt as string),

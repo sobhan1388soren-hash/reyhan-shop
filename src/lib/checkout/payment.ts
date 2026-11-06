@@ -8,9 +8,10 @@ import type { PaymentMethodOption } from "./types";
 /**
  * Available payment methods for checkout.
  *
- * Placeholder architecture (Phase 9): ONLINE only. When gateways are
- * approved in Phase 10, this list becomes data-driven (per-provider
- * availability) behind the same shape.
+ * ZarinPal integration belongs to Phase 10 and is not yet active.
+ * ONLINE is kept in the list (never removed) so the UI and validation
+ * remain structurally correct when the gateway is approved. It is
+ * marked non-selectable until that approval.
  */
 export function getPaymentMethods(): PaymentMethodOption[] {
   return [
@@ -18,8 +19,8 @@ export function getPaymentMethods(): PaymentMethodOption[] {
       id: "ONLINE",
       title: "پرداخت اینترنتی",
       description:
-        "پرداخت از طریق درگاه امن زرین‌پال پس از ثبت سفارش.",
-      selectable: true,
+        "پرداخت اینترنتی از طریق درگاه زرین‌پال — این گزینه به‌زودی فعال می‌شود.",
+      selectable: false,
     },
   ];
 }

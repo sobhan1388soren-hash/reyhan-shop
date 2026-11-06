@@ -116,18 +116,6 @@ export function buildFilterWhere(params: CatalogSearchParams): Prisma.ProductWhe
     };
   }
 
-  // Availability quick filter
-  if (params.inStock) {
-    where.variants = {
-      some: {
-        isActive: true,
-        inventory: {
-          quantity: { gt: 0 },
-        },
-      },
-    };
-  }
-
   // Specification filters — each key/value pair requires a matching ProductSpecification
   if (params.specs) {
     const andConditions: Prisma.ProductWhereInput[] = [];

@@ -17,9 +17,9 @@
 //   - Synthetic ids are prefixed `fb-` so snapshot rows are always
 //     distinguishable from database rows in logs and caches.
 
+import { getProductAvailability } from "./availability";
 import rawCatalog from "../../../scripts/data/reyhan-catalog.json";
 import type {
-  AvailabilityState,
   CatalogCategory,
   CatalogProduct,
   CatalogVariant,
@@ -41,23 +41,6 @@ function realImageUrl(url: unknown): string | null {
   } catch {
     return null;
   }
-}
-
-function toAvailability(status: string, variants: CatalogVariant[]): AvailabilityState {
-  if (status !== "ACTIVE") return "unavailable";
-  const active = variants.filter((v) => v.isActive);
-  if (!active.length) return "unavailable";
-  const totalQty = active.reduce(
-    (sum, v) => sum + (v.inventory?.quantity ?? 0) - (v.inventory?.reservedQuantity ?? 0),
-    0
-  );
-  if (totalQty <= 0) return "out_of_stock";
-  const low = active.some(
-    (v) =>
-      v.inventory &&
-      v.inventory.quantity - v.inventory.reservedQuantity <= v.inventory.lowStockThreshold
-  );
-  return low ? "low_stock" : "in_stock";
 }
 
 function toDate(value: unknown): Date {
@@ -141,7 +124,7 @@ function toFallbackProduct(raw: RawProduct): CatalogProduct {
       const url = realImageUrl(img?.url);
       return url ? [{ url, alt: img?.alt ?? null }] : [];
     }),
-    availability: toAvailability(raw.status ?? "ACTIVE", variants),
+    availability: getProductAvailability(raw.status ?? "ACTIVE", variants),
     priceRange,
     createdAt,
     updatedAt: createdAt,

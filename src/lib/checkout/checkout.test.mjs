@@ -44,18 +44,18 @@ test("shipping: placeholder cost is always 0 — no invented charge", () => {
   assert.equal(calculateShippingCost(method), 0);
 });
 
-// ── Payment — provider-agnostic, ONLINE only ───────────────────────────
+// ── Payment — ONLINE blocked until Phase 10 integration ─────────────────
 
-test("payment: ONLINE is the only representable method", () => {
+test("payment: ONLINE is the only representable method but not yet selectable", () => {
   const methods = getPaymentMethods();
   assert.equal(methods.length, 1);
   assert.equal(methods[0].id, "ONLINE");
-  assert.equal(methods[0].selectable, true);
+  assert.equal(methods[0].selectable, false, "ONLINE is blocked until ZarinPal integration");
 });
 
-test("payment: rejects unknown/absent method ids", () => {
-  assert.equal(resolvePaymentMethod("ONLINE").ok, true);
-  assert.equal(resolvePaymentMethod("COD").ok, false, "COD is not approved in Phase 9");
+test("payment: ONLINE is blocked; unknown/absent method ids are rejected", () => {
+  assert.equal(resolvePaymentMethod("ONLINE").ok, false, "ONLINE is blocked until Phase 10");
+  assert.equal(resolvePaymentMethod("COD").ok, false, "COD is not approved");
   assert.equal(resolvePaymentMethod("CARD_TO_CARD").ok, false);
   assert.equal(resolvePaymentMethod("ZARINPAL").ok, false, "gateway ids are Phase 10");
   assert.equal(resolvePaymentMethod("").ok, false);

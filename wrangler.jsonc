@@ -17,6 +17,14 @@
     "NEXT_PUBLIC_SUPABASE_URL": "https://banmwcbbwypvlbpctmyi.supabase.co",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_nTwhN7Som7Mf6n3IBA9dnA_ZDE1mmhu"
   },
+  // Hyperdrive binding for production database connectivity.
+  // The binding name (HYPERDRIVE) is used internally; the actual connection
+  // string is provisioned via `wrangler secret put DATABASE_URL`.
+  // Provision Hyperdrive in the Cloudflare dashboard, then set the secret:
+  //   wrangler secret put DATABASE_URL --name reyhan-shop
+  //   # Value: the Hyperdrive connection string (e.g. postgres://user:pass@host/db?sslmode=require)
+  // For local development, use DIRECT_URL/DATABASE_URL in .env.local pointing
+  // to Supabase session pooler (port 5432) or transaction pooler (port 6543).
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",

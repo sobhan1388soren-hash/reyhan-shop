@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { parseSession } from "@/lib/auth/session";
-import { isAdminCapableRole } from "@/lib/admin/rules";
 
 // Optimistic auth checks — secure checks still run in the DAL on every
 // account/admin page/action (proxy is only the first filter).
@@ -27,14 +26,12 @@ export default async function proxy(req: NextRequest) {
   // requireAdmin() re-resolves the role from the database user row and is
   // deny-by-default; this hop just avoids rendering a redirect chain for
   // obvious anonymous/customer traffic.
+  // Authorization is re-resolved from the database on every server request.
   if (isAdminRoute) {
     if (!session) {
       const loginUrl = new URL("/login", req.nextUrl);
       loginUrl.searchParams.set("next", path);
       return NextResponse.redirect(loginUrl);
-    }
-    if (!isAdminCapableRole(session.role)) {
-      return NextResponse.redirect(new URL("/account", req.nextUrl));
     }
     return NextResponse.next();
   }

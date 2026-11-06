@@ -11,7 +11,7 @@ import { parsePagination, buildPaginationMeta } from "./pagination";
 import { parseSort, sortToPrismaOrderBy } from "./sorting";
 import { buildSearchWhere } from "./search";
 import { buildFilterWhere } from "./filtering";
-import { getProductAvailability } from "./availability";
+import { getProductAvailability, isPurchasable } from "./availability";
 import { selectRankedProducts } from "@/lib/marketing/ranking";
 
 // Safe wrapper — if DB is empty or unreachable, return empty result instead of crashing build.
@@ -304,6 +304,9 @@ export async function getProductsPaginated(
       if (params.availability?.length) {
         filtered = filtered.filter((p) => params.availability!.includes(p.availability));
       }
+      if (params.inStock) {
+        filtered = filtered.filter((p) => isPurchasable(p.availability));
+      }
 
       const total = filtered.length;
       const paged = filtered.slice(skip, skip + take);
@@ -323,7 +326,7 @@ export async function getProductsPaginated(
 
     let data = items.map(toCatalogProduct);
 
-    if (params.availability?.length) {
+    if (params.availability?.length || params.inStock) {
       // Need to adjust total as well — filter data then recompute meta
       // For accurate pagination we would need DB-level availability, but we do post-filter fallback
       const allForCount = await prisma.product.findMany({
@@ -331,7 +334,15 @@ export async function getProductsPaginated(
         include: productInclude,
       });
       const allMapped = allForCount.map(toCatalogProduct);
-      const filteredAll = allMapped.filter((p) => params.availability!.includes(p.availability));
+      const filteredAll = allMapped.filter((p) => {
+        if (params.availability?.length && !params.availability.includes(p.availability)) {
+          return false;
+        }
+        if (params.inStock && !isPurchasable(p.availability)) {
+          return false;
+        }
+        return true;
+      });
       const filteredTotal = filteredAll.length;
       data = filteredAll
         .sort((a, b) => {

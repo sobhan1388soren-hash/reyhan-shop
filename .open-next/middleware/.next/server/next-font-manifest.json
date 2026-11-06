@@ -1,0 +1,154 @@
+{
+  "app": {
+    "[project]/src/app/(admin)/admin/banners/[bannerId]/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/banners/new/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/banners/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/blog/categories/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/blog/posts/[postId]/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/blog/posts/new/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/blog/posts/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/categories/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/discounts/[discountId]/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/discounts/new/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/discounts/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/orders/[orderId]/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/orders/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/products/[productId]/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/products/new/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/products/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/questions/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/reviews/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/users/[userId]/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(admin)/admin/users/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(auth)/login/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(auth)/register/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/about/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/account/addresses/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/account/invoices/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/account/orders/[orderId]/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/account/orders/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/account/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/account/profile/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/blog/[postSlug]/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/blog/category/[categorySlug]/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/blog/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/cart/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/categories/[categorySlug]/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/categories/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/checkout/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/checkout/success/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/contact/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/faq/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/payment/result/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/privacy/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/products/[productSlug]/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/products/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/terms/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/(shop)/wishlist/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/_not-found/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ],
+    "[project]/src/app/verify-email/page": [
+      "static/media/f1d25eabcf1db66d-s.p.21se6xk6bxqs6.woff2"
+    ]
+  },
+  "appUsingSizeAdjust": true,
+  "pages": {},
+  "pagesUsingSizeAdjust": false
+}
